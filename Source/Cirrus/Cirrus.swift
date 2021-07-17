@@ -21,5 +21,6 @@ public class Cirrus: ObservableObject {
 	public var zones: [String: CKRecordZone] = [:]
 	
 	internal var cancelBag = Set<AnyCancellable>()
+	@FileBackedCodable(url: .library(named: "cirrus.local.dat"), initialValue: LocalState()) var localState
 }
 

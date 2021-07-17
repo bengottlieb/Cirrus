@@ -20,7 +20,7 @@ extension Cirrus {
 		container = CKContainer(identifier: config.containerIdentifer)
 
 		UIApplication.willEnterForegroundNotification.publisher()
-			.sink() { _ in Task() { try? await self.authenticate() }}
+			.sink() { _ in async { try? await self.authenticate() }}
 			.store(in: &cancelBag)
 	}
 	

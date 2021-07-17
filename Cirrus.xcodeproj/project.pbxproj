@@ -16,6 +16,9 @@
 		B52104AD26A25AB4008ABEF4 /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B52104AC26A25AB4008ABEF4 /* Suite */; };
 		B52104B326A25B9B008ABEF4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52104B226A25B9B008ABEF4 /* CloudKit.framework */; };
 		B52104B626A2681A008ABEF4 /* Cirrus.Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */; };
+		B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */; };
+		B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */; };
+		B5B0960F26A2E08B0096EF93 /* Cirrus.UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +34,9 @@
 		B52104B226A25B9B008ABEF4 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B52104B426A26145008ABEF4 /* Suite */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Suite; path = ../Suite; sourceTree = "<group>"; };
 		B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Authentication.swift; sourceTree = "<group>"; };
+		B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.LocalState.swift; sourceTree = "<group>"; };
+		B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Notifications.swift; sourceTree = "<group>"; };
+		B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.UserData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +105,10 @@
 			children = (
 				B52104A726A257F5008ABEF4 /* Cirrus.swift */,
 				B52104A926A259D4008ABEF4 /* Cirrus.Configuration.swift */,
+				B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */,
 				B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */,
+				B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */,
+				B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */,
 			);
 			path = Cirrus;
 			sourceTree = "<group>";
@@ -188,11 +197,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */,
+				B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */,
 				B52104A826A257F5008ABEF4 /* Cirrus.swift in Sources */,
 				B521049C26A256C6008ABEF4 /* ContentView.swift in Sources */,
 				B521049A26A256C6008ABEF4 /* CirrusApp.swift in Sources */,
 				B52104B626A2681A008ABEF4 /* Cirrus.Authentication.swift in Sources */,
 				B52104AA26A259D4008ABEF4 /* Cirrus.Configuration.swift in Sources */,
+				B5B0960F26A2E08B0096EF93 /* Cirrus.UserData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

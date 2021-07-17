@@ -21,8 +21,8 @@ extension Cirrus {
 			case .available:
 				let id = try await container.userRecordID()
 				try await setupZones()
-				self.state = .authenticated(id)
-				
+				userSignedIn(as: id)
+
 			default:
 				state = .notLoggedIn
 			}
@@ -34,12 +34,15 @@ extension Cirrus {
 	
 	func setupZones() async throws {
 		zones = Dictionary(uniqueKeysWithValues: configuration.zoneNames.map { ($0, CKRecordZone(zoneName: $0)) })
+		if configuration.zoneNames == localState.lastCreatedZoneNamesList { return }
 		let op = CKModifyRecordZonesOperation(recordZonesToSave: Array(zones.values), recordZoneIDsToDelete: nil)
 		
 		return try await withUnsafeThrowingContinuation { continuation in
 			op.modifyRecordZonesResultBlock = { result in
 				switch result {
-				case .success: continuation.resume()
+				case .success:
+					self.localState.lastCreatedZoneNamesList = self.configuration.zoneNames
+					continuation.resume()
 				case .failure(let error): continuation.resume(throwing: error)
 				}
 			}
