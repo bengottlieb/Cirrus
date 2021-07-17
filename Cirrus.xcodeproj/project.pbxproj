@@ -19,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B507F45A26A2819F00A5C291 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		B521049626A256C6008ABEF4 /* Cirrus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cirrus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B521049926A256C6008ABEF4 /* CirrusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirrusApp.swift; sourceTree = "<group>"; };
 		B521049B26A256C6008ABEF4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -48,6 +49,7 @@
 		B521048D26A256C6008ABEF4 = {
 			isa = PBXGroup;
 			children = (
+				B507F45A26A2819F00A5C291 /* Package.swift */,
 				B52104B426A26145008ABEF4 /* Suite */,
 				B52104B026A25B92008ABEF4 /* Cirrus.entitlements */,
 				B52104AE26A25AC9008ABEF4 /* Source */,
