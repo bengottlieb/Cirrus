@@ -11,6 +11,11 @@
 		B521049C26A256C6008ABEF4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B521049B26A256C6008ABEF4 /* ContentView.swift */; };
 		B521049E26A256C7008ABEF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B521049D26A256C7008ABEF4 /* Assets.xcassets */; };
 		B52104A126A256C7008ABEF4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B52104A026A256C7008ABEF4 /* Preview Assets.xcassets */; };
+		B52104A826A257F5008ABEF4 /* Cirrus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52104A726A257F5008ABEF4 /* Cirrus.swift */; };
+		B52104AA26A259D4008ABEF4 /* Cirrus.Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52104A926A259D4008ABEF4 /* Cirrus.Configuration.swift */; };
+		B52104AD26A25AB4008ABEF4 /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B52104AC26A25AB4008ABEF4 /* Suite */; };
+		B52104B326A25B9B008ABEF4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52104B226A25B9B008ABEF4 /* CloudKit.framework */; };
+		B52104B626A2681A008ABEF4 /* Cirrus.Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,12 @@
 		B521049B26A256C6008ABEF4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B521049D26A256C7008ABEF4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B52104A026A256C7008ABEF4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B52104A726A257F5008ABEF4 /* Cirrus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.swift; sourceTree = "<group>"; };
+		B52104A926A259D4008ABEF4 /* Cirrus.Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Configuration.swift; sourceTree = "<group>"; };
+		B52104B026A25B92008ABEF4 /* Cirrus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Cirrus.entitlements; sourceTree = "<group>"; };
+		B52104B226A25B9B008ABEF4 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		B52104B426A26145008ABEF4 /* Suite */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Suite; path = ../Suite; sourceTree = "<group>"; };
+		B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Authentication.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52104AD26A25AB4008ABEF4 /* Suite in Frameworks */,
+				B52104B326A25B9B008ABEF4 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -35,8 +48,12 @@
 		B521048D26A256C6008ABEF4 = {
 			isa = PBXGroup;
 			children = (
-				B521049826A256C6008ABEF4 /* Cirrus */,
+				B52104B426A26145008ABEF4 /* Suite */,
+				B52104B026A25B92008ABEF4 /* Cirrus.entitlements */,
+				B52104AE26A25AC9008ABEF4 /* Source */,
+				B521049826A256C6008ABEF4 /* Test Harness */,
 				B521049726A256C6008ABEF4 /* Products */,
+				B52104B126A25B9B008ABEF4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -48,7 +65,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B521049826A256C6008ABEF4 /* Cirrus */ = {
+		B521049826A256C6008ABEF4 /* Test Harness */ = {
 			isa = PBXGroup;
 			children = (
 				B521049926A256C6008ABEF4 /* CirrusApp.swift */,
@@ -56,7 +73,7 @@
 				B521049D26A256C7008ABEF4 /* Assets.xcassets */,
 				B521049F26A256C7008ABEF4 /* Preview Content */,
 			);
-			path = Cirrus;
+			path = "Test Harness";
 			sourceTree = "<group>";
 		};
 		B521049F26A256C7008ABEF4 /* Preview Content */ = {
@@ -65,6 +82,32 @@
 				B52104A026A256C7008ABEF4 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		B52104AE26A25AC9008ABEF4 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				B52104AF26A25AD1008ABEF4 /* Cirrus */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		B52104AF26A25AD1008ABEF4 /* Cirrus */ = {
+			isa = PBXGroup;
+			children = (
+				B52104A726A257F5008ABEF4 /* Cirrus.swift */,
+				B52104A926A259D4008ABEF4 /* Cirrus.Configuration.swift */,
+				B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */,
+			);
+			path = Cirrus;
+			sourceTree = "<group>";
+		};
+		B52104B126A25B9B008ABEF4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B52104B226A25B9B008ABEF4 /* CloudKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +126,9 @@
 			dependencies = (
 			);
 			name = Cirrus;
+			packageProductDependencies = (
+				B52104AC26A25AB4008ABEF4 /* Suite */,
+			);
 			productName = Cirrus;
 			productReference = B521049626A256C6008ABEF4 /* Cirrus.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +157,9 @@
 				Base,
 			);
 			mainGroup = B521048D26A256C6008ABEF4;
+			packageReferences = (
+				B52104AB26A25AB4008ABEF4 /* XCRemoteSwiftPackageReference "suite" */,
+			);
 			productRefGroup = B521049726A256C6008ABEF4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,8 +186,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52104A826A257F5008ABEF4 /* Cirrus.swift in Sources */,
 				B521049C26A256C6008ABEF4 /* ContentView.swift in Sources */,
 				B521049A26A256C6008ABEF4 /* CirrusApp.swift in Sources */,
+				B52104B626A2681A008ABEF4 /* Cirrus.Authentication.swift in Sources */,
+				B52104AA26A259D4008ABEF4 /* Cirrus.Configuration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,9 +318,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Cirrus.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Cirrus/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Test Harness/Preview Content\"";
 				DEVELOPMENT_TEAM = YY6CWUX533;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -277,13 +330,13 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.standalone.Cirrus;
+				PRODUCT_BUNDLE_IDENTIFIER = com.standalone.cirrus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -296,9 +349,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Cirrus.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Cirrus/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Test Harness/Preview Content\"";
 				DEVELOPMENT_TEAM = YY6CWUX533;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -307,13 +361,13 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.standalone.Cirrus;
+				PRODUCT_BUNDLE_IDENTIFIER = com.standalone.cirrus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -343,6 +397,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B52104AB26A25AB4008ABEF4 /* XCRemoteSwiftPackageReference "suite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bengottlieb/suite";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B52104AC26A25AB4008ABEF4 /* Suite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B52104AB26A25AB4008ABEF4 /* XCRemoteSwiftPackageReference "suite" */;
+			productName = Suite;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B521048E26A256C6008ABEF4 /* Project object */;
 }
