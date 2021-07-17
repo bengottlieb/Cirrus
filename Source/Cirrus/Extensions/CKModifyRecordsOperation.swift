@@ -24,7 +24,6 @@ extension CKModifyRecordsOperation {
 		self.isAtomic = atomically
 		return try await withUnsafeThrowingContinuation { continuation in
 			self.modifyRecordsResultBlock = { result in
-				print(result)
 				switch result {
 				case .success:
 					if errors.isEmpty {

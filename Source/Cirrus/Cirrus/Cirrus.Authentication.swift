@@ -19,9 +19,6 @@ extension Cirrus {
 				DispatchQueue.onMain { self.state = .denied }
 				
 			case .available:
-//				container.fetchUserRecordID { id, err in
-//					print(err)
-//				}
 				let id = try await container.userRecordID()
 				try await setupZones()
 				DispatchQueue.onMain { self.userSignedIn(as: id) }

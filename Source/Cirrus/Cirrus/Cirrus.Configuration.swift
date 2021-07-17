@@ -23,6 +23,10 @@ extension Cirrus {
 		UIApplication.willEnterForegroundNotification.publisher()
 			.sink() { _ in Task { try? await self.authenticate() }}
 			.store(in: &cancelBag)
+		
+		Notification.Name.CKAccountChanged.publisher()
+			.sink() { _ in Task { try? await self.authenticate() }}
+			.store(in: &cancelBag)
 	}
 	
 	public struct Configuration {

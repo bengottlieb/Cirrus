@@ -14,9 +14,10 @@ public extension CKDatabase {
 		do {
 			try await op.save(in: self)
 		} catch {
-			print("Found an error when saving: \(error)")
 			if let updatedRecords = try await conflictResolver.resolve(error: error, in: records, database: self) {
 				try await save(records: updatedRecords, atomically: atomically, conflictResolver: conflictResolver)
+			} else {
+				throw error
 			}
 		}
 	}
