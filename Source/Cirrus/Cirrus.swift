@@ -18,6 +18,7 @@ public class Cirrus: ObservableObject {
 	public var configuration: Configuration!
 
 	public var container: CKContainer!
+	public var zones: [String: CKRecordZone] = [:]
 	
 	internal var cancelBag = Set<AnyCancellable>()
 }

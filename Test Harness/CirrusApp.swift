@@ -11,7 +11,7 @@ import SwiftUI
 
 @main
 struct CirrusApp: App {
-	let configuration = Cirrus.Configuration(containerIdentifer: "iCloud.con.standalone.cloudkittesting")
+	let configuration = Cirrus.Configuration(containerIdentifer: "iCloud.con.standalone.cloudkittesting", zoneNames: ["Cirrus Zone 1"])
 	
 	init() {
 		Cirrus.configure(with: configuration)

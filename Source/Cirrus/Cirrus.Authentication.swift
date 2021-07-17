@@ -20,6 +20,7 @@ extension Cirrus {
 				
 			case .available:
 				let id = try await container.userRecordID()
+				try await setupZones()
 				self.state = .authenticated(id)
 				
 			default:
@@ -28,6 +29,21 @@ extension Cirrus {
 		} catch let error as NSError {
 			state = .failed(error)
 			throw error
+		}
+	}
+	
+	func setupZones() async throws {
+		zones = Dictionary(uniqueKeysWithValues: configuration.zoneNames.map { ($0, CKRecordZone(zoneName: $0)) })
+		let op = CKModifyRecordZonesOperation(recordZonesToSave: Array(zones.values), recordZoneIDsToDelete: nil)
+		
+		return try await withUnsafeThrowingContinuation { continuation in
+			op.modifyRecordZonesResultBlock = { result in
+				switch result {
+				case .success: continuation.resume()
+				case .failure(let error): continuation.resume(throwing: error)
+				}
+			}
+			container.privateCloudDatabase.add(op)
 		}
 	}
 }
