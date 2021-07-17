@@ -8,15 +8,32 @@
 import CloudKit
 
 extension CKModifyRecordsOperation {
-	public func save(in database: CKDatabase) async throws -> [CKRecord] {
-		assert(recordIDsToDelete.isNotEmpty, "using CKModifyRecordsOperation.save() to delete records is not supported")
+	public func save(in database: CKDatabase, atomically: Bool = true) async throws {
+		assert(recordIDsToDelete.isEmpty, "using CKModifyRecordsOperation.save() to delete records is not supported")
 
-		guard let records = recordsToSave, records.isNotEmpty else { return [] }
+		guard let records = recordsToSave, records.isNotEmpty else { return }
+		var errors: [Error] = []
 		
+		self.perRecordSaveBlock = { recordID, result in
+			switch result {
+			case .failure(let error): errors.append(error)
+			case .success: break
+			}
+		}
+		
+		self.isAtomic = atomically
 		return try await withUnsafeThrowingContinuation { continuation in
 			self.modifyRecordsResultBlock = { result in
+				print(result)
 				switch result {
-				case .success: continuation.resume(returning: records)
+				case .success:
+					if errors.isEmpty {
+						continuation.resume()
+					} else if errors.count == 1 {
+						continuation.resume(throwing: errors[0])
+					} else {
+						continuation.resume(throwing: Cirrus.MultipleErrors(errors: errors))
+					}
 				case .failure(let error): continuation.resume(throwing: error)
 				}
 			}
@@ -25,7 +42,7 @@ extension CKModifyRecordsOperation {
 	}
 	
 	public func delete(from database: CKDatabase) async throws {
-		assert(recordsToSave.isNotEmpty, "using CKModifyRecordsOperation.delete() to save records is not supported")
+		assert(recordsToSave.isEmpty, "using CKModifyRecordsOperation.delete() to save records is not supported")
 
 		guard let recordIDs = recordIDsToDelete, recordIDs.isNotEmpty else { return }
 		

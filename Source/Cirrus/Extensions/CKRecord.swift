@@ -16,7 +16,7 @@ public protocol CKRecordSeed {
 }
 
 public extension CKRecord {
-	convenience init?(seed: CKRecordSeed) {
+	convenience init?(_ seed: CKRecordSeed) {
 		guard let id = seed.recordID else {
 			self.init(recordType: seed.recordType)
 			return nil
@@ -26,5 +26,24 @@ public extension CKRecord {
 		for name in seed.savedFieldNames {
 			self[name] = seed[name]
 		}
+	}
+	
+	func copy(from record: CKRecord) {
+		for field in self.allKeys() {
+			if record[field] == nil { self[field] = nil }
+		}
+		for field in record.allKeys() {
+			self[field] = record[field]
+		}
+	}
+	
+	func hasSameContent(as record: CKRecord) -> Bool {
+		let keys = self.allKeys()
+		if keys != record.allKeys() { return false }
+		
+		for key in keys {
+			if !areEqual(self[key], record[key]) { return false }
+		}
+		return true
 	}
 }

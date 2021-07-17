@@ -9,7 +9,7 @@ import Foundation
 import CloudKit
 
 struct Flag: CKRecordSeed {
-	var recordID: CKRecord.ID? { CKRecord.ID(recordName: country) }
+	var recordID: CKRecord.ID? { CKRecord.ID(recordName: country, zoneID: Cirrus.instance.zones["Flags"]!.zoneID) }
 	
 	var recordType: CKRecord.RecordType { "flag" }
 	
@@ -34,6 +34,7 @@ extension Flag {
 		Flag(country: "Japan", emoji: "🇯🇵"),
 		Flag(country: "Afghanistan", emoji: "🇦🇫"),
 		Flag(country: "Canada", emoji: "🇨🇦"),
+		Flag(country: "Piratania", emoji: "🏴‍☠️"),
 		Flag(country: "Switzerland", emoji: "🇨🇭"),
 		
 	]

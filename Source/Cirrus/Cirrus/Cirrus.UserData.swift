@@ -15,5 +15,6 @@ extension Cirrus {
 			Notifications.currentUserChanged.notify(localState.lastSignedInUserID)
 			localState.lastSignedInUserID = id.recordName
 		}
+		Notifications.userSignedIn.notify()
 	}
 }
