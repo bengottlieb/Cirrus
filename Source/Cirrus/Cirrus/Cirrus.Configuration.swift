@@ -11,6 +11,7 @@ import UIKit
 
 extension Cirrus {
 	public static func configure(with configuration: Configuration) {
+		Configuration.instance = configuration
 		instance.load(configuration: configuration)
 	}
 	
@@ -25,7 +26,12 @@ extension Cirrus {
 	}
 	
 	public struct Configuration {
+		public static var instance: Configuration!
+		
 		public var containerIdentifer: String
 		public var zoneNames: [String] = []
+		
+		public var managedObjectIDField: String?
+		public var syncedEntityNames: [String] = []
 	}
 }

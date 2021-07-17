@@ -16,18 +16,18 @@ extension Cirrus {
 		do {
 			switch try await container.accountStatus() {
 			case .couldNotDetermine, .noAccount, .restricted, .temporarilyUnavailable:
-				state = .denied
+				DispatchQueue.onMain { self.state = .denied }
 				
 			case .available:
 				let id = try await container.userRecordID()
 				try await setupZones()
-				userSignedIn(as: id)
+				DispatchQueue.onMain { self.userSignedIn(as: id) }
 
 			default:
-				state = .notLoggedIn
+				DispatchQueue.onMain { self.state = .notLoggedIn }
 			}
 		} catch let error as NSError {
-			state = .failed(error)
+			DispatchQueue.onMain { self.state = .failed(error) }
 			throw error
 		}
 	}
@@ -41,7 +41,7 @@ extension Cirrus {
 			op.modifyRecordZonesResultBlock = { result in
 				switch result {
 				case .success:
-					self.localState.lastCreatedZoneNamesList = self.configuration.zoneNames
+					DispatchQueue.onMain { self.localState.lastCreatedZoneNamesList = self.configuration.zoneNames }
 					continuation.resume()
 				case .failure(let error): continuation.resume(throwing: error)
 				}

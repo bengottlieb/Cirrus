@@ -19,6 +19,11 @@
 		B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */; };
 		B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */; };
 		B5B0960F26A2E08B0096EF93 /* Cirrus.UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */; };
+		B5B0961126A2E2100096EF93 /* CKDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0961026A2E2100096EF93 /* CKDatabase.swift */; };
+		B5F664C326A2E45D00B49AC7 /* CKModifyRecordsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */; };
+		B5F664C526A2E75800B49AC7 /* CKRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F664C426A2E75800B49AC7 /* CKRecord.swift */; };
+		B5F664C726A2EA8300B49AC7 /* NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F664C626A2EA8300B49AC7 /* NSManagedObject.swift */; };
+		B5F664C926A2EE3A00B49AC7 /* Flag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F664C826A2EE3A00B49AC7 /* Flag.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +42,11 @@
 		B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.LocalState.swift; sourceTree = "<group>"; };
 		B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Notifications.swift; sourceTree = "<group>"; };
 		B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.UserData.swift; sourceTree = "<group>"; };
+		B5B0961026A2E2100096EF93 /* CKDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKDatabase.swift; sourceTree = "<group>"; };
+		B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKModifyRecordsOperation.swift; sourceTree = "<group>"; };
+		B5F664C426A2E75800B49AC7 /* CKRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKRecord.swift; sourceTree = "<group>"; };
+		B5F664C626A2EA8300B49AC7 /* NSManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObject.swift; sourceTree = "<group>"; };
+		B5F664C826A2EE3A00B49AC7 /* Flag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flag.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				B521049926A256C6008ABEF4 /* CirrusApp.swift */,
+				B5F664C826A2EE3A00B49AC7 /* Flag.swift */,
 				B521049B26A256C6008ABEF4 /* ContentView.swift */,
 				B521049D26A256C7008ABEF4 /* Assets.xcassets */,
 				B521049F26A256C7008ABEF4 /* Preview Content */,
@@ -103,12 +114,8 @@
 		B52104AF26A25AD1008ABEF4 /* Cirrus */ = {
 			isa = PBXGroup;
 			children = (
-				B52104A726A257F5008ABEF4 /* Cirrus.swift */,
-				B52104A926A259D4008ABEF4 /* Cirrus.Configuration.swift */,
-				B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */,
-				B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */,
-				B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */,
-				B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */,
+				B5B0961326A2E21E0096EF93 /* Cirrus */,
+				B5B0961226A2E2140096EF93 /* Extensions */,
 			);
 			path = Cirrus;
 			sourceTree = "<group>";
@@ -119,6 +126,30 @@
 				B52104B226A25B9B008ABEF4 /* CloudKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B5B0961226A2E2140096EF93 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				B5B0961026A2E2100096EF93 /* CKDatabase.swift */,
+				B5F664C426A2E75800B49AC7 /* CKRecord.swift */,
+				B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */,
+				B5F664C626A2EA8300B49AC7 /* NSManagedObject.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		B5B0961326A2E21E0096EF93 /* Cirrus */ = {
+			isa = PBXGroup;
+			children = (
+				B52104A726A257F5008ABEF4 /* Cirrus.swift */,
+				B52104A926A259D4008ABEF4 /* Cirrus.Configuration.swift */,
+				B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */,
+				B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */,
+				B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */,
+				B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */,
+			);
+			path = Cirrus;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,11 +229,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */,
+				B5F664C726A2EA8300B49AC7 /* NSManagedObject.swift in Sources */,
 				B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */,
+				B5B0961126A2E2100096EF93 /* CKDatabase.swift in Sources */,
 				B52104A826A257F5008ABEF4 /* Cirrus.swift in Sources */,
 				B521049C26A256C6008ABEF4 /* ContentView.swift in Sources */,
 				B521049A26A256C6008ABEF4 /* CirrusApp.swift in Sources */,
+				B5F664C526A2E75800B49AC7 /* CKRecord.swift in Sources */,
+				B5F664C326A2E45D00B49AC7 /* CKModifyRecordsOperation.swift in Sources */,
 				B52104B626A2681A008ABEF4 /* Cirrus.Authentication.swift in Sources */,
+				B5F664C926A2EE3A00B49AC7 /* Flag.swift in Sources */,
 				B52104AA26A259D4008ABEF4 /* Cirrus.Configuration.swift in Sources */,
 				B5B0960F26A2E08B0096EF93 /* Cirrus.UserData.swift in Sources */,
 			);

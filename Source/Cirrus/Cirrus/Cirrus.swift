@@ -9,7 +9,6 @@ import Suite
 import CloudKit
 
 
-@MainActor
 public class Cirrus: ObservableObject {
 	public static let instance = Cirrus()
 	
