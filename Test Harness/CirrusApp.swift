@@ -19,15 +19,14 @@ struct CirrusApp: App {
 			.eraseToAnyPublisher()
 			.onSuccess { _ in
 				Task() {
-					Task() {
-						do {
-							for try await record in Cirrus.instance.container.privateCloudDatabase.records(ofType: "Flag") {
-								print("Got: \(record["country"] as? String ?? "Missing country")")
-							}
-						} catch {
-							print("Error when fetching: \(error)")
+					do {
+						for try await record in Cirrus.instance.container.privateCloudDatabase.records(ofType: "Flag") {
+							print("Got: \(record["country"] as? String ?? "Missing country")")
 						}
+					} catch {
+						print("Error when fetching: \(error)")
 					}
+				}
 
 					
 //					do {
@@ -37,7 +36,6 @@ struct CirrusApp: App {
 //					} catch {
 //						print(error)
 //					}
-				}
 		}
 	}
 	

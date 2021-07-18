@@ -35,14 +35,18 @@ public class AsyncRecordSequence: AsyncSequence {
 		operation.zoneID = zoneID
 		operation.recordMatchedBlock = { recordID, result in
 			switch result {
+			case .failure(let error):
+				Cirrus.instance.handleReceivedError(error)
+				self.errors.append(error)
 			case .success(let record): self.records.append(record)
-			case .failure(let error): self.errors.append(error)
 			}
 		}
 		
 		operation.queryResultBlock = { result in
 			switch result {
-			case .failure(let error): self.errors.append(error)
+			case .failure(let error):
+				Cirrus.instance.handleReceivedError(error)
+				self.errors.append(error)
 			case .success(let possibleCursor):
 				if let cursor = possibleCursor {
 					self.run(cursor: cursor)

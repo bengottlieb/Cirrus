@@ -27,6 +27,7 @@ public extension CKDatabase {
 			if let updatedRecords = try await conflictResolver.resolve(error: error, in: records, database: self) {
 				try await save(records: updatedRecords, atomically: atomically, conflictResolver: conflictResolver)
 			} else {
+				await Cirrus.instance.handleReceivedError(error)
 				throw error
 			}
 		}
@@ -52,6 +53,7 @@ public extension CKDatabase {
 				return nil
 				
 			default:
+				await Cirrus.instance.handleReceivedError(error)
 				throw error
 			}
 		}

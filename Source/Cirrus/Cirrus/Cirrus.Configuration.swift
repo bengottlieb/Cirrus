@@ -25,7 +25,7 @@ extension Cirrus {
 			.store(in: &cancelBag)
 		
 		Notification.Name.CKAccountChanged.publisher()
-			.sink() { _ in Task { try? await self.authenticate() }}
+			.sink() { _ in Task { if case .authenticated = self.state { try? await self.authenticate() }}}
 			.store(in: &cancelBag)
 	}
 	
