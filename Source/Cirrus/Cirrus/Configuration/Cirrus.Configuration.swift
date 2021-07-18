@@ -8,6 +8,7 @@
 import Foundation
 import CloudKit
 import UIKit
+import CoreData
 
 extension Cirrus {
 	public static func configure(with configuration: Configuration) {
@@ -37,5 +38,14 @@ extension Cirrus {
 		
 		public var managedObjectIDField: String?
 		public var syncedEntityNames: [String] = []
+		
+		public var importer: ManagedObjectImporter?
+		public var entities: [String: CirrusManagedObjectConfiguration]?
+		
+		func managedObjectInfo(for object: NSManagedObject) -> CirrusManagedObjectConfiguration? {
+			entities?.values.first { $0.entityDescription == object.entity }
+		}
 	}
 }
+
+

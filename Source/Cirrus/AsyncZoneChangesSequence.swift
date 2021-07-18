@@ -8,17 +8,27 @@
 import Suite
 import CloudKit
 
+public enum CKRecordChange {
+	case deleted(CKRecord.ID, CKRecord.RecordType)
+	case changed(CKRecord.ID, CKRecord)
+	
+	var recordType: CKRecord.RecordType {
+		switch self {
+		case .deleted(_, let type): return type
+		case .changed(_, let record): return record.recordType
+		}
+	}
+}
+
 public class AsyncZoneChangesSequence: AsyncSequence {
 	public typealias AsyncIterator = RecordIterator
-	public typealias Element = RecordChange
-
-	public enum RecordChange { case deleted(CKRecord.ID, CKRecord.RecordType), changed(CKRecord.ID, CKRecord) }
+	public typealias Element = CKRecordChange
 		
 	let database: CKDatabase
 	let zoneIDs: [CKRecordZone.ID]
 	var resultChunkSize: Int = 0
 	
-	public var changes: [RecordChange] = []
+	public var changes: [CKRecordChange] = []
 	public var errors: [Error] = []
 	var isComplete = false
 	
@@ -47,7 +57,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configuration)
 		
 		operation.recordWithIDWasDeletedBlock = { id, type in
-			self.changes.append(RecordChange.deleted(id, type))
+			self.changes.append(CKRecordChange.deleted(id, type))
 		}
 		
 		operation.recordWasChangedBlock = { id, result in
@@ -78,7 +88,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 
 	public struct RecordIterator: AsyncIteratorProtocol {
 		var position = 0
-		public mutating func next() async throws -> AsyncZoneChangesSequence.RecordChange? {
+		public mutating func next() async throws -> CKRecordChange? {
 			while true {
 				if let error = sequence.errors.first { throw error }
 				if position < sequence.changes.count {
@@ -91,7 +101,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 			}
 		}
 		
-		public typealias Element = AsyncZoneChangesSequence.RecordChange
+		public typealias Element = CKRecordChange
 		var sequence: AsyncZoneChangesSequence
 		
 	}
