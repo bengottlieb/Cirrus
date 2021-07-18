@@ -19,10 +19,14 @@ struct CirrusApp: App {
 			.eraseToAnyPublisher()
 			.onSuccess { _ in
 				Task() {
+					let zoneIDs = [Cirrus.instance.zone(named: "Flags")!.zoneID]
 					do {
-						for try await record in Cirrus.instance.container.privateCloudDatabase.records(ofType: "Flag") {
-							print("Got: \(record["country"] as? String ?? "Missing country")")
+						for try await change in Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs) {
+							print("Got: \(change)")
 						}
+						print("Done fetching change")
+						
+						try await Cirrus.instance.container.privateCloudDatabase.delete(record: CKRecord(Flag.flags[0]))
 					} catch {
 						print("Error when fetching: \(error)")
 					}

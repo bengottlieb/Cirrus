@@ -18,6 +18,12 @@ public extension CKDatabase {
 		seq.start()
 		return seq
 	}
+
+	func changes(in zoneIDs: [CKRecordZone.ID]) -> AsyncZoneChangesSequence {
+		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self)
+		seq.start()
+		return seq
+	}
 	
 	func save(records: [CKRecord], atomically: Bool = true, conflictResolver: ConflictResolver = ConflictResolverNewerWins()) async throws {
 		let op = CKModifyRecordsOperation(recordsToSave: records)

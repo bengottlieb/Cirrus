@@ -21,6 +21,7 @@
 		B5373DB026A36A4B00F6A15C /* CKRecordValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373DAF26A36A4B00F6A15C /* CKRecordValue.swift */; };
 		B5373DB226A36AC200F6A15C /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373DB126A36AC200F6A15C /* URL.swift */; };
 		B565D13326A3C34700F0C395 /* AsyncRecordSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13226A3C34700F0C395 /* AsyncRecordSequence.swift */; };
+		B57A735E26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */; };
 		B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */; };
 		B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */; };
 		B5B0960F26A2E08B0096EF93 /* Cirrus.UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */; };
@@ -49,6 +50,7 @@
 		B5373DAF26A36A4B00F6A15C /* CKRecordValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKRecordValue.swift; sourceTree = "<group>"; };
 		B5373DB126A36AC200F6A15C /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		B565D13226A3C34700F0C395 /* AsyncRecordSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRecordSequence.swift; sourceTree = "<group>"; };
+		B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncZoneChangesSequence.swift; sourceTree = "<group>"; };
 		B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.LocalState.swift; sourceTree = "<group>"; };
 		B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Notifications.swift; sourceTree = "<group>"; };
 		B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.UserData.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				B5B0961226A2E2140096EF93 /* Extensions */,
 				B5373DAB26A3324500F6A15C /* ConflictResolver.swift */,
 				B565D13226A3C34700F0C395 /* AsyncRecordSequence.swift */,
+				B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */,
 			);
 			path = Cirrus;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 				B5373DAC26A3324500F6A15C /* ConflictResolver.swift in Sources */,
 				B565D13326A3C34700F0C395 /* AsyncRecordSequence.swift in Sources */,
 				B5F664C726A2EA8300B49AC7 /* NSManagedObject.swift in Sources */,
+				B57A735E26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift in Sources */,
 				B5373DAE26A34F2E00F6A15C /* Cirrus.Errors.swift in Sources */,
 				B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */,
 				B5B0961126A2E2100096EF93 /* CKDatabase.swift in Sources */,

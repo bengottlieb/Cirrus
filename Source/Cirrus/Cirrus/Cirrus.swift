@@ -18,6 +18,10 @@ public class Cirrus: ObservableObject {
 
 	public var container: CKContainer!
 	public var zones: [String: CKRecordZone] = [:]
+
+	public func zone(named name: String) -> CKRecordZone? {
+		zones[name]
+	}
 	
 	internal var cancelBag = Set<AnyCancellable>()
 	@FileBackedCodable(url: .library(named: "cirrus.local.dat"), initialValue: LocalState()) var localState
