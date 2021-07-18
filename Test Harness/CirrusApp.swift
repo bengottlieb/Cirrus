@@ -19,13 +19,24 @@ struct CirrusApp: App {
 			.eraseToAnyPublisher()
 			.onSuccess { _ in
 				Task() {
-					do {
-						try await Cirrus.instance.container.privateCloudDatabase.save(records: Flag.flags.map { CKRecord($0)! })
-					} catch let err as NSError {
-						print("Error: \(err.localizedDescription)")
-					} catch {
-						print(error)
+					Task() {
+						do {
+							for try await record in Cirrus.instance.container.privateCloudDatabase.records(ofType: "Flag") {
+								print("Got: \(record["country"] as? String ?? "Missing country")")
+							}
+						} catch {
+							print("Error when fetching: \(error)")
+						}
 					}
+
+					
+//					do {
+//						try await Cirrus.instance.container.privateCloudDatabase.save(records: Flag.flags.map { CKRecord($0)! })
+//					} catch let err as NSError {
+//						print("Error: \(err.localizedDescription)")
+//					} catch {
+//						print(error)
+//					}
 				}
 		}
 	}

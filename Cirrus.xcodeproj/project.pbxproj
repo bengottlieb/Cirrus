@@ -20,6 +20,7 @@
 		B5373DAE26A34F2E00F6A15C /* Cirrus.Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373DAD26A34F2E00F6A15C /* Cirrus.Errors.swift */; };
 		B5373DB026A36A4B00F6A15C /* CKRecordValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373DAF26A36A4B00F6A15C /* CKRecordValue.swift */; };
 		B5373DB226A36AC200F6A15C /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5373DB126A36AC200F6A15C /* URL.swift */; };
+		B565D13326A3C34700F0C395 /* AsyncRecordSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13226A3C34700F0C395 /* AsyncRecordSequence.swift */; };
 		B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */; };
 		B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */; };
 		B5B0960F26A2E08B0096EF93 /* Cirrus.UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */; };
@@ -47,6 +48,7 @@
 		B5373DAD26A34F2E00F6A15C /* Cirrus.Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Errors.swift; sourceTree = "<group>"; };
 		B5373DAF26A36A4B00F6A15C /* CKRecordValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKRecordValue.swift; sourceTree = "<group>"; };
 		B5373DB126A36AC200F6A15C /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		B565D13226A3C34700F0C395 /* AsyncRecordSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncRecordSequence.swift; sourceTree = "<group>"; };
 		B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.LocalState.swift; sourceTree = "<group>"; };
 		B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Notifications.swift; sourceTree = "<group>"; };
 		B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.UserData.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				B5B0961326A2E21E0096EF93 /* Cirrus */,
 				B5B0961226A2E2140096EF93 /* Extensions */,
 				B5373DAB26A3324500F6A15C /* ConflictResolver.swift */,
+				B565D13226A3C34700F0C395 /* AsyncRecordSequence.swift */,
 			);
 			path = Cirrus;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 			files = (
 				B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */,
 				B5373DAC26A3324500F6A15C /* ConflictResolver.swift in Sources */,
+				B565D13326A3C34700F0C395 /* AsyncRecordSequence.swift in Sources */,
 				B5F664C726A2EA8300B49AC7 /* NSManagedObject.swift in Sources */,
 				B5373DAE26A34F2E00F6A15C /* Cirrus.Errors.swift in Sources */,
 				B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */,

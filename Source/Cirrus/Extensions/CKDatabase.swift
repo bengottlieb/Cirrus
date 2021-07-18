@@ -9,6 +9,16 @@ import Suite
 import CloudKit
 
 public extension CKDatabase {
+	func records(ofType type: CKRecord.RecordType, matching predicate: NSPredicate = NSPredicate(value: true), sortedBy: [NSSortDescriptor] = [], in zoneID: CKRecordZone.ID? = nil) -> AsyncRecordSequence {
+		let query = CKQuery(recordType: type, predicate: predicate)
+		query.sortDescriptors = sortedBy
+		
+		
+		let seq = AsyncRecordSequence(query: query, in: self, zoneID: zoneID)
+		seq.start()
+		return seq
+	}
+	
 	func save(records: [CKRecord], atomically: Bool = true, conflictResolver: ConflictResolver = ConflictResolverNewerWins()) async throws {
 		let op = CKModifyRecordsOperation(recordsToSave: records)
 		do {
