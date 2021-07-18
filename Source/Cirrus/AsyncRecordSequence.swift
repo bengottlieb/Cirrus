@@ -15,6 +15,7 @@ public class AsyncRecordSequence: AsyncSequence {
 	let query: CKQuery
 	let database: CKDatabase
 	let zoneID: CKRecordZone.ID?
+	var resultChunkSize: Int = 0
 	
 	public var records: [CKRecord] = []
 	public var errors: [Error] = []
@@ -31,8 +32,16 @@ public class AsyncRecordSequence: AsyncSequence {
 	}
 	
 	func run(cursor: CKQueryOperation.Cursor? = nil) {
-		let operation = CKQueryOperation(query: query)
+		let operation: CKQueryOperation
+		
+		if let cursor = cursor {
+			operation = CKQueryOperation(cursor: cursor)
+		} else {
+			operation = CKQueryOperation(query: query)
+		}
+		
 		operation.zoneID = zoneID
+		operation.resultsLimit = resultChunkSize
 		operation.recordMatchedBlock = { recordID, result in
 			switch result {
 			case .failure(let error):
