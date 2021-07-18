@@ -5,46 +5,53 @@
 //  Created by Ben Gottlieb on 7/18/21.
 //
 
-import Foundation
+import Suite
 import CoreData
 
 public protocol ManagedObjectImporter {
-	func process(change: CKRecordChange)
-	func finishImporting()
+	func process(change: CKRecordChange) async
+	func finishImporting() async
 }
 
 public class SimpleObjectImporter: ManagedObjectImporter {
 	let context: NSManagedObjectContext
-	var unresolvedReferences: [UnresolvedReference] = []
+	let connector: ReferenceConnector
 	
 	public init(context: NSManagedObjectContext) {
 		self.context = context
+		self.connector = ReferenceConnector(context: context)
 	}
 	
-	public func finishImporting() {
-		print("All done!")
-		try? context.save()
+	public func finishImporting() async {
+		await context.perform {
+			self.connector.connectUnresolved()
+			self.context.saveContext(toDisk: true)
+		}
 	}
 	
-	public func process(change: CKRecordChange) {
-		guard let info = Cirrus.instance.configuration.entities?[change.recordType] else { return }
+	public func process(change: CKRecordChange) async {
+		guard let info = await Cirrus.instance.configuration.entityInfo(for: change.recordType) else { return }
 		
-		switch change {
-		case .changed(let id, let record):
-			do {
-				if let object = info.record(with: id, in: context) {
-					unresolvedReferences += try object.load(cloudKitRecord: record)
-				} else {
-					let object = context.insertEntity(named: info.entityDescription.name!)
-					unresolvedReferences += try object.load(cloudKitRecord: record)
+		do {
+			switch change {
+			case .changed(let id, let record):
+				try await context.perform {
+					if let object = info.record(with: id, in: self.context) {
+						try object.load(cloudKitRecord: record, using: self.connector)
+					} else {
+						let object = self.context.insertEntity(named: info.entityDescription.name!) as! SyncedManagedObject
+						object.setValue(id.recordName, forKey: info.idField)
+						try object.load(cloudKitRecord: record, using: self.connector)
+					}
 				}
-			} catch {
+				
+			case .deleted(let id, _):
+				if let object = info.record(with: id, in: context) {
+					context.delete(object)
+				}
 			}
-			
-		case .deleted(let id, _):
-			if let object = info.record(with: id, in: context) {
-				context.delete(object)
-			}
+		} catch {
+			print("Failed to change: \(error)")
 		}
 	}
 }

@@ -12,38 +12,29 @@ struct ContentView: View {
 	@State var previousUserID: String?
 	
 	var body: some View {
-		VStack() {
-			if let prev = previousUserID {
-				Text("Was signed in as: \(prev)")
-			}
-			
-			if case .authenticated(let id) = cirrus.state {
-				Text("Signed in as: \(id.recordName)")
-			}
-
-			switch cirrus.state {
-			case .authenticated:
-				Text("Welcome!")
-				
-			case .signingIn:
-				ProgressView()
-				
-			case .denied, .tokenFailed, .notLoggedIn:
-				Button("Please Sign In!") {
-					Cirrus.launchCloudSettings()
+		NavigationView() {
+			VStack() {
+				switch cirrus.state {
+				case .authenticated:
+					EmojiListView()
+					
+				case .signingIn:
+					ProgressView()
+					
+				case .denied, .tokenFailed, .notLoggedIn:
+					Button("Please Sign In!") {
+						Cirrus.launchCloudSettings()
+					}
+					
+				case .failed(let error):
+					Text(error.localizedDescription)
+						.foregroundColor(Color.red)
+						.font(.caption)
+						.padding()
+						.multilineTextAlignment(.center)
 				}
 				
-			case .failed(let error):
-				Text(error.localizedDescription)
-					.foregroundColor(Color.red)
-					.font(.caption)
-					.padding()
-					.multilineTextAlignment(.center)
 			}
-			
-		}
-		.onReceive(Cirrus.Notifications.currentUserChanged.publisher()) { note in
-			previousUserID = note.object as? String ?? "None"
 		}
 	}
 }

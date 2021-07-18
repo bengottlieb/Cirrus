@@ -28,6 +28,16 @@ extension Cirrus {
 		Notification.Name.CKAccountChanged.publisher()
 			.sink() { _ in Task { if case .authenticated = self.state { try? await self.authenticate() }}}
 			.store(in: &cancelBag)
+		
+		Notification.Name.NSManagedObjectContextWillSave.publisher()
+			.sink() { note in
+				guard let context = note.object as? NSManagedObjectContext else { return }
+				let unsyncedObjects = context.unsyncedObjects.sorted { self.configuration.shouldEntity($0.entity, sortBefore: $1.entity) }
+				for unsynced in unsyncedObjects {
+					self.configuration.entityInfo(for: unsynced.entity)?.sync(object: unsynced)
+				}
+			}
+			.store(in: &cancelBag)
 	}
 	
 	public struct Configuration {
@@ -40,12 +50,21 @@ extension Cirrus {
 		public var syncedEntityNames: [String] = []
 		
 		public var importer: ManagedObjectImporter?
-		public var entities: [String: CirrusManagedObjectConfiguration]?
+		public var entities: [CirrusManagedObjectConfiguration]?
 		
-		func managedObjectInfo(for object: NSManagedObject) -> CirrusManagedObjectConfiguration? {
-			entities?.values.first { $0.entityDescription == object.entity }
+		func entityInfo(for entityDescription: NSEntityDescription?) -> CirrusManagedObjectConfiguration? {
+			entities?.first { $0.entityDescription == entityDescription }
+		}
+
+		func entityInfo(for recordType: CKRecord.RecordType) -> CirrusManagedObjectConfiguration? {
+			entities?.first { $0.recordType == recordType }
+		}
+		
+		func shouldEntity(_ first: NSEntityDescription, sortBefore second: NSEntityDescription) -> Bool {
+			let firstIndex = entities?.firstIndex { $0.entityName == first.name } ?? Int.max
+			let secondIndex = entities?.firstIndex { $0.entityName == second.name } ?? Int.max
+			
+			return firstIndex <= secondIndex
 		}
 	}
 }
-
-

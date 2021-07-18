@@ -7,7 +7,7 @@
 
 import CoreData
 
-class EmojiBadgeMO: NSManagedObject {
+class EmojiBadgeMO: SyncedManagedObject {
 	@NSManaged public var uuid: String
 	@NSManaged public var emoji: EmojiMO?
 	@NSManaged public var badge: BadgeMO?

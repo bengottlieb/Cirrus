@@ -83,6 +83,17 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 			}
 		}
 		
+		operation.fetchRecordZoneChangesResultBlock = { result in
+			switch result {
+			case .failure(let error):
+				Cirrus.instance.handleReceivedError(error)
+				self.errors.append(error)
+				
+			case .success:
+				self.isComplete = true
+			}
+		}
+		
 		database.add(operation)
 	}
 

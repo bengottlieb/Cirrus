@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19178.1" systemVersion="20F5046g" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Badge" representedClassName="BadgeMO" syncable="YES">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19178.1" systemVersion="20F71" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Badge" representedClassName=".BadgeMO" syncable="YES">
         <attribute name="content" optional="YES" attributeType="String"/>
         <attribute name="uuid" optional="YES" attributeType="String"/>
         <relationship name="emoji" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EmojiBadge" inverseName="badge" inverseEntity="EmojiBadge"/>
     </entity>
-    <entity name="Emoji" representedClassName="EmojiMO" syncable="YES">
-        <attribute name="content" optional="YES" attributeType="String"/>
+    <entity name="Emoji" representedClassName=".EmojiMO" syncable="YES">
+        <attribute name="emoji" optional="YES" attributeType="String"/>
         <attribute name="uuid" optional="YES" attributeType="String"/>
         <relationship name="badge" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EmojiBadge" inverseName="emoji" inverseEntity="EmojiBadge"/>
     </entity>
-    <entity name="EmojiBadge" representedClassName="EmojiBadgeMO" syncable="YES">
+    <entity name="EmojiBadge" representedClassName=".EmojiBadgeMO" syncable="YES">
         <attribute name="index" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String"/>
         <relationship name="badge" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Badge" inverseName="emoji" inverseEntity="Badge"/>
