@@ -12,25 +12,11 @@ open class SyncedManagedObject: NSManagedObject {
 	var isLoadingFromCloud = false
 	var changedKeys: Set<String> = []
 	
-	open override func setPrimitiveValue(_ value: Any?, forKey key: String) {
+	open override func didChangeValue(forKey key: String) {
 		if !isLoadingFromCloud, !changedKeys.contains(key) {
 			changedKeys.insert(key)
 		}
-		super.setPrimitiveValue(value, forKey: key)
-	}
-	
-	open override func setValue(_ value: Any?, forKey key: String) {
-		if !isLoadingFromCloud, !changedKeys.contains(key) {
-			changedKeys.insert(key)
-		}
-		super.setValue(value, forKey: key)
-	}
-	
-	open override func setValue(_ value: Any?, forKeyPath keyPath: String) {
-		if !isLoadingFromCloud, !changedKeys.contains(keyPath) {
-			changedKeys.insert(keyPath)
-		}
-		super.setValue(value, forKeyPath: keyPath)
+		super.didChangeValue(forKey: key)
 	}
 }
 
