@@ -15,10 +15,7 @@ struct EmojiListView: View {
 		ScrollView() {
 			VStack() {
 				ForEach(emoji) { emoji in
-					HStack() {
-						Text(emoji.emoji)
-						Spacer()
-					}
+					EmojiRow(emoji: emoji)
 					.padding(.horizontal)
 					.padding(.vertical, 4)
 				}

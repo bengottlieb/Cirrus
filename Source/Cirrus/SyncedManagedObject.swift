@@ -25,6 +25,13 @@ open class SyncedManagedObject: NSManagedObject {
 		}
 		super.setValue(value, forKey: key)
 	}
+	
+	open override func setValue(_ value: Any?, forKeyPath keyPath: String) {
+		if !isLoadingFromCloud, !changedKeys.contains(keyPath) {
+			changedKeys.insert(keyPath)
+		}
+		super.setValue(value, forKeyPath: keyPath)
+	}
 }
 
 extension SyncedManagedObject {

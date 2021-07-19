@@ -29,9 +29,9 @@ class DataStore {
 		
 		Notification.Name.NSManagedObjectContextDidSave.publisher()
 			.sink { note in
-				if let context = note.object as? NSManagedObjectContext, context.persistentStoreCoordinator == self.container.persistentStoreCoordinator, context != self.viewContext {
-					self.viewContext.perform {
-						self.viewContext.mergeChanges(fromContextDidSave: note)
+				if let context = note.object as? NSManagedObjectContext, context.persistentStoreCoordinator == self.container.persistentStoreCoordinator {
+					if context != self.viewContext {
+						self.viewContext.perform { self.viewContext.mergeChanges(fromContextDidSave: note) }
 					}
 				}
 			}
@@ -49,5 +49,16 @@ class DataStore {
 				await Cirrus.instance.configuration.importer?.finishImporting()
 			}
 		}
+	}
+	
+	func badge(with emoji: String) -> BadgeMO {
+		let predicate = NSPredicate(format: "content == %@", emoji)
+		if let found: BadgeMO = viewContext.fetchAny(matching: predicate) { return found }
+		
+		let badge: BadgeMO = viewContext.insertObject()
+		
+		badge.content = emoji
+		return badge
+		
 	}
 }

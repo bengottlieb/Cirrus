@@ -117,7 +117,6 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		
 	}
 	
-
 	public __consuming func makeAsyncIterator() -> RecordIterator {
 		RecordIterator(sequence: self)
 	}

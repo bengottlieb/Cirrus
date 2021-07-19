@@ -7,10 +7,13 @@
 
 import CoreData
 
-class BadgeMO: SyncedManagedObject {
+class BadgeMO: SyncedManagedObject, Identifiable {
 	@NSManaged public var uuid: String
-	@NSManaged public var emoji: EmojiBadgeMO?
-	
+	@NSManaged public var emojis: Set<EmojiBadgeMO>?
+	@NSManaged public var content: String
+
+	var id: String { uuid }
+
 	override func awakeFromInsert() {
 		self.uuid = UUID().uuidString
 	}

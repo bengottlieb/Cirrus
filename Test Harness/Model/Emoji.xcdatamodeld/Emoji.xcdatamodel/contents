@@ -3,18 +3,18 @@
     <entity name="Badge" representedClassName=".BadgeMO" syncable="YES">
         <attribute name="content" optional="YES" attributeType="String"/>
         <attribute name="uuid" optional="YES" attributeType="String"/>
-        <relationship name="emoji" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EmojiBadge" inverseName="badge" inverseEntity="EmojiBadge"/>
+        <relationship name="emojis" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EmojiBadge" inverseName="badge" inverseEntity="EmojiBadge"/>
     </entity>
     <entity name="Emoji" representedClassName=".EmojiMO" syncable="YES">
         <attribute name="emoji" optional="YES" attributeType="String"/>
         <attribute name="uuid" optional="YES" attributeType="String"/>
-        <relationship name="badge" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EmojiBadge" inverseName="emoji" inverseEntity="EmojiBadge"/>
+        <relationship name="badges" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="EmojiBadge" inverseName="emoji" inverseEntity="EmojiBadge"/>
     </entity>
     <entity name="EmojiBadge" representedClassName=".EmojiBadgeMO" syncable="YES">
         <attribute name="index" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String"/>
-        <relationship name="badge" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Badge" inverseName="emoji" inverseEntity="Badge"/>
-        <relationship name="emoji" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Emoji" inverseName="badge" inverseEntity="Emoji"/>
+        <relationship name="badge" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Badge" inverseName="emojis" inverseEntity="Badge"/>
+        <relationship name="emoji" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Emoji" inverseName="badges" inverseEntity="Emoji"/>
     </entity>
     <elements>
         <element name="Badge" positionX="-54" positionY="-9" width="128" height="74"/>
