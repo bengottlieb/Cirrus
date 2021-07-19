@@ -34,7 +34,7 @@ extension Cirrus {
 	
 	func setupZones() async throws {
 		zones = Dictionary(uniqueKeysWithValues: configuration.zoneNames.map { ($0, CKRecordZone(zoneName: $0)) })
-
+		if let defaultZone = configuration.defaultZoneName { self.defaultRecordZone = zones[defaultZone] }
 		if self.localState.lastCreatedZoneNamesList == configuration.zoneNames { return }
 		let op = CKModifyRecordZonesOperation(recordZonesToSave: Array(zones.values), recordZoneIDsToDelete: nil)
 		

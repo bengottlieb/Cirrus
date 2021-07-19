@@ -10,11 +10,15 @@ import CloudKit
 
 struct Emoji: CKRecordSeed {
 	var recordID: CKRecord.ID? { CKRecord.ID(recordName: emoji, zoneID: Cirrus.instance.zones["emoji"]!.zoneID) }
+	var recordZone: CKRecordZone? { Cirrus.instance.zone(named: "emoji") }
+	var parentRelationshipName: String? { nil }
+	var savedRelationshipNames: [String] { [] }
 	
 	var recordType: CKRecord.RecordType { "emoji" }
 	
 	var savedFieldNames: [String] { ["emoji"] }
 	
+	func reference(for name: String, action: CKRecord.ReferenceAction = .none) -> CKRecord.Reference? { nil }
 	subscript(key: String) -> CKRecordValue? {
 		switch key {
 		case "emoji": return emoji as CKRecordValue

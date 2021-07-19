@@ -13,7 +13,9 @@ public protocol CirrusManagedObjectConfiguration {
 	var recordType: CKRecord.RecordType { get }
 	var entityDescription: NSEntityDescription { get }
 	var idField: String { get }
-	
+	var parentKey: String? { get }
+	var pertinentRelationships: [String] { get }
+
 	func record(with id: CKRecord.ID, in context: NSManagedObjectContext) -> SyncedManagedObject?
 	func sync(object: SyncedManagedObject)
 }

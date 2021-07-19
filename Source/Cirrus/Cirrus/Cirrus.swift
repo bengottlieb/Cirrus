@@ -18,6 +18,7 @@ public class Cirrus: ObservableObject {
 
 	public var container: CKContainer!
 	public var zones: [String: CKRecordZone] = [:]
+	public var defaultRecordZone: CKRecordZone?
 
 	public func zone(named name: String) -> CKRecordZone? {
 		zones[name]

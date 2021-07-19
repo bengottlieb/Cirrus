@@ -16,6 +16,7 @@ extension Cirrus {
 		
 		public var containerIdentifer: String
 		public var zoneNames: [String] = []
+		public var defaultZoneName: String?
 		
 		public var managedObjectIDField: String?
 		public var syncedEntityNames: [String] = []

@@ -10,11 +10,15 @@ import CloudKit
 
 struct Flag: CKRecordSeed {
 	var recordID: CKRecord.ID? { CKRecord.ID(recordName: country, zoneID: Cirrus.instance.zones["Flags"]!.zoneID) }
-	
+	var recordZone: CKRecordZone? { Cirrus.instance.zone(named: "flags") }
+	var parentRelationshipName: String? { nil }
+	var savedRelationshipNames: [String] { [] }
+
 	var recordType: CKRecord.RecordType { "flag" }
 	
 	var savedFieldNames: [String] { ["country", "emoji"] }
 	
+	func reference(for name: String, action: CKRecord.ReferenceAction = .none) -> CKRecord.Reference? { nil }
 	subscript(key: String) -> CKRecordValue? {
 		switch key {
 		case "country": return country as CKRecordValue

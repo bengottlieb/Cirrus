@@ -31,9 +31,12 @@ extension Cirrus {
 		Notification.Name.NSManagedObjectContextWillSave.publisher()
 			.sink() { note in
 				guard let context = note.object as? NSManagedObjectContext else { return }
-				let unsyncedObjects = context.unsyncedObjects.sorted { self.configuration.shouldEntity($0.entity, sortBefore: $1.entity) }
-				for unsynced in unsyncedObjects {
-					self.configuration.entityInfo(for: unsynced.entity)?.sync(object: unsynced)
+				Task {
+					do {
+						try await self.syncContext(context)
+					} catch {
+						logg(error: error, "Error when syncing")
+					}
 				}
 			}
 			.store(in: &cancelBag)

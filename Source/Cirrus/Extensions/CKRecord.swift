@@ -8,13 +8,6 @@
 import Suite
 import CloudKit
 
-public protocol CKRecordSeed {
-	var recordID: CKRecord.ID? { get }
-	var recordType: CKRecord.RecordType { get }
-	var savedFieldNames: [String] { get }
-	subscript(key: String) -> CKRecordValue? { get }
-}
-
 public extension CKRecord {
 	convenience init?(_ seed: CKRecordSeed) {
 		guard let id = seed.recordID else {
@@ -25,6 +18,16 @@ public extension CKRecord {
 		self.init(recordType: seed.recordType, recordID: id)
 		for name in seed.savedFieldNames {
 			self[name] = seed[name]
+		}
+		
+		if let parentKey = seed.parentRelationshipName, let parent = seed.reference(for: parentKey, action: .none) {
+			self.parent = parent
+		}
+		
+		for key in seed.savedRelationshipNames {
+			if let reference = seed.reference(for: key, action: .none) {
+				self[key] = reference
+			}
 		}
 	}
 	

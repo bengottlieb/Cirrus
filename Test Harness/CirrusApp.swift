@@ -23,7 +23,7 @@ func addEmoji() async {
 
 @main
 struct CirrusApp: App {
-	var configuration = Cirrus.Configuration(containerIdentifer: "iCloud.con.standalone.cloudkittesting", zoneNames: ["emoji"])
+	var configuration = Cirrus.Configuration(containerIdentifer: "iCloud.con.standalone.cloudkittesting", zoneNames: ["emoji"], defaultZoneName: "emoji")
 	let dataStore = DataStore.instance
 	
 	init() {
