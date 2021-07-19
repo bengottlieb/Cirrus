@@ -45,6 +45,18 @@ public struct SimpleManagedObject: CirrusManagedObjectConfiguration {
 	}
 	
 	public func sync(object: SyncedManagedObject) {
+		guard let record = CKRecord(object) else {
+			print("Failed to create a CKRecord")
+			return
+		}
 		
+		Task() {
+			do {
+				try await object.database.save(record: record)
+			} catch {
+				print((error as NSError).userInfo)
+				print("Failed to save \(record.recordType): \(error)")
+			}
+		}
 	}
 }

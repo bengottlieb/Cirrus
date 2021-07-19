@@ -18,6 +18,8 @@ open class SyncedManagedObject: NSManagedObject {
 		}
 		super.didChangeValue(forKey: key)
 	}
+	
+	open var database: CKDatabase { Cirrus.instance.container.privateCloudDatabase }
 }
 
 extension SyncedManagedObject {
@@ -48,6 +50,10 @@ extension SyncedManagedObject: CKRecordSeed {
 		return CKRecord.ID(recordName: id)
 	}
 	
-	public var recordType: CKRecord.RecordType { entity.name! }
-	public var savedFieldNames: [String] { [] }
+	public var recordType: CKRecord.RecordType {
+		guard let info = Cirrus.instance.configuration.entityInfo(for: entity) else { return entity.name! }
+		return info.recordType
+	}
+
+	public var savedFieldNames: [String] { Array(entity.attributesByName.keys) }
 }
