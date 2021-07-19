@@ -38,6 +38,11 @@ extension SyncedManagedObject {
 				self.setValue(cloudKitRecord[key], forKey: key)
 			}
 		}
+		
+		if let parent = cloudKitRecord.parent, let parentKey = Cirrus.instance.configuration.entityInfo(for: entity)?.parentKey {
+			connector.connect(reference: parent, to: self, key: parentKey)
+		}
+		
 		isLoadingFromCloud = false
 	}
 }
