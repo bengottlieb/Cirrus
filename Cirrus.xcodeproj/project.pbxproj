@@ -30,6 +30,8 @@
 		B57A735E26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */; };
 		B57A736026A58D0C001FD4F7 /* CKRecordSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57A735F26A58D0C001FD4F7 /* CKRecordSeed.swift */; };
 		B57A736226A59850001FD4F7 /* Cirrus+Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57A736126A59850001FD4F7 /* Cirrus+Sync.swift */; };
+		B592C12526A64E0A00BEDD20 /* PendingDeletions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B592C12426A64E0A00BEDD20 /* PendingDeletions.swift */; };
+		B592C12726A64F9E00BEDD20 /* CKRecord.ID.swift in Sources */ = {isa = PBXBuildFile; fileRef = B592C12626A64F9E00BEDD20 /* CKRecord.ID.swift */; };
 		B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */; };
 		B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */; };
 		B5B0960F26A2E08B0096EF93 /* Cirrus.UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */; };
@@ -74,6 +76,8 @@
 		B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncZoneChangesSequence.swift; sourceTree = "<group>"; };
 		B57A735F26A58D0C001FD4F7 /* CKRecordSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKRecordSeed.swift; sourceTree = "<group>"; };
 		B57A736126A59850001FD4F7 /* Cirrus+Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cirrus+Sync.swift"; sourceTree = "<group>"; };
+		B592C12426A64E0A00BEDD20 /* PendingDeletions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingDeletions.swift; sourceTree = "<group>"; };
+		B592C12626A64F9E00BEDD20 /* CKRecord.ID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKRecord.ID.swift; sourceTree = "<group>"; };
 		B5B0960A26A2DEF80096EF93 /* Cirrus.LocalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.LocalState.swift; sourceTree = "<group>"; };
 		B5B0960C26A2DFFB0096EF93 /* Cirrus.Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Notifications.swift; sourceTree = "<group>"; };
 		B5B0960E26A2E08B0096EF93 /* Cirrus.UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.UserData.swift; sourceTree = "<group>"; };
@@ -163,6 +167,7 @@
 				B5B0961326A2E21E0096EF93 /* Cirrus */,
 				B5B0961226A2E2140096EF93 /* Extensions */,
 				B5373DAB26A3324500F6A15C /* ConflictResolver.swift */,
+				B592C12426A64E0A00BEDD20 /* PendingDeletions.swift */,
 				B565D13226A3C34700F0C395 /* AsyncRecordSequence.swift */,
 				B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */,
 				B5E6DE5026A4556300856E8C /* ManagedObjectImporter.swift */,
@@ -190,6 +195,7 @@
 				B5373DB126A36AC200F6A15C /* URL.swift */,
 				B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */,
 				B565D13826A49CE100F0C395 /* NSManagedObjectContext.swift */,
+				B592C12626A64F9E00BEDD20 /* CKRecord.ID.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -315,10 +321,12 @@
 				B57A735E26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift in Sources */,
 				B565D13526A47FFF00F0C395 /* ReferenceConnector.swift in Sources */,
 				B5373DAE26A34F2E00F6A15C /* Cirrus.Errors.swift in Sources */,
+				B592C12726A64F9E00BEDD20 /* CKRecord.ID.swift in Sources */,
 				B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */,
 				B5B0961126A2E2100096EF93 /* CKDatabase.swift in Sources */,
 				B52104A826A257F5008ABEF4 /* Cirrus.swift in Sources */,
 				B5373DB226A36AC200F6A15C /* URL.swift in Sources */,
+				B592C12526A64E0A00BEDD20 /* PendingDeletions.swift in Sources */,
 				B5E6DE5526A4658600856E8C /* Emoji.swift in Sources */,
 				B521049C26A256C6008ABEF4 /* ContentView.swift in Sources */,
 				B5E6DE4926A44B1C00856E8C /* EmojiBadgeMO.swift in Sources */,

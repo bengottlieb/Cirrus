@@ -18,7 +18,8 @@ extension Cirrus {
 		public var zoneNames: [String] = []
 		public var defaultZoneName: String?
 		
-		public var idField = ""
+		public var idField = "cirrus_uuid"
+		public var statusField = "cirrus_status"
 		public var managedObjectIDField: String?
 		public var syncedEntityNames: [String] = []
 

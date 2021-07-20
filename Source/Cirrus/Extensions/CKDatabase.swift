@@ -77,3 +77,15 @@ public extension CKDatabase {
 		}
 	}
 }
+
+extension CKDatabase.Scope: Codable {
+	var database: CKDatabase {
+		switch self {
+		case .private: return Cirrus.instance.container.privateCloudDatabase
+		case .public: return Cirrus.instance.container.publicCloudDatabase
+		case .shared: return Cirrus.instance.container.sharedCloudDatabase
+		default: return Cirrus.instance.container.privateCloudDatabase
+		}
+	}
+
+}

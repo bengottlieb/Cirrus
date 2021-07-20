@@ -23,7 +23,11 @@ public class Cirrus: ObservableObject {
 	public func zone(named name: String) -> CKRecordZone? {
 		zones[name]
 	}
-	
+
+	public func zone(withID id: CKRecordZone.ID) -> CKRecordZone? {
+		zones.values.first { $0.zoneID == id }
+	}
+
 	internal var cancelBag = Set<AnyCancellable>()
 	@FileBackedCodable(url: .library(named: "cirrus.local.dat"), initialValue: LocalState()) var localState
 }
