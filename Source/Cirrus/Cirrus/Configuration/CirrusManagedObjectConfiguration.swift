@@ -12,7 +12,6 @@ import CloudKit
 public protocol CirrusManagedObjectConfiguration {
 	var recordType: CKRecord.RecordType { get }
 	var entityDescription: NSEntityDescription { get }
-	var idField: String { get }
 	var parentKey: String? { get }
 	var pertinentRelationships: [String] { get }
 
@@ -27,14 +26,12 @@ extension CirrusManagedObjectConfiguration {
 public struct SimpleManagedObject: CirrusManagedObjectConfiguration {
 	public let recordType: CKRecord.RecordType
 	public let entityDescription: NSEntityDescription
-	public let idField: String
 	public let parentKey: String?
 	public let pertinentRelationships: [String]
 	let entityName: String
 	
-	init(recordType: CKRecord.RecordType, entityName: String, idField: String, parent: String? = nil, pertinent: [String] = [], in context: NSManagedObjectContext) {
+	init(recordType: CKRecord.RecordType, entityName: String, parent: String? = nil, pertinent: [String] = [], in context: NSManagedObjectContext) {
 		self.recordType = recordType
-		self.idField = idField
 		self.entityName = entityName
 		self.entityDescription = context.persistentStoreCoordinator!.managedObjectModel.entitiesByName[entityName]!
 		self.parentKey = parent
@@ -42,7 +39,7 @@ public struct SimpleManagedObject: CirrusManagedObjectConfiguration {
 	}
 	
 	public func record(with id: CKRecord.ID, in context: NSManagedObjectContext) -> SyncedManagedObject? {
-		let pred = NSPredicate(format: "\(idField) == %@", id.recordName)
+		let pred = NSPredicate(format: "\(Cirrus.instance.configuration.idField) == %@", id.recordName)
 		return context.fetchAny(named: entityName, matching: pred) as? SyncedManagedObject
 	}
 	

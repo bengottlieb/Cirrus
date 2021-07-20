@@ -8,15 +8,20 @@
 import CoreData
 import CloudKit
 
-open class SyncedManagedObject: NSManagedObject {
-	var isLoadingFromCloud = false
+open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
+	var isLoadingFromCloud = 0
 	var changedKeys: Set<String> = []
 	
 	open override func didChangeValue(forKey key: String) {
-		if !isLoadingFromCloud, !changedKeys.contains(key) {
+		if isLoadingFromCloud == 0, !changedKeys.contains(key), key != Cirrus.instance.configuration.idField {
 			changedKeys.insert(key)
 		}
 		super.didChangeValue(forKey: key)
+	}
+
+	open override func validateForDelete() throws {
+		try super.validateForDelete()
+		print("Deleting")
 	}
 	
 	open var database: CKDatabase { Cirrus.instance.container.privateCloudDatabase }
@@ -28,7 +33,7 @@ open class SyncedManagedObject: NSManagedObject {
 
 extension SyncedManagedObject {
 	func load(cloudKitRecord: CKRecord, using connector: ReferenceConnector) throws {
-		isLoadingFromCloud = true
+		isLoadingFromCloud += 1
 		for key in cloudKitRecord.allKeys() {
 			let value = cloudKitRecord[key]
 			
@@ -43,19 +48,17 @@ extension SyncedManagedObject {
 			connector.connect(reference: parent, to: self, key: parentKey)
 		}
 		
-		isLoadingFromCloud = false
+		isLoadingFromCloud -= 1
 	}
 }
 
-extension SyncedManagedObject: CKRecordSeed {
+extension SyncedManagedObject {
 	public subscript(key: String) -> CKRecordValue? {
 		self.value(forKey: key) as? CKRecordValue
 	}
 	
 	public var recordID: CKRecord.ID? {
-		guard let info = Cirrus.instance.configuration.entityInfo(for: entity) else { return nil }
-
-		guard let id = self.value(forKey: info.idField) as? String else { return nil }
+		guard let id = self.value(forKey: Cirrus.instance.configuration.idField) as? String else { return nil }
 		if let zone = self.recordZone { return CKRecord.ID(recordName: id, zoneID: zone.zoneID) }
 		return CKRecord.ID(recordName: id)
 	}

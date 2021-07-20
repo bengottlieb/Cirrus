@@ -25,7 +25,19 @@ public extension CKDatabase {
 		return seq
 	}
 	
-	func save(records: [CKRecord], atomically: Bool = true, conflictResolver: ConflictResolver = ConflictResolverNewerWins()) async throws {
+	func delete(recordIDs: [CKRecord.ID]?) async throws {
+		guard let ids = recordIDs, ids.isNotEmpty else { return }
+		let op = CKModifyRecordsOperation(recordIDsToDelete: recordIDs)
+		do {
+			try await op.delete(from: self)
+		} catch {
+			await Cirrus.instance.handleReceivedError(error)
+			throw error
+		}
+	}
+	
+	func save(records: [CKRecord]?, atomically: Bool = true, conflictResolver: ConflictResolver = ConflictResolverNewerWins()) async throws {
+		guard let records = records, records.isNotEmpty else { return }
 		let op = CKModifyRecordsOperation(recordsToSave: records)
 		do {
 			try await op.save(in: self)

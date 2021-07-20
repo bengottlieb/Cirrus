@@ -18,9 +18,10 @@ extension Cirrus {
 		public var zoneNames: [String] = []
 		public var defaultZoneName: String?
 		
+		public var idField = ""
 		public var managedObjectIDField: String?
 		public var syncedEntityNames: [String] = []
-		
+
 		public var importer: ManagedObjectImporter?
 		public var entities: [CirrusManagedObjectConfiguration]?
 	}

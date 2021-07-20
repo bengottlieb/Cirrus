@@ -28,11 +28,12 @@ struct CirrusApp: App {
 	
 	init() {
 		let context = dataStore.importContext
+		configuration.idField = "uuid"
 		configuration.importer = SimpleObjectImporter(context: context)
 		configuration.entities = [
-			SimpleManagedObject(recordType: "emoji", entityName: "Emoji", idField: "uuid", in: context),
-			SimpleManagedObject(recordType: "badge", entityName: "Badge", idField: "uuid", in: context),
-			SimpleManagedObject(recordType: "emojiBadge", entityName: "EmojiBadge", idField: "uuid", parent: "emoji", pertinent: ["badge"], in: context),
+			SimpleManagedObject(recordType: "emoji", entityName: "Emoji", in: context),
+			SimpleManagedObject(recordType: "badge", entityName: "Badge", in: context),
+			SimpleManagedObject(recordType: "emojiBadge", entityName: "EmojiBadge", parent: "emoji", pertinent: ["badge"], in: context),
 		]
 		
 		Cirrus.configure(with: configuration)

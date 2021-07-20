@@ -41,6 +41,7 @@ public class ReferenceConnector {
 		else { return false }
 		
 		if let connected = info.record(with: reference.recordID, in: context) {
+			target.isLoadingFromCloud += 1
 			if relationship.isToMany {
 				let current = target.value(forKey: key) as? NSMutableSet ?? NSMutableSet()
 				current.add(connected)
@@ -48,6 +49,7 @@ public class ReferenceConnector {
 			} else {
 				target.setValue(connected, forKey: key)
 			}
+			target.isLoadingFromCloud -= 1
 			return true
 		}
 		return false

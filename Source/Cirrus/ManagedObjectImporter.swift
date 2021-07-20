@@ -32,6 +32,7 @@ public class SimpleObjectImporter: ManagedObjectImporter {
 	public func process(change: CKRecordChange) async {
 		guard let info = await Cirrus.instance.configuration.entityInfo(for: change.recordType) else { return }
 		
+		let idField = await Cirrus.instance.configuration.idField
 		do {
 			switch change {
 			case .changed(let id, let record):
@@ -40,7 +41,7 @@ public class SimpleObjectImporter: ManagedObjectImporter {
 						try object.load(cloudKitRecord: record, using: self.connector)
 					} else {
 						let object = self.context.insertEntity(named: info.entityDescription.name!) as! SyncedManagedObject
-						object.setValue(id.recordName, forKey: info.idField)
+						object.setValue(id.recordName, forKey: idField)
 						try object.load(cloudKitRecord: record, using: self.connector)
 					}
 				}

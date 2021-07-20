@@ -16,7 +16,9 @@ struct EmojiRow: View {
 			 Spacer()
 			 
 			 ForEach(Array(emoji.badges ?? [])) { emojiBadge in
-				 Text(emojiBadge.badge?.content ?? "-")
+				 Button(action: { deleteBadge(emojiBadge) }) {
+					 Text(emojiBadge.badge?.content ?? "-")
+				 }
 			 }
 			 
 			 Button(action: addBadge) {
@@ -25,13 +27,21 @@ struct EmojiRow: View {
 		 }
     }
 	
+	func deleteBadge(_ emojiBadge: EmojiBadgeMO) {
+		emojiBadge.deleteFromContext()
+		save()
+	}
+	
 	func addBadge() {
 		let badgeEmoji = Emoji.random()
 		
 		let badge = DataStore.instance.badge(with: badgeEmoji)
 		badge.content = badgeEmoji
 		emoji.add(badge: badge)
-		
+		save()
+	}
+	
+	func save() {
 		do {
 			try emoji.managedObjectContext?.save()
 		} catch {
