@@ -31,12 +31,8 @@ extension Cirrus {
 		Notification.Name.NSManagedObjectContextWillSave.publisher()
 			.sink() { note in
 				guard let context = note.object as? NSManagedObjectContext else { return }
-				Task {
-					do {
-						try await self.updateChanges(in: context)
-					} catch {
-						logg(error: error, "Error when syncing")
-					}
+				context.performAndWait {
+					self.updateChanges(in: context)
 				}
 			}
 			.store(in: &cancelBag)

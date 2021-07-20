@@ -24,6 +24,8 @@ extension ConflictResolver {
 				} else {
 					resolvedRecords[index] = resolve(local: resolvedRecords[index], remote: remote)
 				}
+				
+			case CKError.batchRequestFailed: break
 			default: return nil
 			}
 		}

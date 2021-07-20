@@ -10,7 +10,7 @@ import CoreData
 import Suite
 
 extension Cirrus {
-	func updateChanges(in context: NSManagedObjectContext) async throws {
+	func updateChanges(in context: NSManagedObjectContext) {
 		let unsyncedObjects = context.recentlyChangedObjects.sorted { self.configuration.shouldEntity($0.entity, sortBefore: $1.entity) }
 		let deletedObjects = context.recentlyDeletedObjects
 		
@@ -22,11 +22,6 @@ extension Cirrus {
 			for object in unsyncedObjects {
 				object.cirrusRecordStatus = .hasLocalChanges
 				object.cirruschangedKeys = []
-			}
-			do {
-				try context.save()
-			} catch {
-				logg(error: error, "Failed to save context after clearing changed keys")
 			}
 		}
 		

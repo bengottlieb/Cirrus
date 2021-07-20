@@ -24,7 +24,9 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
 	
 	var cirrusRecordStatus: RecordStatusFlags {
 		get { RecordStatusFlags(rawValue: self.value(forKey: Cirrus.instance.configuration.statusField) as? Int32 ?? 0) }
-		set { self.setValue(newValue.rawValue, forKey: Cirrus.instance.configuration.statusField) }
+		set {
+			self.setValue(newValue.rawValue, forKey: Cirrus.instance.configuration.statusField)
+		}
 	}
 	
 	open override func didChangeValue(forKey key: String) {
@@ -32,11 +34,6 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
 			cirruschangedKeys.insert(key)
 		}
 		super.didChangeValue(forKey: key)
-	}
-
-	open override func validateForDelete() throws {
-		try super.validateForDelete()
-		print("Deleting")
 	}
 	
 	open var database: CKDatabase { Cirrus.instance.container.privateCloudDatabase }
@@ -49,7 +46,9 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
 extension SyncedManagedObject {
 	func load(cloudKitRecord: CKRecord, using connector: ReferenceConnector) throws {
 		isLoadingFromCloud += 1
+		let statusFieldKey = Cirrus.instance.configuration.statusField
 		for key in cloudKitRecord.allKeys() {
+			if key == statusFieldKey { continue }
 			let value = cloudKitRecord[key]
 			
 			if let ref = value as? CKRecord.Reference {
