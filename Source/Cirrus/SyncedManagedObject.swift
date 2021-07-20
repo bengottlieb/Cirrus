@@ -8,13 +8,28 @@
 import CoreData
 import CloudKit
 
+extension SyncedManagedObject {
+	public struct RecordStatusFlags: OptionSet {
+		public let rawValue: Int32
+
+		public init(rawValue: Int32) { self.rawValue = rawValue }
+		public static let hasLocalChanges    = RecordStatusFlags(rawValue: 1 << 0)
+
+	}
+}
+
 open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
 	var isLoadingFromCloud = 0
-	var changedKeys: Set<String> = []
+	var cirruschangedKeys: Set<String> = []
+	
+	var cirrusRecordStatus: RecordStatusFlags {
+		get { RecordStatusFlags(rawValue: self.value(forKey: Cirrus.instance.configuration.statusField) as? Int32 ?? 0) }
+		set { self.setValue(newValue.rawValue, forKey: Cirrus.instance.configuration.statusField) }
+	}
 	
 	open override func didChangeValue(forKey key: String) {
-		if isLoadingFromCloud == 0, !changedKeys.contains(key), key != Cirrus.instance.configuration.idField {
-			changedKeys.insert(key)
+		if isLoadingFromCloud == 0, !cirruschangedKeys.contains(key), key != Cirrus.instance.configuration.idField, key != Cirrus.instance.configuration.statusField {
+			cirruschangedKeys.insert(key)
 		}
 		super.didChangeValue(forKey: key)
 	}

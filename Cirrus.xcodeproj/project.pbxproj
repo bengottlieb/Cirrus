@@ -42,7 +42,7 @@
 		B5E6DE4926A44B1C00856E8C /* EmojiBadgeMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4826A44B1C00856E8C /* EmojiBadgeMO.swift */; };
 		B5E6DE4B26A44DF500856E8C /* CirrusManagedObjectConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4A26A44DF500856E8C /* CirrusManagedObjectConfiguration.swift */; };
 		B5E6DE4F26A4529700856E8C /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4E26A4529700856E8C /* DataStore.swift */; };
-		B5E6DE5126A4556300856E8C /* ManagedObjectImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE5026A4556300856E8C /* ManagedObjectImporter.swift */; };
+		B5E6DE5126A4556300856E8C /* ManagedObjectSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE5026A4556300856E8C /* ManagedObjectSynchronizer.swift */; };
 		B5E6DE5526A4658600856E8C /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE5426A4658600856E8C /* Emoji.swift */; };
 		B5F664C326A2E45D00B49AC7 /* CKModifyRecordsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */; };
 		B5F664C526A2E75800B49AC7 /* CKRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F664C426A2E75800B49AC7 /* CKRecord.swift */; };
@@ -88,7 +88,7 @@
 		B5E6DE4826A44B1C00856E8C /* EmojiBadgeMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiBadgeMO.swift; sourceTree = "<group>"; };
 		B5E6DE4A26A44DF500856E8C /* CirrusManagedObjectConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirrusManagedObjectConfiguration.swift; sourceTree = "<group>"; };
 		B5E6DE4E26A4529700856E8C /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
-		B5E6DE5026A4556300856E8C /* ManagedObjectImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectImporter.swift; sourceTree = "<group>"; };
+		B5E6DE5026A4556300856E8C /* ManagedObjectSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectSynchronizer.swift; sourceTree = "<group>"; };
 		B5E6DE5426A4658600856E8C /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKModifyRecordsOperation.swift; sourceTree = "<group>"; };
 		B5F664C426A2E75800B49AC7 /* CKRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKRecord.swift; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 				B592C12426A64E0A00BEDD20 /* PendingDeletions.swift */,
 				B565D13226A3C34700F0C395 /* AsyncRecordSequence.swift */,
 				B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */,
-				B5E6DE5026A4556300856E8C /* ManagedObjectImporter.swift */,
+				B5E6DE5026A4556300856E8C /* ManagedObjectSynchronizer.swift */,
 				B565D13426A47FFF00F0C395 /* ReferenceConnector.swift */,
 				B565D13626A4948600F0C395 /* SyncedManagedObject.swift */,
 			);
@@ -190,12 +190,12 @@
 			children = (
 				B5B0961026A2E2100096EF93 /* CKDatabase.swift */,
 				B5F664C426A2E75800B49AC7 /* CKRecord.swift */,
+				B592C12626A64F9E00BEDD20 /* CKRecord.ID.swift */,
 				B57A735F26A58D0C001FD4F7 /* CKRecordSeed.swift */,
 				B5373DAF26A36A4B00F6A15C /* CKRecordValue.swift */,
 				B5373DB126A36AC200F6A15C /* URL.swift */,
 				B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */,
 				B565D13826A49CE100F0C395 /* NSManagedObjectContext.swift */,
-				B592C12626A64F9E00BEDD20 /* CKRecord.ID.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -317,7 +317,7 @@
 				B5B0960B26A2DEF80096EF93 /* Cirrus.LocalState.swift in Sources */,
 				B5373DAC26A3324500F6A15C /* ConflictResolver.swift in Sources */,
 				B565D13326A3C34700F0C395 /* AsyncRecordSequence.swift in Sources */,
-				B5E6DE5126A4556300856E8C /* ManagedObjectImporter.swift in Sources */,
+				B5E6DE5126A4556300856E8C /* ManagedObjectSynchronizer.swift in Sources */,
 				B57A735E26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift in Sources */,
 				B565D13526A47FFF00F0C395 /* ReferenceConnector.swift in Sources */,
 				B5373DAE26A34F2E00F6A15C /* Cirrus.Errors.swift in Sources */,

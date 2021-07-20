@@ -8,8 +8,8 @@
 import CoreData
 
 extension NSManagedObjectContext {
-	var unsyncedObjects: [SyncedManagedObject] {
-		registeredObjects.compactMap { $0 as? SyncedManagedObject }.filter { $0.changedKeys.isNotEmpty }
+	var recentlyChangedObjects: [SyncedManagedObject] {
+		registeredObjects.compactMap { $0 as? SyncedManagedObject }.filter { $0.cirruschangedKeys.isNotEmpty }
 	}
 	
 	var recentlyDeletedObjects: [SyncedManagedObject] {
@@ -18,7 +18,11 @@ extension NSManagedObjectContext {
 	
 	func clearUnsynced(_ objects: [SyncedManagedObject]) {
 		objects.forEach { obj in
-			obj.changedKeys = []
+			obj.cirruschangedKeys = []
 		}
+	}
+	
+	func changedRecords(named name: String) -> [SyncedManagedObject] {
+		fetchAll(named: name, matching: NSPredicate(format: "\(Cirrus.instance.configuration.statusField) != 0")) as? [SyncedManagedObject] ?? []
 	}
 }

@@ -87,5 +87,7 @@ extension CKDatabase.Scope: Codable {
 		default: return Cirrus.instance.container.privateCloudDatabase
 		}
 	}
-
+	static var allScopes: [CKDatabase.Scope] {
+		[.private, .public, .shared]
+	}
 }

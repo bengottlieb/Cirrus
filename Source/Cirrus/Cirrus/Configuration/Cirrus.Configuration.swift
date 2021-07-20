@@ -18,12 +18,11 @@ extension Cirrus {
 		public var zoneNames: [String] = []
 		public var defaultZoneName: String?
 		
-		public var idField = "cirrus_uuid"
-		public var statusField = "cirrus_status"
-		public var managedObjectIDField: String?
+		public var idField = "cirrus_uuid"					// every syncableManagedObject should have a string field with this name, used to generate the CKRecord.ID for that object
+		public var statusField = "cirrus_status"			// also, it should have an Int32 field with this name, which contains the record's sync status
 		public var syncedEntityNames: [String] = []
 
-		public var importer: ManagedObjectImporter?
+		public var synchronizer: ManagedObjectSynchronizer?
 		public var entities: [CirrusManagedObjectConfiguration]?
 	}
 }

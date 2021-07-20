@@ -33,7 +33,7 @@ extension Cirrus {
 				guard let context = note.object as? NSManagedObjectContext else { return }
 				Task {
 					do {
-						try await self.syncContext(context)
+						try await self.updateChanges(in: context)
 					} catch {
 						logg(error: error, "Error when syncing")
 					}

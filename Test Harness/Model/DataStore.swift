@@ -44,9 +44,9 @@ class DataStore {
 			do {
 				for try await change in await Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs) {
 					
-					await Cirrus.instance.configuration.importer?.process(change: change)
+					await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change)
 				}
-				await Cirrus.instance.configuration.importer?.finishImporting()
+				await Cirrus.instance.configuration.synchronizer?.finishImporting()
 			}
 		}
 	}
