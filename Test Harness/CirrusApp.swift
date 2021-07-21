@@ -7,6 +7,7 @@
 
 import Suite
 import CloudKit
+import SwiftUI
 
 
 func addEmoji() async {
@@ -23,6 +24,7 @@ func addEmoji() async {
 
 @main
 struct CirrusApp: App {
+	@UIApplicationDelegateAdaptor(LegacyAppDelegate.self) var appDelegate
 	var configuration = Cirrus.Configuration(containerIdentifer: "iCloud.con.standalone.cloudkittesting", zoneNames: ["emoji"], defaultZoneName: "emoji")
 	let dataStore = DataStore.instance
 	
@@ -37,6 +39,9 @@ struct CirrusApp: App {
 		]
 		
 		Cirrus.configure(with: configuration)
+		Task() {
+			await Cirrus.instance.container.privateCloudDatabase.setupSubscriptions([.init()])
+		}
 		
 		Cirrus.Notifications.userSignedIn.publisher()
 			.eraseToAnyPublisher()
