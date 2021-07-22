@@ -19,6 +19,12 @@ struct EmojiListView: View {
 					.padding(.horizontal)
 					.padding(.vertical, 4)
 				}
+				
+				Button("Clear All") {
+					Task() {
+						try? await Cirrus.instance.container.privateCloudDatabase.deleteAll(from: ["emoji", "emojiBadge", "badge"], in: Cirrus.instance.zone(named: "emoji"))
+					}
+				}
 			}
 		}
 		.navigationTitle("Emoji")

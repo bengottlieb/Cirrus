@@ -12,7 +12,7 @@ struct EmojiRow: View {
 	
     var body: some View {
 		 HStack() {
-			 Text(emoji.emoji)
+			 Text("\(emoji.emoji)(\(emoji.badges?.count ?? 0))")
 			 Spacer()
 			 
 			 let badges = emoji.sortedBadges

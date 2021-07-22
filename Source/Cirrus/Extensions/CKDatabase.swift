@@ -95,6 +95,24 @@ public extension CKDatabase {
 	
 }
 
+extension CKDatabase {
+	public func deleteAll(from recordTypes: [CKRecord.RecordType], in zone: CKRecordZone? = nil) async throws {
+		var ids: [CKRecord.ID] = []
+		
+		for recordType in recordTypes {
+			let seq = AsyncRecordSequence(recordType: recordType, desiredKeys: [], in: self, zoneID: zone?.zoneID)
+			
+			seq.start()
+			for try await record in seq {
+				ids.append(record.recordID)
+			}
+		}
+		
+		print("Record IDs: \(ids.count)")
+	}
+}
+
+
 extension CKDatabase.Scope: Codable {
 	var database: CKDatabase {
 		switch self {

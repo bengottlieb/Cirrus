@@ -20,11 +20,20 @@ public class AsyncRecordSequence: AsyncSequence {
 	public var records: [CKRecord] = []
 	public var errors: [Error] = []
 	var isComplete = false
+	var desiredKeys: [String]?
+
+	init(recordType: CKRecord.RecordType, desiredKeys: [String]? = nil, in database: CKDatabase, zoneID: CKRecordZone.ID? = nil) {
+		self.query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
+		self.database = database
+		self.zoneID = zoneID
+		self.desiredKeys = desiredKeys
+	}
 	
-	init(query: CKQuery, in database: CKDatabase, zoneID: CKRecordZone.ID? = nil) {
+	init(query: CKQuery, desiredKeys: [String]? = nil, in database: CKDatabase, zoneID: CKRecordZone.ID? = nil) {
 		self.query = query
 		self.database = database
 		self.zoneID = zoneID
+		self.desiredKeys = desiredKeys
 	}
 	
 	public func start() {
@@ -40,6 +49,7 @@ public class AsyncRecordSequence: AsyncSequence {
 			operation = CKQueryOperation(query: query)
 		}
 		
+		operation.desiredKeys = desiredKeys
 		operation.zoneID = zoneID
 		operation.resultsLimit = resultChunkSize
 		operation.recordMatchedBlock = { recordID, result in
