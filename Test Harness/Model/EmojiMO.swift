@@ -25,4 +25,24 @@ class EmojiMO: SyncedManagedObject, Identifiable {
 		link.emoji = self
 		link.badge = badge
 	}
+	
+	func deleteBadge(withContent content: String) {
+		for badge in badges ?? [] {
+			if badge.badge?.content == content {
+				badge.deleteFromContext()
+				self.save()
+				return
+			}
+		}
+	}
+	
+	var sortedBadges: [(String, Int)] {
+		var results: [String: Int] = [:]
+		for badge in badges ?? [] {
+			guard let content = badge.badge?.content else { continue }
+			let current = results[content] ?? 0
+			results[content] = current + 1
+		}
+		return Array(results.keys).sorted().map { ($0, results[$0] ?? 0) }
+	}
 }

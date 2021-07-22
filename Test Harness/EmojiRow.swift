@@ -15,10 +15,18 @@ struct EmojiRow: View {
 			 Text(emoji.emoji)
 			 Spacer()
 			 
-			 ForEach(Array(emoji.badges ?? [])) { emojiBadge in
-				 Button(action: { deleteBadge(emojiBadge) }) {
-					 Text(emojiBadge.badge?.content ?? "-")
+			 let badges = emoji.sortedBadges
+			 ForEach(badges.indices, id: \.self) { index in
+				 let string = badges[index].0
+				 let count = badges[index].1
+				 
+				 Button(action: { deleteBadge(string) }) {
+					 HStack(spacing: 1) {
+						 Text(string)
+						 if count > 0 { Text("\(count)").font(.caption) }
+					 }
 				 }
+				 .buttonStyle(PlainButtonStyle())
 			 }
 			 
 			 Button(action: addBadge) {
@@ -26,6 +34,10 @@ struct EmojiRow: View {
 			 }
 		 }
     }
+	
+	func deleteBadge(_ string: String) {
+		emoji.deleteBadge(withContent: string)
+	}
 	
 	func deleteBadge(_ emojiBadge: EmojiBadgeMO) {
 		emojiBadge.deleteFromContext()
