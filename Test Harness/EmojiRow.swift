@@ -33,7 +33,7 @@ struct EmojiRow: View {
 	}
 	
 	func addBadge() {
-		let badgeEmoji = Emoji.random()
+		let badgeEmoji = "\("📛🍏🎖💡⚙️".randomElement()!)"
 		
 		let badge = DataStore.instance.badge(with: badgeEmoji)
 		badge.content = badgeEmoji

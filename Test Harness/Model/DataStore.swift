@@ -33,21 +33,22 @@ class DataStore {
 					if context != self.viewContext {
 						self.viewContext.perform { self.viewContext.mergeChanges(fromContextDidSave: note) }
 					}
+					if context != self.importContext {
+						self.importContext.perform { self.importContext.mergeChanges(fromContextDidSave: note) }
+					}
 				}
 			}
 			.store(in: &cancelBag)
 	}
 	
-	func sync() {
-		Task() {
-			let zoneIDs = await [Cirrus.instance.zone(named: "emoji")!.zoneID]
-			do {
-				for try await change in await Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs) {
-					
-					await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change)
-				}
-				await Cirrus.instance.configuration.synchronizer?.finishImporting()
+	func sync() async throws {
+		let zoneIDs = await [Cirrus.instance.zone(named: "emoji")!.zoneID]
+		do {
+			for try await change in await Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs) {
+				
+				await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change)
 			}
+			await Cirrus.instance.configuration.synchronizer?.finishImporting()
 		}
 	}
 	

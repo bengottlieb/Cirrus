@@ -25,6 +25,9 @@ extension ConflictResolver {
 					resolvedRecords[index] = resolve(local: resolvedRecords[index], remote: remote)
 				}
 				
+			case CKError.requestRateLimited:
+				print(err)
+				
 			case CKError.batchRequestFailed: break
 			default: return nil
 			}

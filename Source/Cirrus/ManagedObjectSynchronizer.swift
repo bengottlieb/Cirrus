@@ -18,6 +18,7 @@ public protocol ManagedObjectSynchronizer {
 public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 	let context: NSManagedObjectContext
 	let connector: ReferenceConnector
+	weak var syncStartTimer: Timer?
 	
 	public init(context: NSManagedObjectContext) {
 		self.context = context
@@ -32,8 +33,11 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 	}
 	
 	public func startSync() {
-		Task() {
-			await self.uploadLocalChanges()
+		syncStartTimer?.invalidate()
+		syncStartTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+			Task() {
+				await self.uploadLocalChanges()
+			}
 		}
 	}
 	

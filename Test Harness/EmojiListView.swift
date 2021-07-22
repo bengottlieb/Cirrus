@@ -22,7 +22,10 @@ struct EmojiListView: View {
 			}
 		}
 		.navigationTitle("Emoji")
-		.navigationBarItems(leading: Button(action: { DataStore.instance.sync() }) { Image(.arrow_clockwise) })
+		.navigationBarItems(leading: Button(action: {
+			Task() {
+				try? await DataStore.instance.sync()
+			}}) { Image(.arrow_clockwise) })
     }
 }
 

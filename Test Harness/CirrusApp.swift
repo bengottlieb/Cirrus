@@ -46,7 +46,7 @@ struct CirrusApp: App {
 		Cirrus.Notifications.userSignedIn.publisher()
 			.eraseToAnyPublisher()
 			.onSuccess { _ in
-				DataStore.instance.sync()
+				Task() { try? await DataStore.instance.sync() }
 			}
 	}
 	
