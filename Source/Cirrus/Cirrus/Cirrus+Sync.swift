@@ -15,7 +15,7 @@ extension Cirrus {
 		let deletedObjects = context.recentlyDeletedObjects
 		
 		for object in deletedObjects {
-			PendingDeletions.instance.queue(recordID: object.recordID, in: object.database)
+			QueuedDeletions.instance.queue(recordID: object.recordID, in: object.database)
 		}
 
 		if unsyncedObjects.isNotEmpty {

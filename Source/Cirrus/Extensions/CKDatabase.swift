@@ -28,11 +28,12 @@ public extension CKDatabase {
 		return seq
 	}
 	
-	func delete(recordIDs: [CKRecord.ID]?) async throws {
-		guard let ids = recordIDs, ids.isNotEmpty else { return }
+	func delete(recordIDs: [CKRecord.ID]?) async throws -> [CKRecord.ID] {
+		guard let ids = recordIDs, ids.isNotEmpty else { return [] }
+		
 		let op = CKModifyRecordsOperation(recordIDsToDelete: recordIDs)
 		do {
-			try await op.delete(from: self)
+			return try await op.delete(from: self)
 		} catch {
 			await Cirrus.instance.handleReceivedError(error)
 			throw error
@@ -92,6 +93,7 @@ public extension CKDatabase {
 			try await modifyOp.save(in: self)
 		} catch {
 			logg(error: error, "Failed to fetch/setup subscriptions")
+			await Cirrus.instance.handleReceivedError(error)
 		}
 		
 	}
@@ -116,9 +118,12 @@ extension CKDatabase {
 		
 		for chunk in idChunks {
 			do {
-				try await delete(recordIDs: chunk)
+				let deleted = try await delete(recordIDs: chunk)
+				if deleted.count != chunk.count {
+					logg("Failed to delete some records (attempted \(chunk.count), succeeded on \(deleted.count).")
+				}
 			} catch {
-				print("Error when deleting: \(error)")
+				logg(error: error, "Error when deleting")
 			}
 		}
 		

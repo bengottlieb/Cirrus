@@ -28,10 +28,8 @@ extension CKModifyRecordsOperation {
 				case .success:
 					if errors.isEmpty {
 						continuation.resume()
-					} else if errors.count == 1 {
-						continuation.resume(throwing: errors[0])
 					} else {
-						continuation.resume(throwing: Cirrus.MultipleErrors(errors: errors))
+						continuation.resume(throwing: Cirrus.MultipleErrors.build(errors: errors))
 					}
 				case .failure(let error): continuation.resume(throwing: error)
 				}
@@ -40,17 +38,19 @@ extension CKModifyRecordsOperation {
 		}
 	}
 	
-	public func delete(from database: CKDatabase) async throws {
+	public func delete(from database: CKDatabase, atomically: Bool = false) async throws -> [CKRecord.ID] {
 		assert(recordsToSave.isEmpty, "using CKModifyRecordsOperation.delete() to save records is not supported")
 
-		guard let recordIDs = recordIDsToDelete, recordIDs.isNotEmpty else { return }
+		guard let recordIDs = recordIDsToDelete, recordIDs.isNotEmpty else { return [] }
 		
 		var errors: [Error] = []
+		var deleted: [CKRecord.ID] = []
 		
+		self.isAtomic = atomically
 		return try await withUnsafeThrowingContinuation { continuation in
 			self.perRecordDeleteBlock = { id, result in
 				switch result {
-				case .success: break
+				case .success: deleted.append(id)
 				case .failure(let error): errors.append(error)
 				}
 			}
@@ -61,11 +61,9 @@ extension CKModifyRecordsOperation {
 				}
 				
 				if errors.count == 0 {
-					continuation.resume()
-				} else if errors.count == 1 {
-					continuation.resume(throwing: errors[0])
+					continuation.resume(returning: deleted)
 				} else {
-					continuation.resume(throwing: Cirrus.MultipleErrors(errors: errors))
+					continuation.resume(throwing: Cirrus.MultipleErrors.build(errors: errors))
 				}
 			}
 			database.add(self)

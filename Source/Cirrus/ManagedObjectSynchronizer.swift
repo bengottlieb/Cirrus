@@ -44,6 +44,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 	public func uploadLocalChanges() async {
 		let syncableEntities = await Cirrus.instance.configuration.entities ?? []
 		var pending: [CKDatabase.Scope: [CKRecord]] = [:]
+		let queued = await QueuedDeletions.instance.pending
 
 		await context.perform {
 			for entity in syncableEntities {
@@ -51,6 +52,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 				for object in changed {
 					guard let record = CKRecord(object) else { continue }
 					let scope = object.database.databaseScope
+					if queued.contains(recordID: record.recordID, in: scope) { continue }
 					var current = pending[scope] ?? []
 					current.append(record)
 					pending[scope] = current
@@ -59,10 +61,10 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 		}
 		
 		for scope in CKDatabase.Scope.allScopes {
-			let deletions = await PendingDeletions.instance.allPendingDeletions(in: scope.database)
+			let deletions = queued.deletions(in: scope.database)
 			do {
-				try await scope.database.delete(recordIDs: deletions)
-				await PendingDeletions.instance.clear(deleted: deletions)
+				let deleted = try await scope.database.delete(recordIDs: deletions)
+				await QueuedDeletions.instance.clear(deleted: deleted)
 			} catch {
 				logg(error: error, "Failed to delete records: \(deletions)")
 			}

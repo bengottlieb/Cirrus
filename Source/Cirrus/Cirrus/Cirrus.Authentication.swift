@@ -9,8 +9,8 @@ import Suite
 import CloudKit
 
 extension Cirrus {
-	public func authenticate() async throws {
-		guard state.isSignedOut else { return }
+	public func authenticate(evenIfOffline: Bool = false) async throws {
+		guard state.isSignedOut, (evenIfOffline || state != .offline) else { return }
 		
 		DispatchQueue.onMain { self.state = .signingIn }
 		do {
@@ -53,11 +53,11 @@ extension Cirrus {
 }
 
 extension Cirrus {
-	public enum AuthenticationState: Equatable { case notLoggedIn, signingIn, tokenFailed, denied, authenticated(CKRecord.ID), failed(NSError)
+	public enum AuthenticationState: Equatable { case offline, notLoggedIn, signingIn, tokenFailed, denied, authenticated(CKRecord.ID), failed(NSError)
 		
 		var isSignedOut: Bool {
 			switch self {
-			case .notLoggedIn, .tokenFailed, .denied: return true
+			case .notLoggedIn, .tokenFailed, .denied, .offline: return true
 			default: return false
 			}
 		}

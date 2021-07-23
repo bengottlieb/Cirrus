@@ -15,6 +15,9 @@ struct ContentView: View {
 		NavigationView() {
 			VStack() {
 				switch cirrus.state {
+				case .offline:
+					Text("No Internet Connection")
+					
 				case .authenticated:
 					EmojiListView()
 					

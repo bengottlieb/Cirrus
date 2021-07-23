@@ -24,7 +24,7 @@ extension CKFetchSubscriptionsOperation {
 				switch result {
 				case .failure(let error):
 					errors.append(error)
-					continuation.resume(throwing: Cirrus.MultipleErrors(errors: errors))
+					continuation.resume(throwing: Cirrus.MultipleErrors.build(errors: errors))
 					
 				case .success:
 					continuation.resume(returning: subscriptions)

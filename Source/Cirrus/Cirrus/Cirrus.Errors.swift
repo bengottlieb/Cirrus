@@ -10,7 +10,9 @@ import CloudKit
 
 extension Cirrus {
 	public func handleReceivedError(_ error: Error) {
-		if let cloudErr = error as? CKError {
+		if error.isOffline {
+			state = .offline
+		} else if let cloudErr = error as? CKError {
 			switch cloudErr.code {
 			case .missingEntitlement:
 				logg(error: error, "Missing CloudKit Entitlement")
@@ -29,6 +31,11 @@ public extension Cirrus {
 		let errors: [Error]
 		
 		public var errorDescription: String? { "\(errors.count) Errors" }
+		
+		static func build(errors: [Error]) -> Error {
+			if errors.count == 1 { return errors[0] }
+			return MultipleErrors(errors: errors)
+		}
 	}
 }
 

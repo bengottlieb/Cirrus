@@ -20,8 +20,9 @@ public extension CKRecord {
 			self[name] = seed[name]
 		}
 		
-		if let parentKey = seed.parentRelationshipName, let parent = seed.reference(for: parentKey, action: .none) {
-			self.parent = parent
+		if let parentKey = seed.parentRelationshipName, let parentRef = seed.reference(for: parentKey, action: .none) {
+			self.parent = parentRef
+			self[parentKey] = seed.reference(for: parentKey, action: .deleteSelf)
 		}
 		
 		for key in seed.savedRelationshipNames {

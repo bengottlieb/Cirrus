@@ -1,6 +1,6 @@
 //
-//  PendingDeletions.swift
-//  PendingDeletions
+//  QueuedDeletions.swift
+//  QueuedDeletions
 //
 //  Created by Ben Gottlieb on 7/19/21.
 //
@@ -9,8 +9,8 @@ import CoreData
 import CloudKit
 import Suite
 
-class PendingDeletions {
-	static let instance = PendingDeletions()
+class QueuedDeletions {
+	static let instance = QueuedDeletions()
 	
 	@FileBackedCodable(url: .cache(named: "cirrus-pending-deletions"), initialValue: []) var pending: [Deletion]
 	
@@ -19,14 +19,10 @@ class PendingDeletions {
 		pending.append(Deletion(recordName: id.recordName, zoneName: id.zone?.zoneID.zoneName, scope: database.databaseScope))
 	}
 	
-	func allPendingDeletions(in database: CKDatabase) -> [CKRecord.ID] {
-		pending.filter { $0.scope == database.databaseScope }.map { $0.recordID }
-	}
-	
 	func clear(deleted: [CKRecord.ID]) {
 		pending = pending.filter { !deleted.contains($0.recordID) }
 	}
-	
+
 	struct Deletion: Codable {
 		let recordName: String
 		let zoneName: String?
@@ -42,3 +38,13 @@ class PendingDeletions {
 	}
 }
 
+extension Array where Element == QueuedDeletions.Deletion {
+	func contains(recordID: CKRecord.ID?, in scope: CKDatabase.Scope) -> Bool {
+		contains { $0.recordID == recordID && $0.scope == scope }
+	}
+
+	func deletions(in database: CKDatabase) -> [CKRecord.ID] {
+		filter { $0.scope == database.databaseScope }.map { $0.recordID }
+	}
+	
+}
