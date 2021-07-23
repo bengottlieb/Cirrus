@@ -19,13 +19,13 @@ class QueuedDeletions {
 		pending.append(Deletion(recordName: id.recordName, zoneName: id.zone?.zoneID.zoneName, scope: database.databaseScope))
 	}
 	
-	func clear(deleted: [CKRecord.ID]) {
-		pending = pending.filter { !deleted.contains($0.recordID) }
+	func clear(deleted: [Deletion]) {
+		pending = pending.filter { pending in  !deleted.contains { $0.recordName == pending.recordName && $0.scope == pending.scope } }
 	}
 
 	struct Deletion: Codable {
 		let recordName: String
-		let zoneName: String?
+		var zoneName: String?
 		let scope: CKDatabase.Scope
 		
 		var recordID: CKRecord.ID {
