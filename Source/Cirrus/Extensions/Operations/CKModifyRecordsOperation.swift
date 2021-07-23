@@ -45,11 +45,27 @@ extension CKModifyRecordsOperation {
 
 		guard let recordIDs = recordIDsToDelete, recordIDs.isNotEmpty else { return }
 		
+		var errors: [Error] = []
+		
 		return try await withUnsafeThrowingContinuation { continuation in
+			self.perRecordDeleteBlock = { id, result in
+				switch result {
+				case .success: break
+				case .failure(let error): errors.append(error)
+				}
+			}
 			self.modifyRecordsResultBlock = { result in
 				switch result {
-				case .success: continuation.resume()
-				case .failure(let error): continuation.resume(throwing: error)
+				case .success: break
+				case .failure(let error): errors.append(error)
+				}
+				
+				if errors.count == 0 {
+					continuation.resume()
+				} else if errors.count == 1 {
+					continuation.resume(throwing: errors[0])
+				} else {
+					continuation.resume(throwing: Cirrus.MultipleErrors(errors: errors))
 				}
 			}
 			database.add(self)

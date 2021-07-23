@@ -8,12 +8,13 @@
 import CoreData
 import Suite
 
-class DataStore {
+class DataStore: ObservableObject {
 	static let instance = DataStore()
 	
 	let container: NSPersistentContainer
 	let viewContext: NSManagedObjectContext
 	var importContext: NSManagedObjectContext
+	var isSyncing = false { didSet { self.objectWillChange.sendOnMain() }}
 	
 	var cancelBag: Set<AnyCancellable> = []
 	
@@ -41,14 +42,16 @@ class DataStore {
 			.store(in: &cancelBag)
 	}
 	
-	func sync() async throws {
+	func sync(fromBeginning: Bool = false) async throws {
+		isSyncing = true
 		let zoneIDs = await [Cirrus.instance.zone(named: "emoji")!.zoneID]
 		do {
-			for try await change in await Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs) {
+			for try await change in await Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs, fromBeginning: fromBeginning) {
 				
 				await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change)
 			}
 			await Cirrus.instance.configuration.synchronizer?.finishImporting()
+			isSyncing = false
 		}
 	}
 	

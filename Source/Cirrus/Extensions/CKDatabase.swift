@@ -19,7 +19,10 @@ public extension CKDatabase {
 		return seq
 	}
 
-	func changes(in zoneIDs: [CKRecordZone.ID]) -> AsyncZoneChangesSequence {
+	func changes(in zoneIDs: [CKRecordZone.ID], fromBeginning: Bool = false) -> AsyncZoneChangesSequence {
+		if fromBeginning {
+			Cirrus.instance.localState.zoneChangeTokens = [:]
+		}
 		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self)
 		seq.start()
 		return seq
@@ -108,7 +111,18 @@ extension CKDatabase {
 			}
 		}
 		
-		print("Record IDs: \(ids.count)")
+		let chunkSize = 30
+		let idChunks = ids.breakIntoChunks(ofSize: chunkSize)
+		
+		for chunk in idChunks {
+			do {
+				try await delete(recordIDs: chunk)
+			} catch {
+				print("Error when deleting: \(error)")
+			}
+		}
+		
+		print("Done")
 	}
 }
 

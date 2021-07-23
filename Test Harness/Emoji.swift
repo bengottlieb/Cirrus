@@ -30,8 +30,8 @@ struct Emoji: CKRecordSeed {
 }
 
 extension Emoji {
-	static func cluser(count: Int) -> [Emoji] {
-		Array(0..<count).map { _ in randomEmoji() }
+	static func cluster(count: Int) -> [Emoji] {
+		Array(0..<count).map { _ in randomEmoji(max: Int32(Int32.random(to: 10) + 1)) }
 	}
 	
 	static func random() -> String {
@@ -40,11 +40,11 @@ extension Emoji {
 		return "\(seeds.randomElement()!)"
 	}
 	
-	static func randomEmoji() -> Emoji {
+	static func randomEmoji(max: Int32 = 10) -> Emoji {
 		
 		var text = ""
 		
-		for _ in 0...(Int.random(to: 10) + 2) {
+		for _ in 0..<max {
 			text += random()
 		}
 		return Emoji(emoji: text)
