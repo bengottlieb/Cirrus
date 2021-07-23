@@ -24,6 +24,8 @@ extension Cirrus {
 
 		public var synchronizer: ManagedObjectSynchronizer?
 		public var entities: [CirrusManagedObjectConfiguration]?
+		
+		public var conflictResolver: ConflictResolver? = ConflictResolverNewerWins()
 	}
 }
 
