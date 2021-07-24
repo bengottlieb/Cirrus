@@ -50,6 +50,11 @@ extension Cirrus {
 			container.privateCloudDatabase.add(op)
 		}
 	}
+	
+	public func signOut() {
+		self.state = .notLoggedIn
+		self.localState.lastSignedInUserID = nil
+	}
 }
 
 extension Cirrus {

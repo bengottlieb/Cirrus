@@ -11,7 +11,15 @@ import CloudKit
 extension Cirrus {
 	struct LocalState: Codable {
 		var lastCreatedZoneNamesList: [String] = []
-		var lastSignedInUserID: String?
+		var lastSignedInUserIDName: String?
+		var lastSignedInUserID: CKRecord.ID? {
+			get {
+				guard let name = lastSignedInUserIDName else { return nil }
+				return CKRecord.ID(recordName: name)
+			}
+			
+			set { lastSignedInUserIDName = newValue?.recordName }
+		}
 		
 		var zoneChangeTokens: [String: Data] = [:]
 	}

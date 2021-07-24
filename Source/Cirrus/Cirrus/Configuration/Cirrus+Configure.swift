@@ -19,7 +19,7 @@ extension Cirrus {
 		assert(configuration == nil, "You can only configure Cirrus once.")
 		configuration = config
 		container = CKContainer(identifier: config.containerIdentifer)
-		if Reachability.instance.isOffline, case .authenticated(let userID) = state { state = .offline(userID) }
+		if Reachability.instance.isOffline, let userID = localState.lastSignedInUserID { state = .offline(userID) }
 
 		UIApplication.willEnterForegroundNotification.publisher()
 			.sink() { _ in Task { try? await self.authenticate() }}
