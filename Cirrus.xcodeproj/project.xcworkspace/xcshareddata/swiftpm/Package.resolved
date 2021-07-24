@@ -5,9 +5,9 @@
         "package": "suite",
         "repositoryURL": "https://github.com/bengottlieb/suite",
         "state": {
-          "branch": "master",
-          "revision": "f2ecef13be2145c9c05ac4cfca1e92debe6aa46b",
-          "version": null
+          "branch": null,
+          "revision": "0080803581aceab19007518aedabac33c6575a40",
+          "version": "0.10.83"
         }
       }
     ]

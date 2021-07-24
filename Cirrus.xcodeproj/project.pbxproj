@@ -28,6 +28,8 @@
 		B565D13B26A4A23F00F0C395 /* EmojiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13A26A4A23F00F0C395 /* EmojiListView.swift */; };
 		B565D13D26A4DF5500F0C395 /* Cirrus+Configure.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13C26A4DF5500F0C395 /* Cirrus+Configure.swift */; };
 		B565D13F26A4E12300F0C395 /* EmojiRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13E26A4E12300F0C395 /* EmojiRow.swift */; };
+		B56736A826AC1AD400E654D8 /* SyncedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56736A726AC1AD400E654D8 /* SyncedContainer.swift */; };
+		B56736AA26AC1BA100E654D8 /* AppGroupPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56736A926AC1BA100E654D8 /* AppGroupPersistentContainer.swift */; };
 		B57A735E26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */; };
 		B57A736026A58D0C001FD4F7 /* CKRecordSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57A735F26A58D0C001FD4F7 /* CKRecordSeed.swift */; };
 		B57A736226A59850001FD4F7 /* Cirrus+Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57A736126A59850001FD4F7 /* Cirrus+Sync.swift */; };
@@ -45,7 +47,6 @@
 		B5E6DE4726A44B0300856E8C /* BadgeMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4626A44B0300856E8C /* BadgeMO.swift */; };
 		B5E6DE4926A44B1C00856E8C /* EmojiBadgeMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4826A44B1C00856E8C /* EmojiBadgeMO.swift */; };
 		B5E6DE4B26A44DF500856E8C /* CirrusManagedObjectConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4A26A44DF500856E8C /* CirrusManagedObjectConfiguration.swift */; };
-		B5E6DE4F26A4529700856E8C /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4E26A4529700856E8C /* DataStore.swift */; };
 		B5E6DE5126A4556300856E8C /* ManagedObjectSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE5026A4556300856E8C /* ManagedObjectSynchronizer.swift */; };
 		B5E6DE5526A4658600856E8C /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE5426A4658600856E8C /* Emoji.swift */; };
 		B5F664C326A2E45D00B49AC7 /* CKModifyRecordsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */; };
@@ -64,7 +65,6 @@
 		B52104A926A259D4008ABEF4 /* Cirrus.Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Configuration.swift; sourceTree = "<group>"; };
 		B52104B026A25B92008ABEF4 /* Cirrus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Cirrus.entitlements; sourceTree = "<group>"; };
 		B52104B226A25B9B008ABEF4 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		B52104B426A26145008ABEF4 /* Suite */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Suite; path = ../Suite; sourceTree = "<group>"; };
 		B52104B526A2681A008ABEF4 /* Cirrus.Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus.Authentication.swift; sourceTree = "<group>"; };
 		B53000B326A7C206007367A7 /* LegacyAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyAppDelegate.swift; sourceTree = "<group>"; };
 		B53000B526A7C2BF007367A7 /* Cirrus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Cirrus-Info.plist"; sourceTree = "<group>"; };
@@ -79,6 +79,8 @@
 		B565D13A26A4A23F00F0C395 /* EmojiListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiListView.swift; sourceTree = "<group>"; };
 		B565D13C26A4DF5500F0C395 /* Cirrus+Configure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cirrus+Configure.swift"; sourceTree = "<group>"; };
 		B565D13E26A4E12300F0C395 /* EmojiRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiRow.swift; sourceTree = "<group>"; };
+		B56736A726AC1AD400E654D8 /* SyncedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncedContainer.swift; sourceTree = "<group>"; };
+		B56736A926AC1BA100E654D8 /* AppGroupPersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroupPersistentContainer.swift; sourceTree = "<group>"; };
 		B57A735D26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncZoneChangesSequence.swift; sourceTree = "<group>"; };
 		B57A735F26A58D0C001FD4F7 /* CKRecordSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKRecordSeed.swift; sourceTree = "<group>"; };
 		B57A736126A59850001FD4F7 /* Cirrus+Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cirrus+Sync.swift"; sourceTree = "<group>"; };
@@ -96,7 +98,6 @@
 		B5E6DE4626A44B0300856E8C /* BadgeMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeMO.swift; sourceTree = "<group>"; };
 		B5E6DE4826A44B1C00856E8C /* EmojiBadgeMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiBadgeMO.swift; sourceTree = "<group>"; };
 		B5E6DE4A26A44DF500856E8C /* CirrusManagedObjectConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirrusManagedObjectConfiguration.swift; sourceTree = "<group>"; };
-		B5E6DE4E26A4529700856E8C /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		B5E6DE5026A4556300856E8C /* ManagedObjectSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectSynchronizer.swift; sourceTree = "<group>"; };
 		B5E6DE5426A4658600856E8C /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		B5F664C226A2E45D00B49AC7 /* CKModifyRecordsOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKModifyRecordsOperation.swift; sourceTree = "<group>"; };
@@ -122,7 +123,6 @@
 			children = (
 				B53000B526A7C2BF007367A7 /* Cirrus-Info.plist */,
 				B507F45A26A2819F00A5C291 /* Package.swift */,
-				B52104B426A26145008ABEF4 /* Suite */,
 				B52104B026A25B92008ABEF4 /* Cirrus.entitlements */,
 				B52104AE26A25AC9008ABEF4 /* Source */,
 				B521049826A256C6008ABEF4 /* Test Harness */,
@@ -184,6 +184,8 @@
 				B5E6DE5026A4556300856E8C /* ManagedObjectSynchronizer.swift */,
 				B565D13426A47FFF00F0C395 /* ReferenceConnector.swift */,
 				B565D13626A4948600F0C395 /* SyncedManagedObject.swift */,
+				B56736A726AC1AD400E654D8 /* SyncedContainer.swift */,
+				B56736A926AC1BA100E654D8 /* AppGroupPersistentContainer.swift */,
 			);
 			path = Cirrus;
 			sourceTree = "<group>";
@@ -250,7 +252,6 @@
 		B5E6DE4D26A4526A00856E8C /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B5E6DE4E26A4529700856E8C /* DataStore.swift */,
 				B5E6DE4426A44AE700856E8C /* EmojiMO.swift */,
 				B5E6DE4626A44B0300856E8C /* BadgeMO.swift */,
 				B5E6DE4826A44B1C00856E8C /* EmojiBadgeMO.swift */,
@@ -343,6 +344,7 @@
 				B5E6DE5126A4556300856E8C /* ManagedObjectSynchronizer.swift in Sources */,
 				B57A735E26A43AC7001FD4F7 /* AsyncZoneChangesSequence.swift in Sources */,
 				B565D13526A47FFF00F0C395 /* ReferenceConnector.swift in Sources */,
+				B56736AA26AC1BA100E654D8 /* AppGroupPersistentContainer.swift in Sources */,
 				B5373DAE26A34F2E00F6A15C /* Cirrus.Errors.swift in Sources */,
 				B592C12726A64F9E00BEDD20 /* CKRecord.ID.swift in Sources */,
 				B5B0960D26A2DFFB0096EF93 /* Cirrus.Notifications.swift in Sources */,
@@ -354,11 +356,11 @@
 				B5E6DE5526A4658600856E8C /* Emoji.swift in Sources */,
 				B521049C26A256C6008ABEF4 /* ContentView.swift in Sources */,
 				B5E6DE4926A44B1C00856E8C /* EmojiBadgeMO.swift in Sources */,
-				B5E6DE4F26A4529700856E8C /* DataStore.swift in Sources */,
 				B57A736026A58D0C001FD4F7 /* CKRecordSeed.swift in Sources */,
 				B5373DB026A36A4B00F6A15C /* CKRecordValue.swift in Sources */,
 				B565D13D26A4DF5500F0C395 /* Cirrus+Configure.swift in Sources */,
 				B521049A26A256C6008ABEF4 /* CirrusApp.swift in Sources */,
+				B56736A826AC1AD400E654D8 /* SyncedContainer.swift in Sources */,
 				B5F664C526A2E75800B49AC7 /* CKRecord.swift in Sources */,
 				B592C12B26A76ED200BEDD20 /* Cirrus+Subscriptions.swift in Sources */,
 				B5E6DE4726A44B0300856E8C /* BadgeMO.swift in Sources */,
@@ -589,8 +591,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bengottlieb/suite";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.83;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

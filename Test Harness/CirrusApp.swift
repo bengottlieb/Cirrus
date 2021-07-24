@@ -26,10 +26,10 @@ func addEmoji() async {
 struct CirrusApp: App {
 	@UIApplicationDelegateAdaptor(LegacyAppDelegate.self) var appDelegate
 	var configuration = Cirrus.Configuration(containerIdentifer: "iCloud.con.standalone.cloudkittesting", zoneNames: ["emoji"], defaultZoneName: "emoji")
-	let dataStore = DataStore.instance
 	
 	init() {
-		let context = dataStore.importContext
+		SyncedContainer.setup(name: "Emoji", containerIdentifier: configuration.containerIdentifer)
+		let context = SyncedContainer.instance.importContext
 		configuration.idField = "uuid"
 		configuration.synchronizer = SimpleObjectSynchronizer(context: context)
 		configuration.entities = [
@@ -46,14 +46,14 @@ struct CirrusApp: App {
 		Cirrus.Notifications.userSignedIn.publisher()
 			.eraseToAnyPublisher()
 			.onSuccess { _ in
-				Task() { try? await DataStore.instance.sync() }
+				Task() { try? await SyncedContainer.instance.sync() }
 			}
 	}
 	
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.environment(\.managedObjectContext, dataStore.viewContext)
+				.environment(\.managedObjectContext, SyncedContainer.instance.viewContext)
 		}
 	}
 }

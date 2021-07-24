@@ -10,10 +10,10 @@ import CloudKit
 import SwiftUI
 
 struct EmojiListView: View {
-	@ObservedObject var dataStore = DataStore.instance
+	@ObservedObject var dataStore = SyncedContainer.instance
 	@State var clearing = false
 	@Environment(\.managedObjectContext) var context
-	@FetchRequest(entity: DataStore.instance.entity(named: "Emoji"), sortDescriptors: [NSSortDescriptor(key: "uuid", ascending: true)], predicate: nil, animation: .linear) var emoji: FetchedResults<EmojiMO>
+	@FetchRequest(entity: SyncedContainer.instance.entity(named: "Emoji"), sortDescriptors: [NSSortDescriptor(key: "uuid", ascending: true)], predicate: nil, animation: .linear) var emoji: FetchedResults<EmojiMO>
 	
 	var body: some View {
 		ScrollView() {
@@ -31,7 +31,7 @@ struct EmojiListView: View {
 						clearing = true
 						Task() {
 							try? await Cirrus.instance.container.privateCloudDatabase.deleteAll(from: ["emojiBadge", "emoji", "badge"], in: Cirrus.instance.zone(named: "emoji"))
-							try? await DataStore.instance.sync()
+							try? await SyncedContainer.instance.sync()
 							clearing = false
 						}
 					}
@@ -43,7 +43,7 @@ struct EmojiListView: View {
     }
 	
 	@ViewBuilder var syncButton: some View {
-		if DataStore.instance.isSyncing {
+		if SyncedContainer.instance.isSyncing {
 			ProgressView()
 		} else {
 			Button(action: { sync() }) { Image(.arrow_clockwise) }
@@ -55,7 +55,7 @@ struct EmojiListView: View {
 	
 	func sync(fromBeginning: Bool = false) {
 		Task() {
-			try? await DataStore.instance.sync(fromBeginning: fromBeginning)
+			try? await SyncedContainer.instance.sync(fromBeginning: fromBeginning)
 		  }
 	}
 	
@@ -71,6 +71,6 @@ struct EmojiListView: View {
 struct EmojiListView_Previews: PreviewProvider {
     static var previews: some View {
         EmojiListView()
-			 .environment(\.managedObjectContext, DataStore.instance.viewContext)
+			 .environment(\.managedObjectContext, SyncedContainer.instance.viewContext)
     }
 }

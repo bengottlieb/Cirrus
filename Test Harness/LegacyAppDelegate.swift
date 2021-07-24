@@ -21,7 +21,7 @@ class LegacyAppDelegate: NSObject, UIApplicationDelegate {
 	public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 					
 		Task() {
-			try? await DataStore.instance.sync()
+			try? await SyncedContainer.instance.sync()
 			completionHandler(.noData)
 		}
 	}
