@@ -11,7 +11,7 @@ import CloudKit
 extension Cirrus {
 	public func handleReceivedError(_ error: Error) {
 		if error.isOffline {
-			state = .offline
+			state = state.convertToOffline()
 		} else if let cloudErr = error as? CKError {
 			switch cloudErr.code {
 			case .missingEntitlement:

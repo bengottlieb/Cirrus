@@ -10,7 +10,7 @@ import CloudKit
 
 extension Cirrus {
 	public func authenticate(evenIfOffline: Bool = false) async throws {
-		guard state.isSignedOut, (evenIfOffline || state != .offline) else { return }
+		guard state.isSignedOut, (evenIfOffline || !state.isOffline) else { return }
 		
 		DispatchQueue.onMain { self.state = .signingIn }
 		do {
@@ -53,19 +53,34 @@ extension Cirrus {
 }
 
 extension Cirrus {
-	public enum AuthenticationState: Equatable { case offline, notLoggedIn, signingIn, tokenFailed, denied, authenticated(CKRecord.ID), failed(NSError)
+	public enum AuthenticationState: Equatable { case notLoggedIn, signingIn, tokenFailed, denied, authenticated(CKRecord.ID), offline(CKRecord.ID), failed(NSError)
 		
 		public var isSignedIn: Bool {
 			switch self {
-			case .authenticated: return true
+			case .authenticated, .offline: return true
 			default: return false
 			}
 		}
 
 		public var isSignedOut: Bool {
 			switch self {
-			case .notLoggedIn, .tokenFailed, .denied, .offline: return true
+			case .notLoggedIn, .tokenFailed, .denied: return true
 			default: return false
+			}
+		}
+
+		public var isOffline: Bool {
+			switch self {
+			case .offline: return true
+			default: return false
+			}
+		}
+		
+		func convertToOffline() -> AuthenticationState {
+			switch self {
+			case .authenticated(let userID): return .offline(userID)
+			case .offline: return self
+			default: return .notLoggedIn
 			}
 		}
 	}
