@@ -12,7 +12,6 @@ import CloudKit
 public class Cirrus: ObservableObject {
 	public static let instance = Cirrus()
 	
-
 	public var state: AuthenticationState = .notLoggedIn { didSet { objectWillChange.send() }}
 	public var configuration: Configuration!
 

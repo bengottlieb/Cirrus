@@ -20,7 +20,7 @@ public protocol CirrusManagedObjectConfiguration {
 }
 
 extension CirrusManagedObjectConfiguration {
-	var entityName: String { entityDescription.name ?? "" }
+	public var entityName: String { entityDescription.name ?? "" }
 }
 
 public struct SimpleManagedObject: CirrusManagedObjectConfiguration {
@@ -30,7 +30,7 @@ public struct SimpleManagedObject: CirrusManagedObjectConfiguration {
 	public let pertinentRelationships: [String]
 	let entityName: String
 	
-	init(recordType: CKRecord.RecordType, entityName: String, parent: String? = nil, pertinent: [String] = [], in context: NSManagedObjectContext) {
+	public init(recordType: CKRecord.RecordType, entityName: String, parent: String? = nil, pertinent: [String] = [], in context: NSManagedObjectContext) {
 		self.recordType = recordType
 		self.entityName = entityName
 		self.entityDescription = context.persistentStoreCoordinator!.managedObjectModel.entitiesByName[entityName]!

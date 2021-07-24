@@ -25,10 +25,10 @@ func addEmoji() async {
 @main
 struct CirrusApp: App {
 	@UIApplicationDelegateAdaptor(LegacyAppDelegate.self) var appDelegate
-	var configuration = Cirrus.Configuration(containerIdentifer: "iCloud.con.standalone.cloudkittesting", zoneNames: ["emoji"], defaultZoneName: "emoji")
+	var configuration = Cirrus.Configuration(identifier: "iCloud.con.standalone.cloudkittesting", zones: ["emoji"])
 	
 	init() {
-		SyncedContainer.setup(name: "Emoji", containerIdentifier: configuration.containerIdentifer)
+		SyncedContainer.setup(name: "Emoji")
 		let context = SyncedContainer.instance.importContext
 		configuration.idField = "uuid"
 		configuration.synchronizer = SimpleObjectSynchronizer(context: context)

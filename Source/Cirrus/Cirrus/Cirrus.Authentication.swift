@@ -55,7 +55,14 @@ extension Cirrus {
 extension Cirrus {
 	public enum AuthenticationState: Equatable { case offline, notLoggedIn, signingIn, tokenFailed, denied, authenticated(CKRecord.ID), failed(NSError)
 		
-		var isSignedOut: Bool {
+		public var isSignedIn: Bool {
+			switch self {
+			case .authenticated: return true
+			default: return false
+			}
+		}
+
+		public var isSignedOut: Bool {
 			switch self {
 			case .notLoggedIn, .tokenFailed, .denied, .offline: return true
 			default: return false

@@ -10,12 +10,19 @@ import CloudKit
 
 extension Cirrus {
 	public struct SubscriptionInfo {
-		var recordName: String?
-		var zone: CKRecordZone?
-		var predicate: NSPredicate?
-		var options: CKQuerySubscription.Options = [.firesOnRecordCreation, .firesOnRecordUpdate, .firesOnRecordDeletion]
+		public var recordName: String?
+		public var zone: CKRecordZone?
+		public var predicate: NSPredicate?
+		public var options: CKQuerySubscription.Options
 		
-		func id(in scope: CKDatabase.Scope) -> CKSubscription.ID {
+		public init(recordName: String? = nil, zone: CKRecordZone? = nil, predicate: NSPredicate? = nil, options: CKQuerySubscription.Options = [.firesOnRecordCreation, .firesOnRecordUpdate, .firesOnRecordDeletion]) {
+			self.recordName = recordName
+			self.zone = zone
+			self.predicate = predicate
+			self.options = options
+		}
+
+		public func id(in scope: CKDatabase.Scope) -> CKSubscription.ID {
 			if scope == .shared { return "shared-subscription" }
 			if let name = recordName {
 				return "\(scope.name)-\(name)-subscription"

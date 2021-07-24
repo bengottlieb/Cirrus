@@ -29,6 +29,14 @@ extension Cirrus {
 	}
 }
 
+public extension Cirrus.Configuration {
+	init(identifier: String, zones: [String], defaultZone: String? = nil) {
+		containerIdentifer = identifier
+		zoneNames = zones
+		defaultZoneName = defaultZone ?? zoneNames.first
+	}
+}
+
 extension Cirrus.Configuration {
 	func entityInfo(for entityDescription: NSEntityDescription?) -> CirrusManagedObjectConfiguration? {
 		entities?.first { $0.entityDescription == entityDescription }

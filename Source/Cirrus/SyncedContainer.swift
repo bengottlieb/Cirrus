@@ -54,7 +54,7 @@ public class SyncedContainer: ObservableObject {
 			.store(in: &cancelBag)
 	}
 
-	func sync(fromBeginning: Bool = false, zones: [CKRecordZone]? = nil) async throws {
+	public func sync(fromBeginning: Bool = false, zones: [CKRecordZone]? = nil) async throws {
 		isSyncing = true
 		var zoneIDs = zones?.map { $0.zoneID }
 		if zoneIDs == nil { zoneIDs = await Cirrus.instance.allZoneIDs }
