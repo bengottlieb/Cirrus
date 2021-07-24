@@ -36,6 +36,11 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
 		super.didChangeValue(forKey: key)
 	}
 	
+	open override func awakeFromInsert() {
+		super.awakeFromInsert()
+		self.setValue(UUID().uuidString, forKey: Cirrus.instance.configuration.idField)
+	}
+	
 	open var database: CKDatabase { Cirrus.instance.container.privateCloudDatabase }
 	open var recordZone: CKRecordZone? { Cirrus.instance.defaultRecordZone }
 
@@ -47,6 +52,7 @@ extension SyncedManagedObject {
 	func load(cloudKitRecord: CKRecord, using connector: ReferenceConnector) throws {
 		isLoadingFromCloud += 1
 		let statusFieldKey = Cirrus.instance.configuration.statusField
+		self.setValue(cloudKitRecord.recordID.recordName, forKey: Cirrus.instance.configuration.idField)
 		for key in cloudKitRecord.allKeys() {
 			if key == statusFieldKey { continue }
 			let value = cloudKitRecord[key]
