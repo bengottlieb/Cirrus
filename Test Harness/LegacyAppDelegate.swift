@@ -9,10 +9,6 @@ import Foundation
 import UIKit
 
 class LegacyAppDelegate: NSObject, UIApplicationDelegate {
-	override init() {
-		super.init()
-	}
-	
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 		UIApplication.shared.registerForRemoteNotifications()
 		return true
