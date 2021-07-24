@@ -13,7 +13,7 @@ struct EmojiListView: View {
 	@ObservedObject var dataStore = DataStore.instance
 	@State var clearing = false
 	@Environment(\.managedObjectContext) var context
-	@FetchRequest(entity: DataStore.instance.entity(named: "Emoji"), sortDescriptors: [NSSortDescriptor(key: "emoji", ascending: true)], predicate: nil, animation: .linear) var emoji: FetchedResults<EmojiMO>
+	@FetchRequest(entity: DataStore.instance.entity(named: "Emoji"), sortDescriptors: [NSSortDescriptor(key: "uuid", ascending: true)], predicate: nil, animation: .linear) var emoji: FetchedResults<EmojiMO>
 	
 	var body: some View {
 		ScrollView() {
