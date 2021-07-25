@@ -25,6 +25,7 @@ public extension CKDatabase {
 		}
 		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self)
 		seq.start()
+
 		return seq
 	}
 	

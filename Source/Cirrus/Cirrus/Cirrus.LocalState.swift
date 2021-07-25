@@ -27,12 +27,21 @@ extension Cirrus {
 
 extension Cirrus.LocalState {
 	func changeToken(for zoneID: CKRecordZone.ID) -> CKServerChangeToken? {
-		guard let data = zoneChangeTokens[zoneID.zoneName] else { return nil }
+		guard let data = zoneChangeTokens[zoneID.tokenIdentifier] else { return nil }
+		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
+	}
+
+	func changeToken(for database: CKDatabase) -> CKServerChangeToken? {
+		guard let data = zoneChangeTokens[database.databaseScope.tokenIdentifier] else { return nil }
 		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
 	}
 
 	mutating func setChangeToken(_ token: CKServerChangeToken, for zoneID: CKRecordZone.ID) {
-		zoneChangeTokens[zoneID.zoneName] = token.data
+		zoneChangeTokens[zoneID.tokenIdentifier] = token.data
+	}
+
+	mutating func setChangeToken(_ token: CKServerChangeToken, for database: CKDatabase) {
+		zoneChangeTokens[database.databaseScope.tokenIdentifier] = token.data
 	}
 }
 
@@ -40,4 +49,12 @@ extension CKServerChangeToken {
 	var data: Data? {
 		try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
 	}
+}
+
+extension CKRecordZone.ID {
+	var tokenIdentifier: String { "zone_" + zoneName}
+}
+
+extension CKDatabase.Scope {
+	var tokenIdentifier: String { "db_" + name }
 }
