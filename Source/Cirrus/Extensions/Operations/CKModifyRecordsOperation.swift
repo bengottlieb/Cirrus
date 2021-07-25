@@ -21,6 +21,7 @@ extension CKModifyRecordsOperation {
 			}
 		}
 		
+		self.savePolicy = .changedKeys
 		self.isAtomic = atomically
 		return try await withUnsafeThrowingContinuation { continuation in
 			self.modifyRecordsResultBlock = { result in

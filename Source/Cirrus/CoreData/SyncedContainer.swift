@@ -16,6 +16,7 @@ public class SyncedContainer: ObservableObject {
 	public var mutability: Mutability
 	public let viewContext: NSManagedObjectContext
 	public let importContext: NSManagedObjectContext
+	public var autoSyncOnAuthentication = true
 	var cancelBag: Set<AnyCancellable> = []
 	public var isSyncing = false { didSet { self.objectWillChange.sendOnMain() }}
 
@@ -39,7 +40,15 @@ public class SyncedContainer: ObservableObject {
 		viewContext = container.viewContext
 		importContext = container.newBackgroundContext()
 		
-		viewContext.automaticallyMergesChangesFromParent = true
+		//viewContext.automaticallyMergesChangesFromParent = true
+		
+		Cirrus.Notifications.userSignedIn.publisher()
+			.sink { note in
+				if self.autoSyncOnAuthentication {
+					Task() { try? await self.sync() } }
+			}
+			.store(in: &cancelBag)
+		
 		Notification.Name.NSManagedObjectContextDidSave.publisher()
 			.sink { note in
 				if let context = note.object as? NSManagedObjectContext, context.persistentStoreCoordinator == self.container.persistentStoreCoordinator {
@@ -55,17 +64,20 @@ public class SyncedContainer: ObservableObject {
 	}
 
 	public func sync(fromBeginning: Bool = false, zones: [CKRecordZone]? = nil) async throws {
+		logg("Sync Starting", .mild)
 		isSyncing = true
 		var zoneIDs = zones?.map { $0.zoneID }
 		if zoneIDs == nil { zoneIDs = await Cirrus.instance.allZoneIDs }
 		do {
 			for try await change in await Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs ?? [], fromBeginning: fromBeginning) {
-				
+				logg("Received Record", .verbose)
 				await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change)
 			}
 			await Cirrus.instance.configuration.synchronizer?.finishImporting()
+			await Cirrus.instance.configuration.synchronizer?.uploadLocalChanges()
 			isSyncing = false
 		}
+		logg("Sync Completed", .mild)
 	}
 
 	public enum Mutability: Int { case normal, readOnlyCloud, readOnly

@@ -13,6 +13,7 @@ public protocol ManagedObjectSynchronizer {
 	func process(downloadedChange change: CKRecordChange) async
 	func finishImporting() async
 	func startSync()
+	func uploadLocalChanges() async
 }
 
 public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
@@ -42,6 +43,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 	}
 	
 	public func uploadLocalChanges() async {
+		if await Cirrus.instance.state.isOffline { return }
 		let syncableEntities = await Cirrus.instance.configuration.entities ?? []
 		var pending: [CKDatabase.Scope: [CKRecord]] = [:]
 		let queuedDeletions = await QueuedDeletions.instance.pending
@@ -84,12 +86,15 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 		guard let info = await Cirrus.instance.configuration.entityInfo(for: change.recordType) else { return }
 		
 		let idField = await Cirrus.instance.configuration.idField
+		let resolver = await Cirrus.instance.configuration.conflictResolver
 		do {
 			switch change {
 			case .changed(let id, let record):
 				try await context.perform {
 					if let object = info.record(with: id, in: self.context) {
-						try object.load(cloudKitRecord: record, using: self.connector)
+						let local = CKRecord(object)
+						let winner = resolver.resolve(local: local, remote: record) ?? record
+						try object.load(cloudKitRecord: winner, using: self.connector)
 					} else {
 						let object = self.context.insertEntity(named: info.entityDescription.name!) as! SyncedManagedObject
 						object.setValue(id.recordName, forKey: idField)

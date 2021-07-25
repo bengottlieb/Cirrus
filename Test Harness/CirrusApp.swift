@@ -39,6 +39,7 @@ struct CirrusApp: App {
 		]
 		
 		Cirrus.configure(with: configuration)
+		Logger.instance.level = .verbose
 		Task() {
 			await Cirrus.instance.container.privateCloudDatabase.setupSubscriptions([.init()])
 		}

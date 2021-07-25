@@ -45,8 +45,13 @@ extension Error {
 		return [self]
 	}
 	
-	var ckRecord: CKRecord? {
+	var serverRecord: CKRecord? {
 		let info = (self as NSError).userInfo
 		return info["ServerRecord"] as? CKRecord
+	}
+	
+	var clientRecord: CKRecord? {
+		let info = (self as NSError).userInfo
+		return info["ClientRecord"] as? CKRecord
 	}
 }

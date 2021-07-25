@@ -68,6 +68,7 @@ extension SyncedManagedObject {
 			connector.connect(reference: parent, to: self, key: parentKey)
 		}
 		
+		self.cirrusRecordStatus = []
 		isLoadingFromCloud -= 1
 	}
 }

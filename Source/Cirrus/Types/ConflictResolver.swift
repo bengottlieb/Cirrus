@@ -18,13 +18,14 @@ extension ConflictResolver {
 		for err in error.allErrors {
 			switch err {
 			case CKError.serverRecordChanged:
-				guard let remote = err.ckRecord, let index = resolvedRecords.firstIndex(where: { $0.recordID == remote.recordID }) else { return nil }
+				guard let remote = err.serverRecord, let index = resolvedRecords.position(of: remote) else { continue }
+				
 				if remote.hasSameContent(as: resolvedRecords[index]) {
 					resolvedRecords.remove(at: index)
 				} else {
-					resolvedRecords[index] = resolve(local: resolvedRecords[index], remote: remote)
+					resolvedRecords[index] = resolve(local: resolvedRecords[index], remote: remote) ?? remote
 				}
-				
+
 			case CKError.requestRateLimited:
 				print(err)
 				
@@ -35,7 +36,9 @@ extension ConflictResolver {
 		return resolvedRecords
 	}
 	
-	func resolve(local: CKRecord, remote: CKRecord) -> CKRecord {
+	func resolve(local: CKRecord?, remote: CKRecord?) -> CKRecord? {
+		guard let local = local else { return remote }
+		guard let remote = remote else { return local }
 		let newRecord = compare(local: local, remote: remote)
 		if newRecord == local { remote.copy(from: newRecord) }
 		return remote
@@ -62,5 +65,11 @@ public struct ConflictResolverNewerWins: ConflictResolver {
 	public func compare(local: CKRecord, remote: CKRecord) -> CKRecord {
 		if (remote.modificationDate ?? .distantFuture) > (local.modificationDate ?? .distantFuture) { return remote }
 		return local
+	}
+}
+
+extension Array where Element == CKRecord {
+	func position(of other: CKRecord?) -> Int? {
+		firstIndex { $0.recordID == other?.recordID }
 	}
 }
