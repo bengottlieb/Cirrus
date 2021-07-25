@@ -20,6 +20,7 @@ extension Cirrus {
 		
 		public var idField = "cirrus_uuid"					// every syncableManagedObject should have a string field with this name, used to generate the CKRecord.ID for that object
 		public var statusField = "cirrus_status"			// also, it should have an Int32 field with this name, which contains the record's sync status
+		public var modifiedAtField = "cirrus_modifedAt" // when was this object last modified
 		public var syncedEntityNames: [String] = []
 
 		public var synchronizer: ManagedObjectSynchronizer?

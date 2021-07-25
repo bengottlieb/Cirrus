@@ -30,8 +30,9 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
 	}
 	
 	open override func didChangeValue(forKey key: String) {
-		if isLoadingFromCloud == 0, !cirruschangedKeys.contains(key), key != Cirrus.instance.configuration.idField, key != Cirrus.instance.configuration.statusField {
+		if isLoadingFromCloud == 0, !cirruschangedKeys.contains(key), key != Cirrus.instance.configuration.idField, key != Cirrus.instance.configuration.statusField, key != Cirrus.instance.configuration.modifiedAtField {
 			cirruschangedKeys.insert(key)
+			self.setValue(Date(), forKey: Cirrus.instance.configuration.modifiedAtField)
 		}
 		super.didChangeValue(forKey: key)
 	}
@@ -52,9 +53,11 @@ extension SyncedManagedObject {
 	func load(cloudKitRecord: CKRecord, using connector: ReferenceConnector) throws {
 		isLoadingFromCloud += 1
 		let statusFieldKey = Cirrus.instance.configuration.statusField
+		let modifiedAtKey = Cirrus.instance.configuration.modifiedAtField
+		
 		self.setValue(cloudKitRecord.recordID.recordName, forKey: Cirrus.instance.configuration.idField)
 		for key in cloudKitRecord.allKeys() {
-			if key == statusFieldKey { continue }
+			if key == statusFieldKey || key == modifiedAtKey { continue }
 			let value = cloudKitRecord[key]
 			
 			if let ref = value as? CKRecord.Reference {
