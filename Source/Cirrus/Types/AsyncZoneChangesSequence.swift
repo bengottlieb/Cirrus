@@ -33,13 +33,23 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 	public var changes: [CKRecordChange] = []
 	public var errors: [Error] = []
 	var isComplete = false
+	var queryType: CKDatabase.RecordChangesQueryType
 	
-	init(zoneIDs: [CKRecordZone.ID], in database: CKDatabase) {
+	init(zoneIDs: [CKRecordZone.ID], in database: CKDatabase, queryType: CKDatabase.RecordChangesQueryType = .recent) {
 		self.database = database
 		self.zoneIDs = zoneIDs
+		self.queryType = queryType
+
+		if queryType == .all {
+			Cirrus.instance.localState.zoneChangeTokens = [:]
+		}
 	}
 	
 	public func start() {
+		if zoneIDs.isEmpty {
+			isComplete = true
+			return
+		}
 		run()
 	}
 	
@@ -47,7 +57,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		var results: [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneConfiguration] = [:]
 		
 		for zone in zoneIDs {
-			if let token = Cirrus.instance.localState.changeToken(for: zone) {
+			if let token = Cirrus.instance.changeToken(for: zone) {
 				results[zone] = CKFetchRecordZoneChangesOperation.ZoneConfiguration(previousServerChangeToken: token, resultsLimit: nil, desiredKeys: nil)
 			}
 		}
@@ -58,11 +68,13 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 	func run(cursor: CKQueryOperation.Cursor? = nil) {
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configuration)
 		
-		operation.recordWithIDWasDeletedBlock = { id, type in
-			if type.isEmpty {
-				self.changes.append(.badRecord)
-			} else {
-				self.changes.append(CKRecordChange.deleted(id, type))
+		if queryType != .createdOnly {
+			operation.recordWithIDWasDeletedBlock = { id, type in
+				if type.isEmpty {
+					self.changes.append(.badRecord)
+				} else {
+					self.changes.append(CKRecordChange.deleted(id, type))
+				}
 			}
 		}
 		
@@ -84,7 +96,8 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 				self.errors.append(error)
 				
 			case .success(let done):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
-				Cirrus.instance.localState.setChangeToken(done.serverChangeToken, for: zoneID)
+				Cirrus.instance.setChangeToken(done.serverChangeToken, for: zoneID)
+				print("Zone change token: \(done.serverChangeToken)")
 				if !done.moreComing { self.isComplete = true }
 			}
 		}

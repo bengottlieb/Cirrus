@@ -43,12 +43,6 @@ struct CirrusApp: App {
 		Task() {
 			await Cirrus.instance.container.privateCloudDatabase.setupSubscriptions([.init()])
 		}
-		
-		Cirrus.Notifications.userSignedIn.publisher()
-			.eraseToAnyPublisher()
-			.onSuccess { _ in
-				Task() { try? await SyncedContainer.instance.sync() }
-			}
 	}
 	
 	var body: some Scene {

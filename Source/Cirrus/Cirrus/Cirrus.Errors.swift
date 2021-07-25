@@ -20,7 +20,9 @@ extension Cirrus {
 			case .notAuthenticated:
 				DispatchQueue.onMain { self.state = .notLoggedIn }
 				
-			default: break
+				
+			default:
+				print("Unexpected Error: \(error)")
 			}
 		}
 	}

@@ -25,23 +25,23 @@ extension Cirrus {
 	}
 }
 
-extension Cirrus.LocalState {
+extension Cirrus {
 	func changeToken(for zoneID: CKRecordZone.ID) -> CKServerChangeToken? {
-		guard let data = zoneChangeTokens[zoneID.tokenIdentifier] else { return nil }
+		guard let data = localState.zoneChangeTokens[zoneID.tokenIdentifier] else { return nil }
 		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
 	}
 
 	func changeToken(for database: CKDatabase) -> CKServerChangeToken? {
-		guard let data = zoneChangeTokens[database.databaseScope.tokenIdentifier] else { return nil }
+		guard let data = localState.zoneChangeTokens[database.databaseScope.tokenIdentifier] else { return nil }
 		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
 	}
 
-	mutating func setChangeToken(_ token: CKServerChangeToken, for zoneID: CKRecordZone.ID) {
-		zoneChangeTokens[zoneID.tokenIdentifier] = token.data
+	func setChangeToken(_ token: CKServerChangeToken, for zoneID: CKRecordZone.ID) {
+		localState.zoneChangeTokens[zoneID.tokenIdentifier] = token.data
 	}
 
-	mutating func setChangeToken(_ token: CKServerChangeToken, for database: CKDatabase) {
-		zoneChangeTokens[database.databaseScope.tokenIdentifier] = token.data
+	func setChangeToken(_ token: CKServerChangeToken, for database: CKDatabase) {
+		localState.zoneChangeTokens[database.databaseScope.tokenIdentifier] = token.data
 	}
 }
 

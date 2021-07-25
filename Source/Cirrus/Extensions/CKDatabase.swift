@@ -9,6 +9,7 @@ import Suite
 import CloudKit
 
 public extension CKDatabase {
+	enum RecordChangesQueryType { case recent, all, createdOnly }
 	func records(ofType type: CKRecord.RecordType, matching predicate: NSPredicate = NSPredicate(value: true), sortedBy: [NSSortDescriptor] = [], in zoneID: CKRecordZone.ID? = nil) -> AsyncRecordSequence {
 		let query = CKQuery(recordType: type, predicate: predicate)
 		query.sortDescriptors = sortedBy
@@ -19,11 +20,8 @@ public extension CKDatabase {
 		return seq
 	}
 
-	func changes(in zoneIDs: [CKRecordZone.ID], fromBeginning: Bool = false) -> AsyncZoneChangesSequence {
-		if fromBeginning {
-			Cirrus.instance.localState.zoneChangeTokens = [:]
-		}
-		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self)
+	func changes(in zoneIDs: [CKRecordZone.ID], queryType: RecordChangesQueryType = .recent) -> AsyncZoneChangesSequence {
+		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self, queryType: queryType)
 		seq.start()
 
 		return seq

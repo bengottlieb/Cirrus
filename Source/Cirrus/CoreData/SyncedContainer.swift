@@ -63,18 +63,25 @@ public class SyncedContainer: ObservableObject {
 			.store(in: &cancelBag)
 	}
 
-	public func sync(fromBeginning: Bool = false, zones: [CKRecordZone]? = nil) async throws {
+	public func sync(fromBeginning: Bool = false, in db: CKDatabase? = nil) async throws {
+		if isSyncing { return }
 		logg("Sync Starting", .mild)
 		isSyncing = true
-		var zoneIDs = zones?.map { $0.zoneID }
-		if zoneIDs == nil { zoneIDs = await Cirrus.instance.allZoneIDs }
+		let isFirstSync = await importContext.perform { self.importContext.isEmpty }
+		
+		var database: CKDatabase! = db
+		if database == nil { database = await Cirrus.instance.container.privateCloudDatabase }
+		let zoneIDs = try await CKFetchDatabaseChangesOperation(database: database).changedZones().compactMap { $0.changedZoneID }
+		
+		let queryType: CKDatabase.RecordChangesQueryType = fromBeginning ? .all : (isFirstSync ? .createdOnly : .recent)
+		
 		do {
-			for try await change in await Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs ?? [], fromBeginning: fromBeginning) {
+			for try await change in database.changes(in: zoneIDs, queryType: queryType) {
 				if Logger.instance.level == .verbose {
 					switch change {
-					case .deleted(_, let type): print("Deleted \(type)")
-					case .changed(let id, let record): print("Received \(record.recordType): \(id)")
-					case .badRecord: print("Bad Record")
+					case .deleted(_, let type): if !isFirstSync { logg("Deleted \(type)") }
+					case .changed(let id, let record): logg("Received \(record.recordType): \(id)")
+					case .badRecord: logg("Bad Record")
 					}
 				}
 				await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change)
