@@ -8,7 +8,7 @@
 import Suite
 import CloudKit
 
-public extension CKRecord {
+class CKLocalRecord: CKRecord {
 	convenience init?(_ seed: CKRecordSeed) {
 		guard let id = seed.recordID else {
 			self.init(recordType: seed.recordType)
@@ -31,7 +31,9 @@ public extension CKRecord {
 			}
 		}
 	}
-	
+}
+
+public extension CKRecord {
 	func copy(from record: CKRecord) {
 		for field in self.allKeys() {
 			if record[field] == nil { self[field] = nil }

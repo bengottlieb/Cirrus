@@ -44,7 +44,7 @@ public struct SimpleManagedObject: CirrusManagedObjectConfiguration {
 	}
 	
 	public func sync(object: SyncedManagedObject) {
-		guard let record = CKRecord(object) else {
+		guard let record = CKLocalRecord(object) else {
 			print("Failed to create a CKRecord")
 			return
 		}

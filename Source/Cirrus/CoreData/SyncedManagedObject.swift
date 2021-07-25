@@ -22,6 +22,7 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
 	var isLoadingFromCloud = 0
 	var cirruschangedKeys: Set<String> = []
 	
+	public var locallyModifiedAt: Date? { self.value(forKey: Cirrus.instance.configuration.modifiedAtField) as? Date }
 	var cirrusRecordStatus: RecordStatusFlags {
 		get { RecordStatusFlags(rawValue: self.value(forKey: Cirrus.instance.configuration.statusField) as? Int32 ?? 0) }
 		set {
@@ -55,6 +56,7 @@ extension SyncedManagedObject {
 		let statusFieldKey = Cirrus.instance.configuration.statusField
 		let modifiedAtKey = Cirrus.instance.configuration.modifiedAtField
 		
+		self.setValue(cloudKitRecord.modificationDate, forKey: modifiedAtKey)
 		self.setValue(cloudKitRecord.recordID.recordName, forKey: Cirrus.instance.configuration.idField)
 		for key in cloudKitRecord.allKeys() {
 			if key == statusFieldKey || key == modifiedAtKey { continue }

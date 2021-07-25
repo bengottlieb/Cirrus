@@ -11,11 +11,13 @@ import CloudKit
 public enum CKRecordChange {
 	case deleted(CKRecord.ID, CKRecord.RecordType)
 	case changed(CKRecord.ID, CKRecord)
-	
-	var recordType: CKRecord.RecordType {
+	case badRecord
+
+	var recordType: CKRecord.RecordType? {
 		switch self {
 		case .deleted(_, let type): return type
 		case .changed(_, let record): return record.recordType
+		case .badRecord: return nil
 		}
 	}
 }
@@ -57,7 +59,11 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configuration)
 		
 		operation.recordWithIDWasDeletedBlock = { id, type in
-			self.changes.append(CKRecordChange.deleted(id, type))
+			if type.isEmpty {
+				self.changes.append(.badRecord)
+			} else {
+				self.changes.append(CKRecordChange.deleted(id, type))
+			}
 		}
 		
 		operation.recordWasChangedBlock = { id, result in
@@ -107,7 +113,9 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 					return sequence.changes[position - 1]
 				}
 				
-				if sequence.isComplete { return nil }
+				if sequence.isComplete {
+					return nil
+				}
 				await Task.sleep(1_000)
 			}
 		}

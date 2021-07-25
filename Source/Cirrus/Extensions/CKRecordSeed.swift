@@ -16,4 +16,5 @@ public protocol CKRecordSeed {
 	subscript(key: String) -> CKRecordValue? { get }
 	var recordZone: CKRecordZone? { get }
 	func reference(for name: String, action: CKRecord.ReferenceAction) -> CKRecord.Reference?
+	var locallyModifiedAt: Date? { get }
 }

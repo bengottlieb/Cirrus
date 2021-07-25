@@ -13,6 +13,7 @@ struct Flag: CKRecordSeed {
 	var recordZone: CKRecordZone? { Cirrus.instance.zone(named: "flags") }
 	var parentRelationshipName: String? { nil }
 	var savedRelationshipNames: [String] { [] }
+	var locallyModifiedAt: Date? { nil }
 
 	var recordType: CKRecord.RecordType { "flag" }
 	

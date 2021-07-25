@@ -15,6 +15,7 @@ struct Emoji: CKRecordSeed {
 	var savedRelationshipNames: [String] { [] }
 	
 	var recordType: CKRecord.RecordType { "emoji" }
+	var locallyModifiedAt: Date? { nil }
 	
 	var savedFieldNames: [String] { ["emoji"] }
 	

@@ -70,7 +70,13 @@ public class SyncedContainer: ObservableObject {
 		if zoneIDs == nil { zoneIDs = await Cirrus.instance.allZoneIDs }
 		do {
 			for try await change in await Cirrus.instance.container.privateCloudDatabase.changes(in: zoneIDs ?? [], fromBeginning: fromBeginning) {
-				logg("Received Record", .verbose)
+				if Logger.instance.level == .verbose {
+					switch change {
+					case .deleted(_, let type): print("Deleted \(type)")
+					case .changed(let id, let record): print("Received \(record.recordType): \(id)")
+					case .badRecord: print("Bad Record")
+					}
+				}
 				await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change)
 			}
 			await Cirrus.instance.configuration.synchronizer?.finishImporting()

@@ -52,7 +52,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 			for entity in syncableEntities {
 				let changed = self.context.changedRecords(named: entity.entityName)
 				for object in changed {
-					guard let record = CKRecord(object) else { continue }
+					guard let record = CKLocalRecord(object) else { continue }
 					let scope = object.database.databaseScope
 					if queuedDeletions.contains(recordID: record.recordID, in: scope) { continue }
 					var current = pending[scope] ?? []
@@ -83,7 +83,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 	}
 	
 	public func process(downloadedChange change: CKRecordChange) async {
-		guard let info = await Cirrus.instance.configuration.entityInfo(for: change.recordType) else { return }
+		guard let recordType = change.recordType, let info = await Cirrus.instance.configuration.entityInfo(for: recordType) else { return }
 		
 		let idField = await Cirrus.instance.configuration.idField
 		let resolver = await Cirrus.instance.configuration.conflictResolver
@@ -92,7 +92,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 			case .changed(let id, let record):
 				try await context.perform {
 					if let object = info.record(with: id, in: self.context) {
-						let local = CKRecord(object)
+						let local = CKLocalRecord(object)
 						let winner = resolver.resolve(local: local, remote: record) ?? record
 						try object.load(cloudKitRecord: winner, using: self.connector)
 					} else {
@@ -103,9 +103,13 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 				}
 				
 			case .deleted(let id, _):
-				if let object = info.record(with: id, in: context) {
-					context.delete(object)
+				await context.perform {
+					if let object = info.record(with: id, in: self.context) {
+						self.context.delete(object)
+					}
 				}
+				
+			case .badRecord: break
 			}
 		} catch {
 			print("Failed to change: \(error)")

@@ -13,7 +13,7 @@ import SwiftUI
 func addEmoji() async {
 	do {
 		let emoji = Emoji.cluster(count: 10)
-		try await Cirrus.instance.container.privateCloudDatabase.save(records: emoji.map { CKRecord($0)! })
+		try await Cirrus.instance.container.privateCloudDatabase.save(records: emoji.map { CKLocalRecord($0)! })
 	} catch let err as NSError {
 		print("Error: \(err.localizedDescription)")
 	} catch {
