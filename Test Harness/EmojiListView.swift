@@ -16,17 +16,18 @@ struct EmojiListView: View {
 	@FetchRequest(entity: SyncedContainer.instance.entity(named: "Emoji"), sortDescriptors: [NSSortDescriptor(key: "uuid", ascending: true)], predicate: nil, animation: .linear) var emoji: FetchedResults<EmojiMO>
 	
 	var body: some View {
-		ScrollView() {
-			VStack() {
+		VStack() {
+			ScrollView() {
 				ForEach(emoji) { emoji in
 					EmojiRow(emoji: emoji)
 					.padding(.horizontal)
 					.padding(.vertical, 4)
 				}
-				
-				if clearing {
-					ProgressView()
-				} else {
+			}
+			if clearing {
+				ProgressView()
+			} else {
+				HStack() {
 					Button("Clear All") {
 						clearing = true
 						Task() {
@@ -35,11 +36,17 @@ struct EmojiListView: View {
 							clearing = false
 						}
 					}
+					.padding()
+					
+					Button("Add 1000") {
+						addEmoji(1000)
+					}
+					.padding()
 				}
 			}
 		}
-		.navigationTitle("Emoji")
-		.navigationBarItems(leading: syncButton, trailing: Button(action: addEmoji) { Image(.plus_app) })
+		.navigationTitle("Emoji - \(SyncedContainer.instance.viewContext.count(of: "Emoji"))")
+		.navigationBarItems(leading: syncButton, trailing: Button(action:  { addEmoji(1) }) { Image(.plus_app) })
     }
 	
 	@ViewBuilder var syncButton: some View {
@@ -59,14 +66,16 @@ struct EmojiListView: View {
 		  }
 	}
 	
-	func addEmoji() {
+	func addEmoji(_ count: Int) {
 		Task {
-			let emoji = Emoji.randomEmoji(max: 2)
-			if let object: EmojiMO = SyncedContainer.instance.viewContext.insertObject() {
-				object.emoji = emoji.emoji
-				object.initial = emoji.emoji
-				object.save()
+			for _ in 0..<count {
+				let emoji = Emoji.randomEmoji(max: 2)
+				if let object: EmojiMO = SyncedContainer.instance.viewContext.insertObject() {
+					object.emoji = emoji.emoji
+					object.initial = emoji.emoji
+				}
 			}
+			SyncedContainer.instance.viewContext.saveContext()
 //			try await Cirrus.instance.container.privateCloudDatabase.save(records: [CKRecord(emoji)!])
 			sync()
 		}

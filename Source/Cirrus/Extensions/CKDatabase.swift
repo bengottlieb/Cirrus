@@ -51,18 +51,23 @@ public extension CKDatabase {
 	
 	func save(records: [CKRecordProviding]?, atomically: Bool = true, conflictResolver: ConflictResolver? = nil) async throws {
 		guard let records = records, records.isNotEmpty else { return }
-		let op = CKModifyRecordsOperation(recordsToSave: records.map { $0.record })
-		var resolver = conflictResolver
-		if resolver == nil { resolver = await Cirrus.instance.configuration.conflictResolver }
+		let chunkSize = 350
+		let recordChunks = records.breakIntoChunks(ofSize: chunkSize)
+		
+		for chunk in recordChunks {
+			let op = CKModifyRecordsOperation(recordsToSave: chunk.map { $0.record })
+			var resolver = conflictResolver
+			if resolver == nil { resolver = await Cirrus.instance.configuration.conflictResolver }
 
-		do {
-			try await op.save(in: self)
-		} catch {
-			if let updatedRecords = try await resolver?.resolve(error: error, in: records, database: self) {
-				try await save(records: updatedRecords, atomically: atomically, conflictResolver: conflictResolver)
-			} else {
-				await Cirrus.instance.handleReceivedError(error)
-				throw error
+			do {
+				try await op.save(in: self)
+			} catch {
+				if let updatedRecords = try await resolver?.resolve(error: error, in: chunk, database: self) {
+					try await save(records: updatedRecords, atomically: atomically, conflictResolver: conflictResolver)
+				} else {
+					await Cirrus.instance.handleReceivedError(error)
+					throw error
+				}
 			}
 		}
 	}

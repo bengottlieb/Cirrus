@@ -10,10 +10,19 @@ import SwiftUI
 struct EmojiRow: View {
 	@ObservedObject var emoji: EmojiMO
 	
+	var suffix: String {
+		var content: [String] = []
+		
+		if emoji.initial != emoji.emoji { content.append(emoji.initial) }
+		if let count = emoji.badges?.count, count > 0 { content.append("\(count)") }
+		if content.isEmpty { return "" }
+		return "[\(content.joined(separator: ", "))]"
+	}
+	
 	var body: some View {
 		HStack() {
 			Button(action: rebuild) {
-				Text("\(emoji.emoji)(\(emoji.initial) \(emoji.badges?.count ?? 0))")
+				Text("\(emoji.emoji)\(suffix)")
 			}
 			Spacer()
 			

@@ -19,7 +19,12 @@ extension Cirrus {
 				
 			case .notAuthenticated:
 				DispatchQueue.onMain { self.state = .notLoggedIn }
+			
+			case .invalidArguments:
+				print("Possibly missing index. \(error.localizedDescription)")
 				
+			case .limitExceeded:
+				print("Too many records in the request, \(error.localizedDescription)")
 				
 			default:
 				print("Unexpected Error: \(error)")
