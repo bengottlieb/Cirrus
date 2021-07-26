@@ -13,7 +13,7 @@ struct EmojiRow: View {
 	var body: some View {
 		HStack() {
 			Button(action: rebuild) {
-				Text("\(emoji.emoji)(\(emoji.badges?.count ?? 0))")
+				Text("\(emoji.emoji)(\(emoji.initial) \(emoji.badges?.count ?? 0))")
 			}
 			Spacer()
 			

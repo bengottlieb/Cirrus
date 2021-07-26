@@ -11,7 +11,8 @@ class EmojiMO: SyncedManagedObject, Identifiable {
 	@NSManaged public var uuid: String
 	@NSManaged public var badges: Set<EmojiBadgeMO>?
 	@NSManaged public var emoji: String
-	
+	@NSManaged public var initial: String
+
 	var id: String { uuid }
 	
 	

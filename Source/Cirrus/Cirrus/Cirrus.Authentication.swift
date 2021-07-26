@@ -10,7 +10,7 @@ import CloudKit
 
 extension Cirrus {
 	public func authenticate(evenIfOffline: Bool = false) async throws {
-		guard state.isSignedOut, (evenIfOffline || !state.isOffline) else { return }
+		guard state.isSignedOut || (evenIfOffline && state.isOffline) else { return }
 		
 		DispatchQueue.onMain { self.state = .signingIn }
 		do {

@@ -22,7 +22,7 @@ extension Cirrus {
 			for object in unsyncedObjects {
 				if object.isDeleted { continue }
 				object.cirrusRecordStatus = .hasLocalChanges
-				object.cirruschangedKeys = []
+				object.cirrus_changedKeys = []
 			}
 		}
 		

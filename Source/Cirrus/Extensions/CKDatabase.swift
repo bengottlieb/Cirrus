@@ -8,6 +8,16 @@
 import Suite
 import CloudKit
 
+public protocol CKRecordProviding {
+	var record: CKRecord { get }
+	var modifiedAt: Date? { get }
+}
+
+extension CKRecord: CKRecordProviding {
+	public var record: CKRecord { self }
+	public var modifiedAt: Date? { modificationDate }
+}
+
 public extension CKDatabase {
 	enum RecordChangesQueryType { case recent, all, createdOnly }
 	func records(ofType type: CKRecord.RecordType, matching predicate: NSPredicate = NSPredicate(value: true), sortedBy: [NSSortDescriptor] = [], in zoneID: CKRecordZone.ID? = nil) -> AsyncRecordSequence {
@@ -39,9 +49,9 @@ public extension CKDatabase {
 		}
 	}
 	
-	func save(records: [CKRecord]?, atomically: Bool = true, conflictResolver: ConflictResolver? = nil) async throws {
+	func save(records: [CKRecordProviding]?, atomically: Bool = true, conflictResolver: ConflictResolver? = nil) async throws {
 		guard let records = records, records.isNotEmpty else { return }
-		let op = CKModifyRecordsOperation(recordsToSave: records)
+		let op = CKModifyRecordsOperation(recordsToSave: records.map { $0.record })
 		var resolver = conflictResolver
 		if resolver == nil { resolver = await Cirrus.instance.configuration.conflictResolver }
 
@@ -57,7 +67,7 @@ public extension CKDatabase {
 		}
 	}
 	
-	func save(record: CKRecord?, conflictResolver: ConflictResolver? = nil) async throws {
+	func save(record: CKRecordProviding?, conflictResolver: ConflictResolver? = nil) async throws {
 		guard let record = record else { return }
 		try await save(records: [record], conflictResolver: conflictResolver)
 	}

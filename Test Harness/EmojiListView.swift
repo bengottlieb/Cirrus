@@ -61,12 +61,13 @@ struct EmojiListView: View {
 	
 	func addEmoji() {
 		Task {
-			let emoji = Emoji.randomEmoji(max: 3)
+			let emoji = Emoji.randomEmoji(max: 2)
 			if let object: EmojiMO = SyncedContainer.instance.viewContext.insertObject() {
 				object.emoji = emoji.emoji
+				object.initial = emoji.emoji
 				object.save()
 			}
-//			try await Cirrus.instance.container.privateCloudDatabase.save(records: [CKLocalRecord(emoji)!])
+//			try await Cirrus.instance.container.privateCloudDatabase.save(records: [CKRecord(emoji)!])
 			sync()
 		}
 	}

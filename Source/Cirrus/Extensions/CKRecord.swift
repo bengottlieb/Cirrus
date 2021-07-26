@@ -8,7 +8,7 @@
 import Suite
 import CloudKit
 
-class CKLocalRecord: CKRecord {
+extension CKRecord {
 	convenience init?(_ seed: CKRecordSeed) {
 		guard let id = seed.recordID else {
 			self.init(recordType: seed.recordType)

@@ -9,7 +9,7 @@ import CoreData
 
 extension NSManagedObjectContext {
 	var recentlyChangedObjects: [SyncedManagedObject] {
-		registeredObjects.compactMap { $0 as? SyncedManagedObject }.filter { $0.cirruschangedKeys.isNotEmpty }
+		registeredObjects.compactMap { $0 as? SyncedManagedObject }.filter { $0.cirrus_changedKeys.isNotEmpty || $0.cirrusRecordStatus.contains(.hasLocalChanges) }
 	}
 	
 	var recentlyDeletedObjects: [SyncedManagedObject] {
@@ -18,7 +18,7 @@ extension NSManagedObjectContext {
 	
 	func clearUnsynced(_ objects: [SyncedManagedObject]) {
 		objects.forEach { obj in
-			obj.cirruschangedKeys = []
+			obj.cirrus_changedKeys = []
 		}
 	}
 	

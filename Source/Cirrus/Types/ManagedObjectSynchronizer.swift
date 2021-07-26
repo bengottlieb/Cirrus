@@ -35,28 +35,35 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 	
 	public func startSync() {
 		syncStartTimer?.invalidate()
-		syncStartTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
-			Task() {
-				await self.uploadLocalChanges()
+		DispatchQueue.onMain(async: true) {
+			self.syncStartTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+				Task() {
+					await self.uploadLocalChanges()
+				}
 			}
 		}
+	}
+	
+	struct ModifiedRecord: CKRecordProviding {
+		let record: CKRecord
+		let modifiedAt: Date?
 	}
 	
 	public func uploadLocalChanges() async {
 		if await Cirrus.instance.state.isOffline { return }
 		let syncableEntities = await Cirrus.instance.configuration.entities ?? []
-		var pending: [CKDatabase.Scope: [CKRecord]] = [:]
+		var pending: [CKDatabase.Scope: [ModifiedRecord]] = [:]
 		let queuedDeletions = await QueuedDeletions.instance.pending
 
 		await context.perform {
 			for entity in syncableEntities {
 				let changed = self.context.changedRecords(named: entity.entityName)
 				for object in changed {
-					guard let record = CKLocalRecord(object) else { continue }
+					guard let record = CKRecord(object) else { continue }
 					let scope = object.database.databaseScope
 					if queuedDeletions.contains(recordID: record.recordID, in: scope) { continue }
 					var current = pending[scope] ?? []
-					current.append(record)
+					current.append(ModifiedRecord(record: record, modifiedAt: object.locallyModifiedAt))
 					pending[scope] = current
 				}
 			}
@@ -89,16 +96,24 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 		let resolver = await Cirrus.instance.configuration.conflictResolver
 		do {
 			switch change {
-			case .changed(let id, let record):
+			case .changed(let id, let remote):
 				try await context.perform {
 					if let object = info.record(with: id, in: self.context) {
-						let local = CKLocalRecord(object)
-						let winner = resolver.resolve(local: local, remote: record) ?? record
-						try object.load(cloudKitRecord: winner, using: self.connector)
+						let local = CKRecord(object)
+						let winner = resolver.resolve(local: local, localModifiedAt: object.locallyModifiedAt, remote: remote)
+						
+						switch winner {
+						case .local:
+							object.cirrusRecordStatus = .hasLocalChanges
+							
+						case .remote:
+							try object.load(cloudKitRecord: remote, using: self.connector)
+						}
+						
 					} else {
 						let object = self.context.insertEntity(named: info.entityDescription.name!) as! SyncedManagedObject
 						object.setValue(id.recordName, forKey: idField)
-						try object.load(cloudKitRecord: record, using: self.connector)
+						try object.load(cloudKitRecord: remote, using: self.connector)
 					}
 				}
 				
