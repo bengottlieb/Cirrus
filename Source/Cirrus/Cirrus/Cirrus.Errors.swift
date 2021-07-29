@@ -26,6 +26,9 @@ extension Cirrus {
 			case .limitExceeded:
 				print("Too many records in the request, \(error.localizedDescription)")
 				
+			case .accountTemporarilyUnavailable:
+				DispatchQueue.onMain { Cirrus.instance.state = .temporaryUnavailable }
+				
 			default:
 				print("Unexpected Error: \(error)")
 			}

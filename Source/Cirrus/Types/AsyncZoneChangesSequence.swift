@@ -58,7 +58,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		
 		for zone in zoneIDs {
 			if let token = Cirrus.instance.changeToken(for: zone) {
-				results[zone] = CKFetchRecordZoneChangesOperation.ZoneConfiguration(previousServerChangeToken: token, resultsLimit: nil, desiredKeys: nil)
+				results[zone] = CKFetchRecordZoneChangesOperation.ZoneConfiguration(previousServerChangeToken: token, resultsLimit: nil, desiredKeys: [])
 			}
 		}
 		

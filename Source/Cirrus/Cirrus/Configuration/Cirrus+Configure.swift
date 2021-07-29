@@ -26,7 +26,14 @@ extension Cirrus {
 			.store(in: &cancelBag)
 		
 		Notification.Name.CKAccountChanged.publisher()
-			.sink() { _ in Task { if case .authenticated = self.state { try? await self.authenticate() }}}
+			.sink() { _ in Task {
+				switch self.state {
+				case .authenticated, .temporaryUnavailable:
+					try? await self.authenticate()
+					
+				default: break
+				}
+				}}
 			.store(in: &cancelBag)
 		
 		Notification.Name.NSManagedObjectContextWillSave.publisher()

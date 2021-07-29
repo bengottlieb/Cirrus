@@ -10,9 +10,9 @@ import CloudKit
 
 extension Cirrus {
 	public func authenticate(evenIfOffline: Bool = false) async throws {
-		guard state.isSignedOut || (evenIfOffline && state.isOffline) else { return }
+		guard state.isSignedOut || state == .temporaryUnavailable || (evenIfOffline && state.isOffline) else { return }
 		
-		DispatchQueue.onMain { self.state = .signingIn }
+		if state != .temporaryUnavailable { DispatchQueue.onMain { self.state = .signingIn } }
 		do {
 			switch try await container.accountStatus() {
 			case .couldNotDetermine, .noAccount, .restricted, .temporarilyUnavailable:
@@ -27,8 +27,15 @@ extension Cirrus {
 				DispatchQueue.onMain { self.state = .notLoggedIn }
 			}
 		} catch let error as NSError {
-			DispatchQueue.onMain { self.state = .failed(error) }
-			throw error
+			print("Error when signing in: \((error as NSError).code)  \(error)\n \((error as NSError).domain)")
+			switch (error.code, error.domain) {
+			case (1028, "CKInternalErrorDomain"):
+				DispatchQueue.onMain { self.state = .temporaryUnavailable }
+				
+			default:
+				DispatchQueue.onMain { self.state = .failed(error) }
+				throw error
+			}
 		}
 	}
 	
@@ -58,7 +65,7 @@ extension Cirrus {
 }
 
 extension Cirrus {
-	public enum AuthenticationState: Equatable { case notLoggedIn, signingIn, tokenFailed, denied, authenticated(CKRecord.ID), offline(CKRecord.ID), failed(NSError)
+	public enum AuthenticationState: Equatable { case notLoggedIn, signingIn, tokenFailed, denied, authenticated(CKRecord.ID), offline(CKRecord.ID), failed(NSError), temporaryUnavailable
 		
 		public var isSignedIn: Bool {
 			switch self {

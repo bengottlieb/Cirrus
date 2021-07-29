@@ -17,6 +17,11 @@ struct ContentView: View {
 				switch cirrus.state {
 				case .offline,  .authenticated:
 					EmojiListView()
+				
+				case .temporaryUnavailable:
+					ProgressView()
+					Text("Temporarily Unavailable…")
+						.opacity(0.5)
 					
 				case .signingIn:
 					ProgressView()
