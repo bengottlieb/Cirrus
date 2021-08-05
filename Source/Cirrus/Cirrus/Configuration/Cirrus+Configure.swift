@@ -9,6 +9,10 @@ import Suite
 import CloudKit
 import CoreData
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 extension Cirrus {
 	public static func configure(with configuration: Configuration) {
 		Configuration.instance = configuration
@@ -21,9 +25,11 @@ extension Cirrus {
 		container = CKContainer(identifier: config.containerIdentifer)
 		if Reachability.instance.isOffline, let userID = localState.lastSignedInUserID { state = .offline(userID) }
 
-		UIApplication.willEnterForegroundNotification.publisher()
-			.sink() { _ in Task { try? await self.authenticate() }}
-			.store(in: &cancelBag)
+		#if canImport(UIKit)
+			UIApplication.willEnterForegroundNotification.publisher()
+				.sink() { _ in Task { try? await self.authenticate() }}
+				.store(in: &cancelBag)
+		#endif
 		
 		Notification.Name.CKAccountChanged.publisher()
 			.sink() { _ in Task { if case .authenticated = self.state { try? await self.authenticate() }}}
