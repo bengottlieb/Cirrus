@@ -10,6 +10,7 @@ import Cocoa
 class LegacyAppDelegate: NSObject, NSApplicationDelegate {
 	func applicationDidFinishLaunching(_ notification: Notification) {
 		print("Did Finish Launching")
+		NSApp.registerForRemoteNotifications()
 	}
 	
 	func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String : Any]) {

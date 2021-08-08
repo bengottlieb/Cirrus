@@ -30,7 +30,6 @@ struct Cirrus_macOSApp: App {
 		Task() {
 			await Cirrus.instance.container.privateCloudDatabase.setupSubscriptions([.init()])
 		}
-		NSApp.registerForRemoteNotifications()
 	}
 
 	var body: some Scene {
