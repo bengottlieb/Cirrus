@@ -44,6 +44,52 @@
 		B52104A126A256C7008ABEF4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B52104A026A256C7008ABEF4 /* Preview Assets.xcassets */; };
 		B52104AD26A25AB4008ABEF4 /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B52104AC26A25AB4008ABEF4 /* Suite */; };
 		B52104B326A25B9B008ABEF4 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52104B226A25B9B008ABEF4 /* CloudKit.framework */; };
+		B525A53626BBEFB600680BAD /* Cirrus_macOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B525A53526BBEFB600680BAD /* Cirrus_macOSApp.swift */; };
+		B525A53826BBEFB600680BAD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B525A53726BBEFB600680BAD /* ContentView.swift */; };
+		B525A53A26BBEFB600680BAD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B525A53926BBEFB600680BAD /* Assets.xcassets */; };
+		B525A53D26BBEFB600680BAD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B525A53C26BBEFB600680BAD /* Preview Assets.xcassets */; };
+		B525A54126BBEFC900680BAD /* CKRecordSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255226ACFA660031B188 /* CKRecordSeed.swift */; };
+		B525A54226BBEFC900680BAD /* ConflictResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506254726ACFA650031B188 /* ConflictResolver.swift */; };
+		B525A54326BBEFC900680BAD /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255B26ACFA660031B188 /* URL.swift */; };
+		B525A54426BBEFC900680BAD /* ReferenceConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506254826ACFA650031B188 /* ReferenceConnector.swift */; };
+		B525A54526BBEFC900680BAD /* ManagedObjectSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506254B26ACFA650031B188 /* ManagedObjectSynchronizer.swift */; };
+		B525A54626BBEFC900680BAD /* Cirrus.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256326ACFA660031B188 /* Cirrus.swift */; };
+		B525A54726BBEFC900680BAD /* CKDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255A26ACFA660031B188 /* CKDatabase.swift */; };
+		B525A54826BBEFC900680BAD /* Cirrus.Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256826ACFA660031B188 /* Cirrus.Authentication.swift */; };
+		B525A54926BBEFC900680BAD /* SyncedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255026ACFA650031B188 /* SyncedContainer.swift */; };
+		B525A54A26BBEFC900680BAD /* Cirrus.Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256526ACFA660031B188 /* Cirrus.Errors.swift */; };
+		B525A54B26BBEFC900680BAD /* Cirrus.UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256926ACFA660031B188 /* Cirrus.UserData.swift */; };
+		B525A54C26BBEFC900680BAD /* CKRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255C26ACFA660031B188 /* CKRecord.swift */; };
+		B525A54D26BBEFC900680BAD /* Cirrus+Configure.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256126ACFA660031B188 /* Cirrus+Configure.swift */; };
+		B525A54E26BBEFC900680BAD /* Cirrus.LocalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256626ACFA660031B188 /* Cirrus.LocalState.swift */; };
+		B525A54F26BBEFC900680BAD /* CKRecordValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255326ACFA660031B188 /* CKRecordValue.swift */; };
+		B525A55026BBEFC900680BAD /* Cirrus.Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256026ACFA660031B188 /* Cirrus.Configuration.swift */; };
+		B525A55126BBEFC900680BAD /* Cirrus.Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255E26ACFA660031B188 /* Cirrus.Notifications.swift */; };
+		B525A55226BBEFC900680BAD /* CirrusManagedObjectConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256226ACFA660031B188 /* CirrusManagedObjectConfiguration.swift */; };
+		B525A55326BBEFC900680BAD /* PendingDeletions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506254926ACFA650031B188 /* PendingDeletions.swift */; };
+		B525A55426BBEFC900680BAD /* SyncedManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506254F26ACFA650031B188 /* SyncedManagedObject.swift */; };
+		B525A55526BBEFC900680BAD /* CKRecord.ID.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255426ACFA660031B188 /* CKRecord.ID.swift */; };
+		B525A55626BBEFC900680BAD /* NSManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255526ACFA660031B188 /* NSManagedObjectContext.swift */; };
+		B525A55726BBEFC900680BAD /* Cirrus+Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256426ACFA660031B188 /* Cirrus+Subscriptions.swift */; };
+		B525A55826BBEFC900680BAD /* AsyncRecordSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506254C26ACFA650031B188 /* AsyncRecordSequence.swift */; };
+		B525A55926BBEFC900680BAD /* Cirrus+Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506256726ACFA660031B188 /* Cirrus+Sync.swift */; };
+		B525A55A26BBEFC900680BAD /* AppGroupPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506254E26ACFA650031B188 /* AppGroupPersistentContainer.swift */; };
+		B525A55B26BBEFC900680BAD /* AsyncZoneChangesSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506254A26ACFA650031B188 /* AsyncZoneChangesSequence.swift */; };
+		B525A55F26BBF06200680BAD /* Suite in Frameworks */ = {isa = PBXBuildFile; productRef = B525A55E26BBF06200680BAD /* Suite */; };
+		B525A56026BBF19C00680BAD /* CKModifyRecordsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255726ACFA660031B188 /* CKModifyRecordsOperation.swift */; };
+		B525A56126BBF1A500680BAD /* CKModifySubscriptionsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255826ACFA660031B188 /* CKModifySubscriptionsOperation.swift */; };
+		B525A56226BBF1A500680BAD /* CKFetchSubscriptionsOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506255926ACFA660031B188 /* CKFetchSubscriptionsOperation.swift */; };
+		B525A56326BBF1A500680BAD /* CKFetchDatabaseChangesOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B506258826AD9C120031B188 /* CKFetchDatabaseChangesOperation.swift */; };
+		B525A56526BBF28600680BAD /* LegacyAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B525A56426BBF28600680BAD /* LegacyAppDelegate.swift */; };
+		B525A56626BBF34800680BAD /* EmojiRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13E26A4E12300F0C395 /* EmojiRow.swift */; };
+		B525A56726BBF34800680BAD /* BadgeMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4626A44B0300856E8C /* BadgeMO.swift */; };
+		B525A56826BBF34800680BAD /* EmojiMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4426A44AE700856E8C /* EmojiMO.swift */; };
+		B525A56926BBF34800680BAD /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE5426A4658600856E8C /* Emoji.swift */; };
+		B525A56A26BBF34800680BAD /* EmojiBadgeMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4826A44B1C00856E8C /* EmojiBadgeMO.swift */; };
+		B525A56B26BBF34800680BAD /* EmojiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13A26A4A23F00F0C395 /* EmojiListView.swift */; };
+		B525A56C26BBF34800680BAD /* Flag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F664C826A2EE3A00B49AC7 /* Flag.swift */; };
+		B525A56D26BBF37C00680BAD /* Emoji.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4126A44A4D00856E8C /* Emoji.xcdatamodeld */; };
+		B525A57026BBF3A700680BAD /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B525A56F26BBF3A700680BAD /* CloudKit.framework */; };
 		B53000B426A7C207007367A7 /* LegacyAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53000B326A7C206007367A7 /* LegacyAppDelegate.swift */; };
 		B565D13B26A4A23F00F0C395 /* EmojiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13A26A4A23F00F0C395 /* EmojiListView.swift */; };
 		B565D13F26A4E12300F0C395 /* EmojiRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13E26A4E12300F0C395 /* EmojiRow.swift */; };
@@ -89,13 +135,21 @@
 		B506258826AD9C120031B188 /* CKFetchDatabaseChangesOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CKFetchDatabaseChangesOperation.swift; sourceTree = "<group>"; };
 		B506258A26ADD9E50031B188 /* Suite */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Suite; path = ../Suite; sourceTree = "<group>"; };
 		B507F45A26A2819F00A5C291 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		B521049626A256C6008ABEF4 /* Cirrus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cirrus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B521049626A256C6008ABEF4 /* Cirrus_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cirrus_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B521049926A256C6008ABEF4 /* CirrusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CirrusApp.swift; sourceTree = "<group>"; };
 		B521049B26A256C6008ABEF4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B521049D26A256C7008ABEF4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B52104A026A256C7008ABEF4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B52104B026A25B92008ABEF4 /* Cirrus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Cirrus.entitlements; sourceTree = "<group>"; };
 		B52104B226A25B9B008ABEF4 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		B525A53326BBEFB600680BAD /* Cirrus_macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cirrus_macOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B525A53526BBEFB600680BAD /* Cirrus_macOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cirrus_macOSApp.swift; sourceTree = "<group>"; };
+		B525A53726BBEFB600680BAD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B525A53926BBEFB600680BAD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B525A53C26BBEFB600680BAD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B525A56426BBF28600680BAD /* LegacyAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyAppDelegate.swift; sourceTree = "<group>"; };
+		B525A56E26BBF39D00680BAD /* Cirrus_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Cirrus_macOS.entitlements; sourceTree = "<group>"; };
+		B525A56F26BBF3A700680BAD /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		B53000B326A7C206007367A7 /* LegacyAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyAppDelegate.swift; sourceTree = "<group>"; };
 		B53000B526A7C2BF007367A7 /* Cirrus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Cirrus-Info.plist"; sourceTree = "<group>"; };
 		B565D13A26A4A23F00F0C395 /* EmojiListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiListView.swift; sourceTree = "<group>"; };
@@ -115,6 +169,15 @@
 			files = (
 				B52104AD26A25AB4008ABEF4 /* Suite in Frameworks */,
 				B52104B326A25B9B008ABEF4 /* CloudKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B525A53026BBEFB600680BAD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B525A55F26BBF06200680BAD /* Suite in Frameworks */,
+				B525A57026BBF3A700680BAD /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,12 +281,14 @@
 		B521048D26A256C6008ABEF4 = {
 			isa = PBXGroup;
 			children = (
+				B525A56E26BBF39D00680BAD /* Cirrus_macOS.entitlements */,
 				B506258A26ADD9E50031B188 /* Suite */,
 				B53000B526A7C2BF007367A7 /* Cirrus-Info.plist */,
 				B507F45A26A2819F00A5C291 /* Package.swift */,
 				B506254426ACFA650031B188 /* Source */,
 				B52104B026A25B92008ABEF4 /* Cirrus.entitlements */,
 				B521049826A256C6008ABEF4 /* Test Harness */,
+				B525A53426BBEFB600680BAD /* Mac Test Harness */,
 				B521049726A256C6008ABEF4 /* Products */,
 				B52104B126A25B9B008ABEF4 /* Frameworks */,
 			);
@@ -232,7 +297,8 @@
 		B521049726A256C6008ABEF4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B521049626A256C6008ABEF4 /* Cirrus.app */,
+				B521049626A256C6008ABEF4 /* Cirrus_iOS.app */,
+				B525A53326BBEFB600680BAD /* Cirrus_macOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -265,9 +331,30 @@
 		B52104B126A25B9B008ABEF4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B525A56F26BBF3A700680BAD /* CloudKit.framework */,
 				B52104B226A25B9B008ABEF4 /* CloudKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B525A53426BBEFB600680BAD /* Mac Test Harness */ = {
+			isa = PBXGroup;
+			children = (
+				B525A53526BBEFB600680BAD /* Cirrus_macOSApp.swift */,
+				B525A56426BBF28600680BAD /* LegacyAppDelegate.swift */,
+				B525A53726BBEFB600680BAD /* ContentView.swift */,
+				B525A53926BBEFB600680BAD /* Assets.xcassets */,
+				B525A53B26BBEFB600680BAD /* Preview Content */,
+			);
+			path = "Mac Test Harness";
+			sourceTree = "<group>";
+		};
+		B525A53B26BBEFB600680BAD /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				B525A53C26BBEFB600680BAD /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		B5E6DE4D26A4526A00856E8C /* Model */ = {
@@ -284,9 +371,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B521049526A256C6008ABEF4 /* Cirrus */ = {
+		B521049526A256C6008ABEF4 /* Cirrus_iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B52104A426A256C7008ABEF4 /* Build configuration list for PBXNativeTarget "Cirrus" */;
+			buildConfigurationList = B52104A426A256C7008ABEF4 /* Build configuration list for PBXNativeTarget "Cirrus_iOS" */;
 			buildPhases = (
 				B521049226A256C6008ABEF4 /* Sources */,
 				B521049326A256C6008ABEF4 /* Frameworks */,
@@ -296,12 +383,32 @@
 			);
 			dependencies = (
 			);
-			name = Cirrus;
+			name = Cirrus_iOS;
 			packageProductDependencies = (
 				B52104AC26A25AB4008ABEF4 /* Suite */,
 			);
 			productName = Cirrus;
-			productReference = B521049626A256C6008ABEF4 /* Cirrus.app */;
+			productReference = B521049626A256C6008ABEF4 /* Cirrus_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B525A53226BBEFB600680BAD /* Cirrus_macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B525A53E26BBEFB600680BAD /* Build configuration list for PBXNativeTarget "Cirrus_macOS" */;
+			buildPhases = (
+				B525A52F26BBEFB600680BAD /* Sources */,
+				B525A53026BBEFB600680BAD /* Frameworks */,
+				B525A53126BBEFB600680BAD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Cirrus_macOS;
+			packageProductDependencies = (
+				B525A55E26BBF06200680BAD /* Suite */,
+			);
+			productName = Cirrus_macOS;
+			productReference = B525A53326BBEFB600680BAD /* Cirrus_macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -315,6 +422,9 @@
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
 					B521049526A256C6008ABEF4 = {
+						CreatedOnToolsVersion = 13.0;
+					};
+					B525A53226BBEFB600680BAD = {
 						CreatedOnToolsVersion = 13.0;
 					};
 				};
@@ -335,7 +445,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B521049526A256C6008ABEF4 /* Cirrus */,
+				B521049526A256C6008ABEF4 /* Cirrus_iOS */,
+				B525A53226BBEFB600680BAD /* Cirrus_macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -347,6 +458,15 @@
 			files = (
 				B52104A126A256C7008ABEF4 /* Preview Assets.xcassets in Resources */,
 				B521049E26A256C7008ABEF4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B525A53126BBEFB600680BAD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B525A53D26BBEFB600680BAD /* Preview Assets.xcassets in Resources */,
+				B525A53A26BBEFB600680BAD /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +519,55 @@
 				B506258926AD9C120031B188 /* CKFetchDatabaseChangesOperation.swift in Sources */,
 				B506257A26ACFA660031B188 /* CKDatabase.swift in Sources */,
 				B5E6DE4326A44A4D00856E8C /* Emoji.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B525A52F26BBEFB600680BAD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B525A54926BBEFC900680BAD /* SyncedContainer.swift in Sources */,
+				B525A55626BBEFC900680BAD /* NSManagedObjectContext.swift in Sources */,
+				B525A54326BBEFC900680BAD /* URL.swift in Sources */,
+				B525A56626BBF34800680BAD /* EmojiRow.swift in Sources */,
+				B525A54526BBEFC900680BAD /* ManagedObjectSynchronizer.swift in Sources */,
+				B525A54F26BBEFC900680BAD /* CKRecordValue.swift in Sources */,
+				B525A54726BBEFC900680BAD /* CKDatabase.swift in Sources */,
+				B525A54E26BBEFC900680BAD /* Cirrus.LocalState.swift in Sources */,
+				B525A55B26BBEFC900680BAD /* AsyncZoneChangesSequence.swift in Sources */,
+				B525A54D26BBEFC900680BAD /* Cirrus+Configure.swift in Sources */,
+				B525A55726BBEFC900680BAD /* Cirrus+Subscriptions.swift in Sources */,
+				B525A53826BBEFB600680BAD /* ContentView.swift in Sources */,
+				B525A55426BBEFC900680BAD /* SyncedManagedObject.swift in Sources */,
+				B525A56126BBF1A500680BAD /* CKModifySubscriptionsOperation.swift in Sources */,
+				B525A56926BBF34800680BAD /* Emoji.swift in Sources */,
+				B525A54226BBEFC900680BAD /* ConflictResolver.swift in Sources */,
+				B525A56D26BBF37C00680BAD /* Emoji.xcdatamodeld in Sources */,
+				B525A56726BBF34800680BAD /* BadgeMO.swift in Sources */,
+				B525A54C26BBEFC900680BAD /* CKRecord.swift in Sources */,
+				B525A55526BBEFC900680BAD /* CKRecord.ID.swift in Sources */,
+				B525A54426BBEFC900680BAD /* ReferenceConnector.swift in Sources */,
+				B525A54126BBEFC900680BAD /* CKRecordSeed.swift in Sources */,
+				B525A56C26BBF34800680BAD /* Flag.swift in Sources */,
+				B525A55326BBEFC900680BAD /* PendingDeletions.swift in Sources */,
+				B525A55126BBEFC900680BAD /* Cirrus.Notifications.swift in Sources */,
+				B525A55226BBEFC900680BAD /* CirrusManagedObjectConfiguration.swift in Sources */,
+				B525A53626BBEFB600680BAD /* Cirrus_macOSApp.swift in Sources */,
+				B525A56B26BBF34800680BAD /* EmojiListView.swift in Sources */,
+				B525A55026BBEFC900680BAD /* Cirrus.Configuration.swift in Sources */,
+				B525A56226BBF1A500680BAD /* CKFetchSubscriptionsOperation.swift in Sources */,
+				B525A54A26BBEFC900680BAD /* Cirrus.Errors.swift in Sources */,
+				B525A56826BBF34800680BAD /* EmojiMO.swift in Sources */,
+				B525A55A26BBEFC900680BAD /* AppGroupPersistentContainer.swift in Sources */,
+				B525A55926BBEFC900680BAD /* Cirrus+Sync.swift in Sources */,
+				B525A56526BBF28600680BAD /* LegacyAppDelegate.swift in Sources */,
+				B525A54826BBEFC900680BAD /* Cirrus.Authentication.swift in Sources */,
+				B525A56026BBF19C00680BAD /* CKModifyRecordsOperation.swift in Sources */,
+				B525A54626BBEFC900680BAD /* Cirrus.swift in Sources */,
+				B525A56326BBF1A500680BAD /* CKFetchDatabaseChangesOperation.swift in Sources */,
+				B525A56A26BBF34800680BAD /* EmojiBadgeMO.swift in Sources */,
+				B525A55826BBEFC900680BAD /* AsyncRecordSequence.swift in Sources */,
+				B525A54B26BBEFC900680BAD /* Cirrus.UserData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,6 +754,72 @@
 			};
 			name = Release;
 		};
+		B525A53F26BBEFB600680BAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Cirrus_macOS.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Mac Test Harness/Preview Content\"";
+				DEVELOPMENT_TEAM = YY6CWUX533;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.standalone.Cirrus-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B525A54026BBEFB600680BAD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Cirrus_macOS.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Mac Test Harness/Preview Content\"";
+				DEVELOPMENT_TEAM = YY6CWUX533;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.standalone.Cirrus-macOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -597,11 +832,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B52104A426A256C7008ABEF4 /* Build configuration list for PBXNativeTarget "Cirrus" */ = {
+		B52104A426A256C7008ABEF4 /* Build configuration list for PBXNativeTarget "Cirrus_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B52104A526A256C7008ABEF4 /* Debug */,
 				B52104A626A256C7008ABEF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B525A53E26BBEFB600680BAD /* Build configuration list for PBXNativeTarget "Cirrus_macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B525A53F26BBEFB600680BAD /* Debug */,
+				B525A54026BBEFB600680BAD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -623,6 +867,10 @@
 		B52104AC26A25AB4008ABEF4 /* Suite */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B52104AB26A25AB4008ABEF4 /* XCRemoteSwiftPackageReference "suite" */;
+			productName = Suite;
+		};
+		B525A55E26BBF06200680BAD /* Suite */ = {
+			isa = XCSwiftPackageProductDependency;
 			productName = Suite;
 		};
 /* End XCSwiftPackageProductDependency section */

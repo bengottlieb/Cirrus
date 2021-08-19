@@ -99,6 +99,7 @@ extension Cirrus {
 	
 }
 
+#if canImport(UIKIt)
 @available(iOSApplicationExtension, unavailable)
 extension Cirrus {
 	public static func launchCloudSettings() {
@@ -106,3 +107,4 @@ extension Cirrus {
 		UIApplication.shared.open(url, options: [:], completionHandler: nil)
 	}
 }
+#endif
