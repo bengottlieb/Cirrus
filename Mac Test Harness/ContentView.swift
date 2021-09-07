@@ -32,6 +32,11 @@ struct ContentView: View {
 						.font(.caption)
 						.padding()
 						.multilineTextAlignment(.center)
+				case .temporaryUnavailable:
+					Text("Temporarily Unavailable")
+						.font(.caption)
+						.padding()
+						.multilineTextAlignment(.center)
 				}
 				
 			}
