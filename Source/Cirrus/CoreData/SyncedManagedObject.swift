@@ -7,6 +7,7 @@
 
 import CoreData
 import CloudKit
+import Suite
 
 extension SyncedManagedObject {
 	public struct RecordStatusFlags: OptionSet {
@@ -18,9 +19,10 @@ extension SyncedManagedObject {
 	}
 }
 
-open class SyncedManagedObject: NSManagedObject, CKRecordSeed {
+open class SyncedManagedObject: NSManagedObject, CKRecordSeed, Identifiable {
 	var isLoadingFromCloud = 0
 	var cirrus_changedKeys: Set<String> = []
+	open var id: String { self.value(forKey: Cirrus.instance.configuration.idField) as? String ?? "" }
 	
 	public var locallyModifiedAt: Date? { self.value(forKey: Cirrus.instance.configuration.modifiedAtField) as? Date }
 	var cirrusRecordStatus: RecordStatusFlags {
@@ -64,6 +66,13 @@ extension SyncedManagedObject {
 			
 			if let ref = value as? CKRecord.Reference {
 				connector.connect(reference: ref, to: self, key: key)
+			} else if let asset = value as? CKAsset {
+				do {
+					if let url = asset.fileURL {
+						let data = try Data(contentsOf: url)
+						self.setValue(data, forKey: key)
+					}
+				}
 			} else {
 				self.setValue(cloudKitRecord[key], forKey: key)
 			}
@@ -80,7 +89,26 @@ extension SyncedManagedObject {
 
 extension SyncedManagedObject {
 	public subscript(key: String) -> CKRecordValue? {
-		self.value(forKey: key) as? CKRecordValue
+		let attributes = self.entity.attributesByName[key]
+		
+		if attributes?.allowsExternalBinaryDataStorage == true {
+			if let data = self.value(forKey: key) as? Data {
+				let url = fileURL(for: key)
+				do {
+					try data.write(to: url)
+					return CKAsset(fileURL: url)
+				} catch {
+					logg(error: error, "Failed to write external data blob out")
+				}
+			}
+			return nil
+		}
+		return self.value(forKey: key) as? CKRecordValue
+	}
+
+	func fileURL(for key: String) -> URL {
+		let name = "\(objectID.uriRepresentation().absoluteString)_\(key).dat"
+		return URL.tempFile(named: name)
 	}
 	
 	public var recordID: CKRecord.ID? {

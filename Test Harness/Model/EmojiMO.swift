@@ -7,18 +7,11 @@
 
 import CoreData
 
-class EmojiMO: SyncedManagedObject, Identifiable {
+class EmojiMO: SyncedManagedObject {
 	@NSManaged public var uuid: String
 	@NSManaged public var badges: Set<EmojiBadgeMO>?
 	@NSManaged public var emoji: String
 	@NSManaged public var initial: String
-
-	var id: String { uuid }
-	
-	
-	override func awakeFromInsert() {
-		self.uuid = UUID().uuidString
-	}
 	
 	func add(badge: BadgeMO) {
 		let link: EmojiBadgeMO = self.managedObjectContext!.insertObject()
