@@ -20,6 +20,11 @@ public class SyncedContainer: ObservableObject {
 	var cancelBag: Set<AnyCancellable> = []
 	public var isSyncing = false { didSet { self.objectWillChange.sendOnMain() }}
 
+	public func newViewContext() -> NSManagedObjectContext {
+		let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+		context.parent = viewContext
+		return context
+	}
 	public static func setup(name: String, containerIdentifier: String? = nil, managedObjectModel model: NSManagedObjectModel? = nil, bundle: Bundle = .main, mutability: Mutability = .normal) {
 		instance = .init(name: name, containerIdentifier: containerIdentifier, managedObjectModel: model, bundle: bundle, mutability: mutability)
 	}
