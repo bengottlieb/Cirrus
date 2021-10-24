@@ -53,7 +53,13 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed, Identifiable {
 }
 
 extension SyncedManagedObject {
-	func load(cloudKitRecord: CKRecord, using connector: ReferenceConnector) throws {
+	func reloadFromCloud() async throws {
+		if let id = recordID, let record = try await database.fetchRecord(withID: id) {
+			try load(cloudKitRecord: record, using: nil)
+		}
+	}
+
+	func load(cloudKitRecord: CKRecord, using connector: ReferenceConnector?) throws {
 		isLoadingFromCloud += 1
 		let statusFieldKey = Cirrus.instance.configuration.statusField
 		let modifiedAtKey = Cirrus.instance.configuration.modifiedAtField
@@ -65,7 +71,7 @@ extension SyncedManagedObject {
 			let value = cloudKitRecord[key]
 			
 			if let ref = value as? CKRecord.Reference {
-				connector.connect(reference: ref, to: self, key: key)
+				connector?.connect(reference: ref, to: self, key: key)
 			} else if let asset = value as? CKAsset {
 				do {
 					if let url = asset.fileURL {
@@ -79,7 +85,7 @@ extension SyncedManagedObject {
 		}
 		
 		if let parent = cloudKitRecord.parent, let parentKey = Cirrus.instance.configuration.entityInfo(for: entity)?.parentKey {
-			connector.connect(reference: parent, to: self, key: parentKey)
+			connector?.connect(reference: parent, to: self, key: parentKey)
 		}
 		
 		self.cirrusRecordStatus = []
