@@ -53,7 +53,7 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed, Identifiable {
 }
 
 extension SyncedManagedObject {
-	func reloadFromCloud() async throws {
+	public func reloadFromCloud() async throws {
 		if let id = recordID, let record = try await database.fetchRecord(withID: id) {
 			try load(cloudKitRecord: record, using: nil)
 		}
