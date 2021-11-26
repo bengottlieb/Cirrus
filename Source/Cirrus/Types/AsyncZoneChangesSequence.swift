@@ -129,7 +129,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 				if sequence.isComplete {
 					return nil
 				}
-				await Task.sleep(1_000)
+                try? await Task.sleep(nanoseconds: 1_000)
 			}
 		}
 		

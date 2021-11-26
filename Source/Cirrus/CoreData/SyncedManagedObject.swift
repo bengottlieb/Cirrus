@@ -23,7 +23,12 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed, Identifiable {
 	var isLoadingFromCloud = 0
 	var cirrus_changedKeys: Set<String> = []
 	open var id: String { self.value(forKey: Cirrus.instance.configuration.idField) as? String ?? "" }
-	
+
+    public func deleteFromCloudKit() async throws {
+        guard let id = recordID else { return }
+        _ = try await database.delete(recordID: id)
+    }
+
 	public var locallyModifiedAt: Date? { self.value(forKey: Cirrus.instance.configuration.modifiedAtField) as? Date }
 	var cirrusRecordStatus: RecordStatusFlags {
 		get { RecordStatusFlags(rawValue: self.value(forKey: Cirrus.instance.configuration.statusField) as? Int32 ?? 0) }
@@ -45,7 +50,7 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed, Identifiable {
 		self.setValue(UUID().uuidString, forKey: Cirrus.instance.configuration.idField)
 	}
 	
-	open var database: CKDatabase { Cirrus.instance.container.privateCloudDatabase }
+    open var database: CKDatabase { .private }
 	open var recordZone: CKRecordZone? { Cirrus.instance.defaultRecordZone }
 
 	open var parentRelationshipName: String? { Cirrus.instance.configuration.entityInfo(for: entity)?.parentKey }
@@ -79,7 +84,7 @@ extension SyncedManagedObject {
 						self.setValue(data, forKey: key)
 					}
 				}
-			} else {
+			} else if self.entity.attributesByName[key] != nil {
 				self.setValue(cloudKitRecord[key], forKey: key)
 			}
 		}

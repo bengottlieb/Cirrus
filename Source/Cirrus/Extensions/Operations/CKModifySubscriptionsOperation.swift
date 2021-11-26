@@ -10,7 +10,7 @@ import CloudKit
 extension CKModifySubscriptionsOperation {
 	func save(in database: CKDatabase) async throws {
 		if subscriptionsToSave.isEmpty { return }
-		return try await withUnsafeThrowingContinuation { continuation in
+        return try await withUnsafeThrowingContinuation { continuation in
 			self.modifySubscriptionsResultBlock = { result in
 				continuation.resume(with: result)
 			}
