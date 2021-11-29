@@ -91,6 +91,7 @@ public class SyncedContainer: ObservableObject {
 			}
 			await Cirrus.instance.configuration.synchronizer?.finishImporting()
 			await Cirrus.instance.configuration.synchronizer?.uploadLocalChanges()
+			Cirrus.Notifications.syncCompleted.notify()
 			isSyncing = false
 		}
 		logg("Sync Completed", .mild)
