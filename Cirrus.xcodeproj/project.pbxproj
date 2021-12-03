@@ -91,6 +91,7 @@
 		B525A56D26BBF37C00680BAD /* Emoji.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4126A44A4D00856E8C /* Emoji.xcdatamodeld */; };
 		B525A57026BBF3A700680BAD /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B525A56F26BBF3A700680BAD /* CloudKit.framework */; };
 		B53000B426A7C207007367A7 /* LegacyAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53000B326A7C206007367A7 /* LegacyAppDelegate.swift */; };
+		B561A127275A36A80051D7A6 /* Convey in Frameworks */ = {isa = PBXBuildFile; productRef = B561A126275A36A80051D7A6 /* Convey */; };
 		B565D13B26A4A23F00F0C395 /* EmojiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13A26A4A23F00F0C395 /* EmojiListView.swift */; };
 		B565D13F26A4E12300F0C395 /* EmojiRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B565D13E26A4E12300F0C395 /* EmojiRow.swift */; };
 		B5E6DE4326A44A4D00856E8C /* Emoji.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DE4126A44A4D00856E8C /* Emoji.xcdatamodeld */; };
@@ -152,6 +153,7 @@
 		B525A56F26BBF3A700680BAD /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		B53000B326A7C206007367A7 /* LegacyAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyAppDelegate.swift; sourceTree = "<group>"; };
 		B53000B526A7C2BF007367A7 /* Cirrus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Cirrus-Info.plist"; sourceTree = "<group>"; };
+		B561A124275A32160051D7A6 /* Convey */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Convey; path = ../Convey; sourceTree = "<group>"; };
 		B565D13A26A4A23F00F0C395 /* EmojiListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiListView.swift; sourceTree = "<group>"; };
 		B565D13E26A4E12300F0C395 /* EmojiRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiRow.swift; sourceTree = "<group>"; };
 		B5E6DE4226A44A4D00856E8C /* Emoji.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Emoji.xcdatamodel; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B561A127275A36A80051D7A6 /* Convey in Frameworks */,
 				B52104AD26A25AB4008ABEF4 /* Suite in Frameworks */,
 				B52104B326A25B9B008ABEF4 /* CloudKit.framework in Frameworks */,
 			);
@@ -282,6 +285,7 @@
 			isa = PBXGroup;
 			children = (
 				B525A56E26BBF39D00680BAD /* Cirrus_macOS.entitlements */,
+				B561A124275A32160051D7A6 /* Convey */,
 				B506258A26ADD9E50031B188 /* Suite */,
 				B53000B526A7C2BF007367A7 /* Cirrus-Info.plist */,
 				B507F45A26A2819F00A5C291 /* Package.swift */,
@@ -386,6 +390,7 @@
 			name = Cirrus_iOS;
 			packageProductDependencies = (
 				B52104AC26A25AB4008ABEF4 /* Suite */,
+				B561A126275A36A80051D7A6 /* Convey */,
 			);
 			productName = Cirrus;
 			productReference = B521049626A256C6008ABEF4 /* Cirrus_iOS.app */;
@@ -440,6 +445,7 @@
 			mainGroup = B521048D26A256C6008ABEF4;
 			packageReferences = (
 				B52104AB26A25AB4008ABEF4 /* XCRemoteSwiftPackageReference "suite" */,
+				B561A125275A36A80051D7A6 /* XCRemoteSwiftPackageReference "convey" */,
 			);
 			productRefGroup = B521049726A256C6008ABEF4 /* Products */;
 			projectDirPath = "";
@@ -861,6 +867,14 @@
 				minimumVersion = 0.10.83;
 			};
 		};
+		B561A125275A36A80051D7A6 /* XCRemoteSwiftPackageReference "convey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bengottlieb/convey";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.9;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -872,6 +886,11 @@
 		B525A55E26BBF06200680BAD /* Suite */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Suite;
+		};
+		B561A126275A36A80051D7A6 /* Convey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B561A125275A36A80051D7A6 /* XCRemoteSwiftPackageReference "convey" */;
+			productName = Convey;
 		};
 /* End XCSwiftPackageProductDependency section */
 
