@@ -13,7 +13,6 @@ public class SyncedContainer: ObservableObject {
 	public static var instance: SyncedContainer!
 	
 	public let container: AppGroupPersistentContainer
-	public var mutability: Mutability
 	public let viewContext: NSManagedObjectContext
 	public let importContext: NSManagedObjectContext
 	public var autoSyncOnAuthentication = true
@@ -25,18 +24,17 @@ public class SyncedContainer: ObservableObject {
 		context.parent = viewContext
 		return context
 	}
-	public static func setup(name: String, containerIdentifier: String? = nil, managedObjectModel model: NSManagedObjectModel? = nil, bundle: Bundle = .main, mutability: Mutability = .normal) {
-		instance = .init(name: name, containerIdentifier: containerIdentifier, managedObjectModel: model, bundle: bundle, mutability: mutability)
+	public static func setup(name: String, containerIdentifier: String? = nil, managedObjectModel model: NSManagedObjectModel? = nil, bundle: Bundle = .main) {
+		instance = .init(name: name, containerIdentifier: containerIdentifier, managedObjectModel: model, bundle: bundle)
 	}
 	
 	public func entity(named name: String) -> NSEntityDescription {
 		container.persistentStoreCoordinator.managedObjectModel.entitiesByName[name]!
 	}
-
-	public init(name: String, containerIdentifier: String?, managedObjectModel model: NSManagedObjectModel?, bundle: Bundle, mutability: Mutability) {
+    
+	public init(name: String, containerIdentifier: String?, managedObjectModel model: NSManagedObjectModel?, bundle: Bundle) {
 		AppGroupPersistentContainer.applicationGroupIdentifier = containerIdentifier
 		self.container = AppGroupPersistentContainer(name: name, managedObjectModel: model ?? NSManagedObjectModel(contentsOf: bundle.url(forResource: name, withExtension: "momd")!)!)
-		self.mutability = mutability
 		
 		self.container.loadPersistentStores { desc, error in
 			Studio.logg(error: error, "Problem loading persistent stores in a SyncedContainer")
@@ -93,13 +91,9 @@ public class SyncedContainer: ObservableObject {
 			}
 			await Cirrus.instance.configuration.synchronizer?.finishImporting()
 			await Cirrus.instance.configuration.synchronizer?.uploadLocalChanges()
+			Cirrus.Notifications.syncCompleted.notify()
 			isSyncing = false
 		}
 		logg("Sync Completed", .mild)
-	}
-
-	public enum Mutability: Int { case normal, readOnlyCloud, readOnly
-		public var isReadOnlyForCloudOps: Bool { return self != .normal }
-		public var isReadOnlyForCoreData: Bool { return self == .readOnly }
 	}
 }

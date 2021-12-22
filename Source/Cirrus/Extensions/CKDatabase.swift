@@ -19,6 +19,10 @@ extension CKRecord: CKRecordProviding {
 }
 
 public extension CKDatabase {
+    static var `public`: CKDatabase { Cirrus.instance.container.publicCloudDatabase }
+    static var `private`: CKDatabase { Cirrus.instance.container.privateCloudDatabase }
+    static var `shared`: CKDatabase { Cirrus.instance.container.sharedCloudDatabase }
+
 	enum RecordChangesQueryType { case recent, all, createdOnly }
 	func records(ofType type: CKRecord.RecordType, matching predicate: NSPredicate = NSPredicate(value: true), sortedBy: [NSSortDescriptor] = [], in zoneID: CKRecordZone.ID? = nil) -> AsyncRecordSequence {
 		let query = CKQuery(recordType: type, predicate: predicate)
@@ -37,7 +41,12 @@ public extension CKDatabase {
 		return seq
 	}
 	
-	func delete(recordIDs: [CKRecord.ID]?) async throws -> [CKRecord.ID] {
+    func delete(recordID: CKRecord.ID) async throws -> Bool {
+        let result = try await delete(recordIDs: [recordID])
+        return result.first == recordID
+    }
+
+    func delete(recordIDs: [CKRecord.ID]?) async throws -> [CKRecord.ID] {
 		guard let ids = recordIDs, ids.isNotEmpty else { return [] }
 		
 		let op = CKModifyRecordsOperation(recordIDsToDelete: recordIDs)

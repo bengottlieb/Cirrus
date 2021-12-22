@@ -112,6 +112,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 						
 					} else {
 						let object = self.context.insertEntity(named: info.entityDescription.name!) as! SyncedManagedObject
+						object.cirrus_changedKeys = []
 						object.setValue(id.recordName, forKey: idField)
 						try object.load(cloudKitRecord: remote, using: self.connector)
 					}
