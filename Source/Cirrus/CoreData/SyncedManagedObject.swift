@@ -124,6 +124,7 @@ extension SyncedManagedObject {
 	
 	public var recordID: CKRecord.ID? {
 		guard let id = self.value(forKey: Cirrus.instance.configuration.idField) as? String else { return nil }
+		if self.database == .public { return CKRecord.ID(recordName: id) }
 		if let zone = self.recordZone { return CKRecord.ID(recordName: id, zoneID: zone.zoneID) }
 		return CKRecord.ID(recordName: id)
 	}

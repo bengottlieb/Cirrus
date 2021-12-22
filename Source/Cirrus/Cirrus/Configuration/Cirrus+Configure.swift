@@ -24,12 +24,12 @@ extension Cirrus {
 		configuration = config
 		container = CKContainer(identifier: config.containerIdentifer)
 		if Reachability.instance.isOffline, let userID = localState.lastSignedInUserID { state = .offline(userID) }
-
-		#if canImport(UIKit)
-			UIApplication.willEnterForegroundNotification.publisher()
-				.sink() { _ in Task { try? await self.authenticate() }}
-				.store(in: &cancelBag)
-		#endif
+		
+#if canImport(UIKit)
+		UIApplication.willEnterForegroundNotification.publisher()
+			.sink() { _ in Task { try? await self.authenticate() }}
+			.store(in: &cancelBag)
+#endif
 		
 		Notification.Name.CKAccountChanged.publisher()
 			.sink() { _ in Task {
@@ -39,7 +39,7 @@ extension Cirrus {
 					
 				default: break
 				}
-				}}
+			}}
 			.store(in: &cancelBag)
 		
 		Notification.Name.NSManagedObjectContextWillSave.publisher()
@@ -61,5 +61,13 @@ extension Cirrus {
 				}
 			}
 			.store(in: &cancelBag)
+		
+		Task {
+			do {
+				try await self.authenticate()
+			} catch {
+				print("Error signing in: \(error)")
+			}
+		}
 	}
 }

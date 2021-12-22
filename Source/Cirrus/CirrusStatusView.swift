@@ -17,7 +17,7 @@ public struct CirrusStatusView<Content: View>: View {
     
     public var body: some View {
         switch cirrus.state {
-        case .offline,  .authenticated:
+        case .offline, .authenticated:
             content()
         
         case .temporaryUnavailable:
