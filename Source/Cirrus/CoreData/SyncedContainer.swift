@@ -65,7 +65,17 @@ public class SyncedContainer: ObservableObject {
 			}
 			.store(in: &cancelBag)
 	}
-
+	
+	public func sync(fromBeginning: Bool = false, in db: CKDatabase? = nil) {
+		Task {
+			do {
+				try await sync(fromBeginning: fromBeginning, in: db)
+			} catch {
+				print("Synchronization failed: \(error)")
+			}
+		}
+	}
+	
 	public func sync(fromBeginning: Bool = false, in db: CKDatabase? = nil) async throws {
 		if isSyncing { return }
 		logg("Sync Starting", .mild)
