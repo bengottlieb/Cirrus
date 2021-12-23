@@ -99,7 +99,8 @@ public class AsyncRecordSequence: AsyncSequence {
 	}
 	
 	public __consuming func makeAsyncIterator() -> RecordIterator {
-		RecordIterator(sequence: self)
+		self.start()
+		return RecordIterator(sequence: self)
 	}
 }
 
