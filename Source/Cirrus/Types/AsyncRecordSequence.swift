@@ -22,8 +22,8 @@ public class AsyncRecordSequence: AsyncSequence {
 	var isComplete = false
 	var desiredKeys: [String]?
 
-	init(recordType: CKRecord.RecordType, desiredKeys: [String]? = nil, in database: CKDatabase, zoneID: CKRecordZone.ID? = nil) {
-		self.query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
+	init(recordType: CKRecord.RecordType, desiredKeys: [String]? = nil, predicate: NSPredicate? = nil, in database: CKDatabase, zoneID: CKRecordZone.ID? = nil) {
+		self.query = CKQuery(recordType: recordType, predicate: predicate ?? .init(value: true))
 		self.database = database
 		self.zoneID = zoneID
 		self.desiredKeys = desiredKeys
