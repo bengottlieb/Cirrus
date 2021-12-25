@@ -7,9 +7,32 @@
 
 import Suite
 import CloudKit
+import UIKit
 
 extension CKRecord {
-	convenience init?(_ seed: CKRecordSeed) {
+	enum SharingError: Error { case noViewController }
+	public func share(withTitle title: String, permissions: CKShare.ParticipantPermission = .readOnly, in window: UIWindow?) async throws {
+		guard let host = await window?.rootViewController else { throw SharingError.noViewController }
+		
+		let controller = await UICloudSharingController { shareController, prep in
+			let share = CKShare(rootRecord: self)
+			share[CKShare.SystemFieldKey.title] = title as CKRecordValue
+			share.publicPermission = .readOnly
+			
+			Task {
+				do {
+					try await CKDatabase.private.save(records: [self, share])
+					prep(share, CKContainer.default(), nil)
+				} catch {
+					prep(share, CKContainer.default(), error)
+				}
+			}
+		}
+		
+		await host.show(controller, sender: nil)
+	}
+
+	public convenience init?(_ seed: CKRecordSeed) {
 		guard let id = seed.recordID else {
 			self.init(recordType: seed.recordType)
 			return nil
