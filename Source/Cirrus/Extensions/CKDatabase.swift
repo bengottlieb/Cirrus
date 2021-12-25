@@ -127,6 +127,49 @@ public extension CKDatabase {
 }
 
 extension CKDatabase {
+	public func allZones() async throws -> [CKRecordZone] {
+		let op = CKFetchRecordZonesOperation.fetchAllRecordZonesOperation()
+		var zones: [CKRecordZone] = []
+		var errors: [Error] = []
+
+		op.perRecordZoneResultBlock = { zoneID, zoneResult in
+			switch zoneResult {
+			case .success(let zone): zones.append(zone)
+			case .failure(let err): errors.append(err)
+			}
+		}
+
+		let found: [CKRecordZone] = try await withCheckedThrowingContinuation { continuation in
+			op.fetchRecordZonesResultBlock = { result in
+				switch result {
+				case .success: continuation.resume(returning: zones)
+				case .failure(let error): continuation.resume(throwing: error)
+				}
+			}
+			
+			self.add(op)
+		}
+		
+		
+		return found
+	}
+	
+	@discardableResult func setup(zones names: [String]) async throws -> [String: CKRecordZone] {
+		let zones = Dictionary(uniqueKeysWithValues: names.map { ($0, CKRecordZone(zoneName: $0)) })
+		let op = CKModifyRecordZonesOperation(recordZonesToSave: Array(zones.values), recordZoneIDsToDelete: nil)
+		
+		return try await withUnsafeThrowingContinuation { continuation in
+			op.modifyRecordZonesResultBlock = { result in
+				switch result {
+				case .success:
+					continuation.resume(returning: zones)
+				case .failure(let error): continuation.resume(throwing: error)
+				}
+			}
+			self.add(op)
+		}
+	}
+
 	public func deleteAll(from recordTypes: [CKRecord.RecordType], in zone: CKRecordZone? = nil) async throws {
 		var ids: [CKRecord.ID] = []
 		

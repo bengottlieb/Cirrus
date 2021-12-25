@@ -40,22 +40,11 @@ extension Cirrus {
 	}
 	
 	func setupZones() async throws {
-		zones = Dictionary(uniqueKeysWithValues: configuration.zoneNames.map { ($0, CKRecordZone(zoneName: $0)) })
 		if let defaultZone = configuration.defaultZoneName { self.defaultRecordZone = zones[defaultZone] }
 		if self.localState.lastCreatedZoneNamesList == configuration.zoneNames { return }
-		let op = CKModifyRecordZonesOperation(recordZonesToSave: Array(zones.values), recordZoneIDsToDelete: nil)
 		
-		return try await withUnsafeThrowingContinuation { continuation in
-			op.modifyRecordZonesResultBlock = { result in
-				switch result {
-				case .success:
-					DispatchQueue.onMain { self.localState.lastCreatedZoneNamesList = self.configuration.zoneNames }
-					continuation.resume()
-				case .failure(let error): continuation.resume(throwing: error)
-				}
-			}
-			container.privateCloudDatabase.add(op)
-		}
+		try await container.privateCloudDatabase.setup(zones: configuration.zoneNames)
+		DispatchQueue.onMain { self.localState.lastCreatedZoneNamesList = self.configuration.zoneNames }
 	}
 	
 	public func signOut() {
