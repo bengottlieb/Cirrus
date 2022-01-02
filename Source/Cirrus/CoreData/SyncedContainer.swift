@@ -48,7 +48,10 @@ public class SyncedContainer: ObservableObject {
 		Cirrus.Notifications.userSignedIn.publisher()
 			.sink { note in
 				if self.autoSyncOnAuthentication {
-					Task() { try? await self.sync() } }
+					Task() {
+						try? await self.sync()
+						try? await self.sync(in: .shared)
+					} }
 			}
 			.store(in: &cancelBag)
 		
@@ -97,7 +100,7 @@ public class SyncedContainer: ObservableObject {
 					case .badRecord: logg("Bad Record")
 					}
 				}
-				await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change)
+				await Cirrus.instance.configuration.synchronizer?.process(downloadedChange: change, from: database)
 			}
 			await Cirrus.instance.configuration.synchronizer?.finishImporting()
 			await Cirrus.instance.configuration.synchronizer?.uploadLocalChanges()

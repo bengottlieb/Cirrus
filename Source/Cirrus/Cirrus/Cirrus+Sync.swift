@@ -21,7 +21,7 @@ extension Cirrus {
 		if unsyncedObjects.isNotEmpty {
 			for object in unsyncedObjects {
 				if object.isDeleted { continue }
-				object.cirrusRecordStatus = .hasLocalChanges
+				object.add(status: .hasLocalChanges)
 				object.cirrus_changedKeys = []
 			}
 		}

@@ -21,10 +21,12 @@ public struct CirrusStatusView<Content: View>: View {
             content()
         
         case .temporaryUnavailable:
-            ProgressView()
-            Text("Temporarily Unavailable…")
+            Text("Temporarily Unavailable.")
                 .opacity(0.5)
-            
+			  Button("Please Sign In!") {
+					Cirrus.launchCloudSettings()
+			  }
+
         case .signingIn:
             ProgressView()
             

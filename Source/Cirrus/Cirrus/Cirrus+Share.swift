@@ -8,6 +8,10 @@
 import CloudKit
 
 public extension Cirrus {
+	func accept(shareURL: URL) async throws {
+		
+	}
+
 	func accept(share: CKShare.Metadata) async throws {
 		if share.participantStatus != .pending { return }
 		

@@ -64,7 +64,10 @@ public extension CKDatabase {
 		let recordChunks = records.breakIntoChunks(ofSize: chunkSize)
 		
 		for chunk in recordChunks {
-			let op = CKModifyRecordsOperation(recordsToSave: chunk.map { $0.record })
+			let saved = chunk.map { $0.record }
+			print(saved)
+			print(saved.map { $0.recordID.zoneID })
+			let op = CKModifyRecordsOperation(recordsToSave: saved)
 			var resolver = conflictResolver
 			if resolver == nil { resolver = await Cirrus.instance.configuration.conflictResolver }
 
@@ -163,7 +166,8 @@ extension CKDatabase {
 				switch result {
 				case .success:
 					continuation.resume(returning: zones)
-				case .failure(let error): continuation.resume(throwing: error)
+				case .failure(let error):
+					continuation.resume(throwing: error)
 				}
 			}
 			self.add(op)

@@ -16,7 +16,7 @@ class QueuedDeletions {
 	
 	func queue(recordID id: CKRecord.ID?, in database: CKDatabase) {
 		guard let id = id, !pending.contains(where: { $0.recordID == id && $0.scope == database.databaseScope }) else { return }
-		pending.append(Deletion(recordName: id.recordName, zoneName: id.zone?.zoneID.zoneName, scope: database.databaseScope))
+		pending.append(Deletion(recordName: id.recordName, zoneName: id.zone(in: database.databaseScope)?.zoneID.zoneName, scope: database.databaseScope))
 	}
 	
 	func clear(deleted: [Deletion]) {
@@ -29,7 +29,8 @@ class QueuedDeletions {
 		let scope: CKDatabase.Scope
 		
 		var recordID: CKRecord.ID {
-			if let zoneName = zoneName, let zone = Cirrus.instance.zone(named: zoneName) {
+			
+			if let zoneName = zoneName, let zone = Cirrus.instance.zone(named: zoneName, in: scope) {
 				return CKRecord.ID(recordName: recordName, zoneID: zone.zoneID)
 			} else {
 				return CKRecord.ID(recordName: recordName)

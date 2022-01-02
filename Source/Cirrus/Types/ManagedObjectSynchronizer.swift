@@ -10,7 +10,7 @@ import CoreData
 import CloudKit
 
 public protocol ManagedObjectSynchronizer {
-	func process(downloadedChange change: CKRecordChange) async
+	func process(downloadedChange change: CKRecordChange, from: CKDatabase) async
 	func finishImporting() async
 	func startSync()
 	func uploadLocalChanges() async
@@ -89,7 +89,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 		
 	}
 	
-	public func process(downloadedChange change: CKRecordChange) async {
+	public func process(downloadedChange change: CKRecordChange, from database: CKDatabase) async {
 		guard let recordType = change.recordType, let info = await Cirrus.instance.configuration.entityInfo(for: recordType) else { return }
 		
 		let idField = await Cirrus.instance.configuration.idField
@@ -104,17 +104,17 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 						
 						switch winner {
 						case .local:
-							object.cirrusRecordStatus = .hasLocalChanges
+							object.add(status: .hasLocalChanges)
 							
 						case .remote:
-							try object.load(cloudKitRecord: remote, using: self.connector)
+							try object.load(cloudKitRecord: remote, using: self.connector, from: database)
 						}
 						
 					} else {
 						let object = self.context.insertEntity(named: info.entityDescription.name!) as! SyncedManagedObject
 						object.cirrus_changedKeys = []
 						object.setValue(id.recordName, forKey: idField)
-						try object.load(cloudKitRecord: remote, using: self.connector)
+						try object.load(cloudKitRecord: remote, using: self.connector, from: database)
 					}
 				}
 				

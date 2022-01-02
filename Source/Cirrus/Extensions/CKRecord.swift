@@ -44,6 +44,9 @@ extension CKRecord {
 		}
 		
 		if let parentKey = seed.parentRelationshipName, let parentRef = seed.reference(for: parentKey, action: .none) {
+			if let parent = seed[parentKey] as? SyncedManagedObject {
+				(seed as? SyncedManagedObject)?.setDatabase(parent.database)
+			}
 			self.parent = parentRef
 			self[parentKey] = seed.reference(for: parentKey, action: .deleteSelf)
 		}
