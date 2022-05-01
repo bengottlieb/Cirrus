@@ -13,7 +13,7 @@ public class Cirrus: ObservableObject {
 	public static let instance = Cirrus()
 	
 	public var mutability: Mutability = .normal
-	public var state: AuthenticationState = .notLoggedIn { didSet { objectWillChange.send() }}
+	public var state: AuthenticationState = .notLoggedIn { didSet { objectWillChange.sendOnMain() }}
 	public var configuration: Configuration!
 	
 	public var container: CKContainer!

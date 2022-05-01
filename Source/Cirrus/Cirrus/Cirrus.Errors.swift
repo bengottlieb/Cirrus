@@ -14,6 +14,10 @@ extension Cirrus {
 			state = state.convertToOffline()
 		} else if let cloudErr = error as? CKError {
 			switch cloudErr.code {
+			case .permissionFailure:
+				logg(error: error, "Not signed in")
+				DispatchQueue.onMain { self.state = .notLoggedIn }
+
 			case .missingEntitlement:
 				logg(error: error, "Missing CloudKit Entitlement")
 				
