@@ -14,7 +14,8 @@ extension Cirrus {
 		
 		if state != .temporaryUnavailable { DispatchQueue.onMain { self.state = .signingIn } }
 		do {
-			switch try await container.accountStatus() {
+			let status = try await container.accountStatus()
+			switch status {
 			case .couldNotDetermine, .noAccount, .restricted, .temporarilyUnavailable:
 				DispatchQueue.onMain { self.state = .denied }
 				
