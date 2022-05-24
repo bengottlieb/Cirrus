@@ -17,13 +17,13 @@ extension Cirrus {
 			case .permissionFailure:
 				logg(error: error, "Not signed in")
 				DispatchQueue.onMain { self.state = .notLoggedIn }
-
+				
 			case .missingEntitlement:
 				logg(error: error, "Missing CloudKit Entitlement")
 				
 			case .notAuthenticated:
 				DispatchQueue.onMain { self.state = .notLoggedIn }
-			
+				
 			case .invalidArguments:
 				print("Possibly missing index. \(error.localizedDescription)")
 				
@@ -37,6 +37,12 @@ extension Cirrus {
 				print("Unexpected Error: \(error)")
 			}
 		}
+	}
+}
+
+extension Error {
+	var isOffline: Bool {
+		(self as NSError).code == -1009
 	}
 }
 
