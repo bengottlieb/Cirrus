@@ -7,10 +7,14 @@
 
 import Suite
 import CloudKit
+
+#if canImport(UIKit)
 import UIKit
+#endif
 
 extension CKRecord {
 	enum SharingError: Error { case noViewController }
+	#if os(iOS)
 	public func share(withTitle title: String, permissions: CKShare.ParticipantPermission = .readOnly, in window: UIWindow?) async throws {
 		guard let host = await window?.rootViewController else { throw SharingError.noViewController }
 		
@@ -31,6 +35,7 @@ extension CKRecord {
 		
 		await host.show(controller, sender: nil)
 	}
+	#endif
 
 	public convenience init?(_ seed: CKRecordSeed) {
 		guard let id = seed.recordID else {

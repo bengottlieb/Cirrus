@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOSApplicationExtension, unavailable)
 struct ContentView: View {
 	@ObservedObject var cirrus = Cirrus.instance
 	@State var previousUserID: String?
@@ -28,7 +29,9 @@ struct ContentView: View {
 					
 				case .denied, .tokenFailed, .notLoggedIn:
 					Button("Please Sign In!") {
-						Cirrus.launchCloudSettings()
+						#if os(iOS)
+							Cirrus.launchCloudSettings()
+						#endif
 					}
 					
 				case .failed(let error):

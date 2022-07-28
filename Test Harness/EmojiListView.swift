@@ -31,7 +31,7 @@ struct EmojiListView: View {
 					Button("Clear All") {
 						clearing = true
 						Task() {
-							try? await Cirrus.instance.container.privateCloudDatabase.deleteAll(from: ["emojiBadge", "emoji", "badge"], in: Cirrus.instance.zone(named: "emoji"))
+							try? await Cirrus.instance.container.privateCloudDatabase.deleteAll(from: ["emojiBadge", "emoji", "badge"], in: Cirrus.instance.zone(named: "emoji", in: .private))
 							try? await SyncedContainer.instance.sync()
 							clearing = false
 						}

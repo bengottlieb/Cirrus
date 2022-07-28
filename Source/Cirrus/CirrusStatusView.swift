@@ -5,8 +5,10 @@
 //  Created by Ben Gottlieb on 11/25/21.
 //
 
+#if canImport(UIKIt)
 import SwiftUI
 
+@available(iOSApplicationExtension, unavailable)
 public struct CirrusStatusView<Content: View>: View {
     let content: () -> Content
     @ObservedObject var cirrus = Cirrus.instance
@@ -50,3 +52,4 @@ struct SwiftUIView_Previews: PreviewProvider {
         CirrusStatusView() { Text("Signed In") }
     }
 }
+#endif

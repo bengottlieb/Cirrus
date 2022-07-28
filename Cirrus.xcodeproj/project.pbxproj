@@ -864,7 +864,7 @@
 			repositoryURL = "https://github.com/bengottlieb/suite";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.10.83;
+				minimumVersion = 1.0.66;
 			};
 		};
 		B561A125275A36A80051D7A6 /* XCRemoteSwiftPackageReference "convey" */ = {
@@ -872,7 +872,7 @@
 			repositoryURL = "https://github.com/bengottlieb/convey";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.9;
+				minimumVersion = 1.1.9;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

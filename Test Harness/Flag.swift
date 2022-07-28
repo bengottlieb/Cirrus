@@ -9,8 +9,8 @@ import Foundation
 import CloudKit
 
 struct Flag: CKRecordSeed {
-	var recordID: CKRecord.ID? { CKRecord.ID(recordName: country, zoneID: Cirrus.instance.zones["Flags"]!.zoneID) }
-	var recordZone: CKRecordZone? { Cirrus.instance.zone(named: "flags") }
+	var recordID: CKRecord.ID? { CKRecord.ID(recordName: country, zoneID: Cirrus.instance.privateZones["Flags"]!.zoneID) }
+	var recordZone: CKRecordZone? { Cirrus.instance.zone(named: "flags", in: .private) }
 	var parentRelationshipName: String? { nil }
 	var savedRelationshipNames: [String] { [] }
 	var locallyModifiedAt: Date? { nil }

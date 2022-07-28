@@ -9,8 +9,8 @@ import Foundation
 import CloudKit
 
 struct Emoji: CKRecordSeed {
-	var recordID: CKRecord.ID? { CKRecord.ID(recordName: emoji, zoneID: Cirrus.instance.zones["emoji"]!.zoneID) }
-	var recordZone: CKRecordZone? { Cirrus.instance.zone(named: "emoji") }
+	var recordID: CKRecord.ID? { CKRecord.ID(recordName: emoji, zoneID: Cirrus.instance.privateZones["emoji"]!.zoneID) }
+	var recordZone: CKRecordZone? { Cirrus.instance.zone(named: "emoji", in: .private) }
 	var parentRelationshipName: String? { nil }
 	var savedRelationshipNames: [String] { [] }
 	

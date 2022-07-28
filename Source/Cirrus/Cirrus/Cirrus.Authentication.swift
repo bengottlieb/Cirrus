@@ -100,7 +100,7 @@ extension Cirrus {
 	
 }
 
-#if canImport(UIKIt)
+#if os(iOS)
 @available(iOSApplicationExtension, unavailable)
 extension Cirrus {
 	public static func launchCloudSettings() {
