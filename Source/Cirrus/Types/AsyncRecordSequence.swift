@@ -51,6 +51,8 @@ public class AsyncRecordSequence: AsyncSequence {
 
 	func run(cursor: CKQueryOperation.Cursor? = nil) {
 		if isRunning { return }
+		if !Cirrus.instance.state.isSignedIn, database != .public { return }
+		
 		isRunning = true
 
 		let operation: CKQueryOperation
@@ -106,7 +108,7 @@ public class AsyncRecordSequence: AsyncSequence {
 				}
 				
 				if sequence.isComplete { return nil }
-				try? await Task.sleep(nanoseconds: 1_000)
+				try? await Task.sleep(nanoseconds: 1_000_000_000)
 			}
 		}
 		
