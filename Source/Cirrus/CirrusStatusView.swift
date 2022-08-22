@@ -5,7 +5,7 @@
 //  Created by Ben Gottlieb on 11/25/21.
 //
 
-#if canImport(UIKIt)
+#if os(iOS)
 import SwiftUI
 
 @available(iOSApplicationExtension, unavailable)
