@@ -26,6 +26,8 @@ struct EmojiListView: View {
 			}
 			if clearing {
 				ProgressView()
+				Text("Clearing…")
+					.font(.caption)
 			} else {
 				HStack() {
 					Button("Clear All") {
@@ -52,6 +54,8 @@ struct EmojiListView: View {
 	@ViewBuilder var syncButton: some View {
 		if SyncedContainer.instance.isSyncing {
 			ProgressView()
+			Text("Syncing…")
+				.font(.caption)
 		} else {
 			Button(action: { sync() }) { Image(.arrow_clockwise) }
 			.simultaneousGesture(LongPressGesture().onEnded { _ in

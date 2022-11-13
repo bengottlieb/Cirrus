@@ -27,15 +27,26 @@ extension Cirrus {
 		
 #if canImport(UIKit)
 		UIApplication.willEnterForegroundNotification.publisher()
-			.sink() { _ in Task { try? await self.authenticate() }}
-			.store(in: &cancelBag)
+			.sink() { _ in Task {
+				do {
+					try await self.authenticate()
+				} catch {
+					print("Faield to authenticate when entering foreground: \(error)")
+				}
+			}
+		}
+		.store(in: &cancelBag)
 #endif
 		
 		Notification.Name.CKAccountChanged.publisher()
 			.sink() { _ in Task {
 				switch self.state {
 				case .authenticated, .temporaryUnavailable:
-					try? await self.authenticate()
+					do {
+						try await self.authenticate()
+					} catch {
+						print("Failed to authenticate when the name changed: \(error)")
+					}
 					
 				default: break
 				}
@@ -57,7 +68,13 @@ extension Cirrus {
 				if Reachability.instance.isOffline {
 					if case .authenticated(let userID) = self.state { self.state = .offline(userID) }
 				} else if self.state.isOffline {
-					Task { try? await self.authenticate(evenIfOffline: true) }
+					Task {
+						do {
+							try await self.authenticate(evenIfOffline: true)
+						} catch {
+							print("Failed to authenticate when reachability changed")
+						}
+					}
 				}
 			}
 			.store(in: &cancelBag)

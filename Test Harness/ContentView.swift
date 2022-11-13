@@ -22,10 +22,13 @@ struct ContentView: View {
 				case .temporaryUnavailable:
 					ProgressView()
 					Text("Temporarily Unavailable…")
+						.font(.caption)
 						.opacity(0.5)
 					
 				case .signingIn:
 					ProgressView()
+					Text("Signing In")
+						.font(.caption)
 					
 				case .denied, .tokenFailed, .notLoggedIn:
 					Button("Please Sign In!") {

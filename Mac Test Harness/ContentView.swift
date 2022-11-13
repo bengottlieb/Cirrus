@@ -20,7 +20,9 @@ struct ContentView: View {
 					
 				case .signingIn:
 					ProgressView()
-					
+					Text("Signing In…")
+						.font(.caption)
+
 				case .denied, .tokenFailed, .notLoggedIn:
 					Button("Please Sign In!") {
 					//	Cirrus.launchCloudSettings()
