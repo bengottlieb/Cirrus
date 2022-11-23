@@ -14,6 +14,15 @@ import UIKit
 
 extension CKRecord {
 	enum SharingError: Error { case noViewController }
+	
+	public func insertChanges(from dictionary: [String: CKRecordValue?]) {
+		for (key, value) in dictionary {
+			if !areEqual(self[key], value) {
+				self[key] = value
+			}
+		}
+	}
+	
 	#if os(iOS)
 	public func share(withTitle title: String, permissions: CKShare.ParticipantPermission = .readOnly, in window: UIWindow?) async throws {
 		guard let host = await window?.rootViewController else { throw SharingError.noViewController }
