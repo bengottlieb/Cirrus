@@ -50,7 +50,7 @@ extension Cirrus {
 			}
 		} else {
 			self.privateZones = try await container.privateCloudDatabase.setup(zones: configuration.zoneNames)
-			self.sharedZones = try await container.privateCloudDatabase.setup(zones: configuration.zoneNames)
+			self.sharedZones = try await container.sharedCloudDatabase.setup(zones: configuration.zoneNames)
 		}
 		if let defaultZone = configuration.defaultZoneName {
 			self.defaultPrivateZone = privateZones[defaultZone]
