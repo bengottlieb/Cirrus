@@ -50,7 +50,7 @@ public class AsyncRecordSequence: AsyncSequence {
 	}
 
 	func run(cursor: CKQueryOperation.Cursor? = nil) {
-		if isRunning { return }
+		if isRunning && cursor == nil { return }
 		if !Cirrus.instance.state.isSignedIn, database != .public { return }
 		
 		isRunning = true
