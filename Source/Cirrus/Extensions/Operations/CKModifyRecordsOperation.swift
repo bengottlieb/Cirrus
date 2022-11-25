@@ -10,12 +10,12 @@ import CloudKit
 extension CKModifyRecordsOperation {
 	public func save(in database: CKDatabase, atomically: Bool = true) async throws {
 		assert(recordIDsToDelete.isEmpty, "using CKModifyRecordsOperation.save() to delete records is not supported")
-
+		
 		guard let records = recordsToSave, records.isNotEmpty else { return }
-        if await Cirrus.instance.mutability.isReadOnlyForCloudOps {
-			  print("Not saving \(records.count) records, no cloud mutability")
-			  return
-		  }
+		if await Cirrus.instance.mutability.isReadOnlyForCloudOps {
+			print("Not saving \(records.count) records, no cloud mutability")
+			return
+		}
 		var errors: [Error] = []
 		
 		self.perRecordSaveBlock = { recordID, result in
@@ -43,15 +43,22 @@ extension CKModifyRecordsOperation {
 		}
 	}
 	
+	static let maxRecordsPerOperation = 400
 	public func delete(from database: CKDatabase, atomically: Bool = false) async throws -> [CKRecord.ID] {
 		assert(recordsToSave.isEmpty, "using CKModifyRecordsOperation.delete() to save records is not supported")
-
+		
 		guard let recordIDs = recordIDsToDelete, recordIDs.isNotEmpty else { return [] }
 		
 		if await Cirrus.instance.mutability.isReadOnlyForCloudOps {
 			print("Not deleting record, no cloud mutability")
 			return []
 		}
+		
+		if let count = recordsToSave?.count, count >= Self.maxRecordsPerOperation {
+			print("You cannot save more than \(Self.maxRecordsPerOperation) records at once")
+			return []
+		}
+		
 		var errors: [Error] = []
 		var deleted: [CKRecord.ID] = []
 		
