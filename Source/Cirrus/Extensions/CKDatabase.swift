@@ -179,11 +179,15 @@ extension CKDatabase {
 		
 		for recordType in recordTypes {
 			let seq = AsyncRecordSequence(recordType: recordType, desiredKeys: [], in: self, zoneID: zone?.zoneID)
-			
+			var recordIDs: [CKRecord.ID] = []
+
 			seq.start()
 			for try await record in seq {
-				ids.append(record.recordID)
+				recordIDs.append(record.recordID)
 			}
+			
+			ids += recordIDs
+			logg("Deleting \(recordIDs.count) \(recordType) records")
 		}
 		
 		let chunkSize = 30
@@ -200,7 +204,7 @@ extension CKDatabase {
 			}
 		}
 		
-		print("Done")
+		logg("Deleted \(ids.count) records")
 	}
 }
 
