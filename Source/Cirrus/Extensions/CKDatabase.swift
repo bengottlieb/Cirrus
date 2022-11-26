@@ -174,8 +174,15 @@ extension CKDatabase {
 		}
 	}
 	
-	public func allRecordIDs(from recordTypes: [CKRecord.RecordType], in zone: CKRecordZone? = nil) async throws -> [CKRecord.ID] {
-		var ids: [CKRecord.ID] = []
+	public struct FetchedRecordIDs {
+		public var ids: [CKRecord.RecordType: [CKRecord.ID]] = [:]
+		public var all: [CKRecord.ID] { ids.values.flatMap { $0 } }
+		public var count: Int { ids.values.map { $0.count }.sum() }
+		public func count(of type: CKRecord.RecordType) -> Int { ids[type]?.count ?? 0 }
+	}
+	
+	public func allRecordIDs(from recordTypes: [CKRecord.RecordType], in zone: CKRecordZone? = nil) async throws -> FetchedRecordIDs {
+		var results = FetchedRecordIDs()
 		
 		for recordType in recordTypes {
 			let seq = AsyncRecordSequence(recordType: recordType, desiredKeys: [], in: self, zoneID: zone?.zoneID)
@@ -186,16 +193,15 @@ extension CKDatabase {
 				recordIDs.append(record.recordID)
 			}
 			
-			ids += recordIDs
-			logg("Deleting \(recordIDs.count) \(recordType) records")
+			results.ids[recordType] = recordIDs
 		}
-		return ids
+		return results
 	}
 
 	public func deleteAll(from recordTypes: [CKRecord.RecordType], in zone: CKRecordZone? = nil) async throws {
 		let ids = try await allRecordIDs(from: recordTypes, in: zone)
 		let chunkSize = 30
-		let idChunks = ids.breakIntoChunks(ofSize: chunkSize)
+		let idChunks = ids.all.breakIntoChunks(ofSize: chunkSize)
 		
 		for chunk in idChunks {
 			do {
