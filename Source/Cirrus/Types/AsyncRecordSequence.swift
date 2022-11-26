@@ -39,7 +39,9 @@ public class AsyncRecordSequence: AsyncSequence {
 	}
 	
 	public func start() {
-		run()
+		if !run() {
+			isComplete = true
+		}
 	}
 	
 	public var all: [CKRecord] {
@@ -49,9 +51,9 @@ public class AsyncRecordSequence: AsyncSequence {
 		}
 	}
 
-	func run(cursor: CKQueryOperation.Cursor? = nil) {
-		if isRunning && cursor == nil { return }
-		if !Cirrus.instance.state.isSignedIn, database != .public { return }
+	func run(cursor: CKQueryOperation.Cursor? = nil) -> Bool {
+		if isRunning && cursor == nil { return true }
+		if !Cirrus.instance.state.isSignedIn, database != .public { return false }
 		
 		isRunning = true
 
@@ -69,7 +71,7 @@ public class AsyncRecordSequence: AsyncSequence {
 		operation.recordMatchedBlock = { recordID, result in
 			switch result {
 			case .failure(let error):
-				Cirrus.instance.handleReceivedError(error)
+				Cirrus.instance.shouldCancelAfterError(error)
 				self.errors.append(error)
 			case .success(let record):
 				if self.checkForDuplicates, let index = self.records.firstIndex(where: { $0.recordID == recordID }) {
@@ -83,11 +85,11 @@ public class AsyncRecordSequence: AsyncSequence {
 		operation.queryResultBlock = { result in
 			switch result {
 			case .failure(let error):
-				Cirrus.instance.handleReceivedError(error)
+				Cirrus.instance.shouldCancelAfterError(error)
 				self.errors.append(error)
 			case .success(let possibleCursor):
 				if let cursor = possibleCursor {
-					self.run(cursor: cursor)
+					_ = self.run(cursor: cursor)
 				} else {
 					self.isComplete = true
 				}
@@ -95,6 +97,7 @@ public class AsyncRecordSequence: AsyncSequence {
 		}
 		
 		database.add(operation)
+		return true
 	}
 
 	public struct RecordIterator: AsyncIteratorProtocol {

@@ -53,7 +53,7 @@ public extension CKDatabase {
 		do {
 			return try await op.delete(from: self)
 		} catch {
-			await Cirrus.instance.handleReceivedError(error)
+			await Cirrus.instance.shouldCancelAfterError(error)
 			throw error
 		}
 	}
@@ -77,7 +77,7 @@ public extension CKDatabase {
 				if let updatedRecords = try await resolver?.resolve(error: error, in: chunk, database: self) {
 					try await save(records: updatedRecords, atomically: atomically, conflictResolver: conflictResolver)
 				} else {
-					await Cirrus.instance.handleReceivedError(error)
+					await Cirrus.instance.shouldCancelAfterError(error)
 					throw error
 				}
 			}
@@ -104,7 +104,7 @@ public extension CKDatabase {
 				return nil
 				
 			default:
-				await Cirrus.instance.handleReceivedError(error)
+				await Cirrus.instance.shouldCancelAfterError(error)
 				throw error
 			}
 		}
@@ -122,7 +122,7 @@ public extension CKDatabase {
 			try await modifyOp.save(in: self)
 		} catch {
 			logg(error: error, "Failed to fetch/setup subscriptions")
-			await Cirrus.instance.handleReceivedError(error)
+			await Cirrus.instance.shouldCancelAfterError(error)
 		}
 		
 	}
@@ -173,8 +173,8 @@ extension CKDatabase {
 			self.add(op)
 		}
 	}
-
-	public func deleteAll(from recordTypes: [CKRecord.RecordType], in zone: CKRecordZone? = nil) async throws {
+	
+	public func allRecordIDs(from recordTypes: [CKRecord.RecordType], in zone: CKRecordZone? = nil) async throws -> [CKRecord.ID] {
 		var ids: [CKRecord.ID] = []
 		
 		for recordType in recordTypes {
@@ -189,7 +189,11 @@ extension CKDatabase {
 			ids += recordIDs
 			logg("Deleting \(recordIDs.count) \(recordType) records")
 		}
-		
+		return ids
+	}
+
+	public func deleteAll(from recordTypes: [CKRecord.RecordType], in zone: CKRecordZone? = nil) async throws {
+		let ids = try await allRecordIDs(from: recordTypes, in: zone)
 		let chunkSize = 30
 		let idChunks = ids.breakIntoChunks(ofSize: chunkSize)
 		

@@ -9,38 +9,66 @@ import Suite
 import CloudKit
 
 extension Cirrus {
-	public func handleReceivedError(_ error: Error) {
-		if error.isOffline {
-			state = state.convertToOffline()
-		} else if let cloudErr = error as? CKError {
-			switch cloudErr.code {
-			case .permissionFailure:
-				logg(error: error, "Not signed in")
-				DispatchQueue.onMain { self.state = .notLoggedIn }
-				
-			case .missingEntitlement:
-				logg(error: error, "Missing CloudKit Entitlement")
-				
-			case .notAuthenticated:
-				DispatchQueue.onMain { self.state = .notLoggedIn }
-				
-			case .invalidArguments:
-				print("Possibly missing index. \(error.localizedDescription)")
-				
-			case .limitExceeded:
-				print("Too many records in the request, \(error.localizedDescription)")
-				
-			case .accountTemporarilyUnavailable:
-				DispatchQueue.onMain { Cirrus.instance.state = .temporaryUnavailable }
-				
-			default:
-				print("Unexpected Error: \(error)")
+	@discardableResult public func shouldCancelAfterError(_ error: Error) -> Bool { shouldCancelAfterError("", error) }
+	@discardableResult public func shouldCancelAfterError(_ label: String, _ error: Error) -> Bool {
+		if let multiple = error as? MultipleErrors {
+			if let primary = multiple.primary {
+				return shouldCancelAfterError(label, primary)
+			} else {
+				var result = false
+				for error in multiple.errors {
+					if shouldCancelAfterError(label, error) { result = true }
+				}
+				return result
 			}
 		}
+		if error.isOffline {
+			state = state.convertToOffline()
+			return true
+		} else if let cloudErr = error as? CKError {
+			switch cloudErr.code {
+			case .quotaExceeded:
+				cloudQuotaExceeded = true
+				logg(error: error, "Quota exceeded")
+				return true
+				
+			case .permissionFailure:
+				logg(error: error, "\(label): Not signed in")
+				DispatchQueue.onMain { self.state = .notLoggedIn }
+				return true
+
+			case .missingEntitlement:
+				logg(error: error, "\(label): Missing CloudKit Entitlement")
+				return true
+
+			case .notAuthenticated:
+				print("\(label): Not signed in")
+				DispatchQueue.onMain { self.state = .notLoggedIn }
+				return true
+
+			case .invalidArguments:
+				print("\(label): Possibly missing index. \(error.localizedDescription)")
+				return true
+
+			case .limitExceeded:
+				print("\(label): Too many records in the request, \(error.localizedDescription)")
+				return true
+
+			case .accountTemporarilyUnavailable:
+				print("\(label): Account temporarily unavailable")
+				DispatchQueue.onMain { Cirrus.instance.state = .temporaryUnavailable }
+				return true
+
+			default:
+				print("\(label): Unexpected Error: \(error)")
+				return false
+			}
+		}
+		return false
 	}
 }
 
-extension Error {
+public extension Error {
 	var isOffline: Bool {
 		(self as NSError).code == -1009
 	}
@@ -49,11 +77,21 @@ extension Error {
 public extension Cirrus {
 	struct MultipleErrors: Error, LocalizedError {
 		let errors: [Error]
+		var primary: Error?
 		
 		public var errorDescription: String? { "\(errors.count) Errors" }
 		
 		static func build(errors: [Error]) -> Error {
 			if errors.count == 1 { return errors[0] }
+			
+			if errors.count > 1 {
+				let code = (errors[0] as NSError).code
+				
+				if errors.filter({ ($0 as NSError).code != code }).isEmpty {
+					return MultipleErrors(errors: errors, primary: errors[0])
+				}
+			}
+			
 			return MultipleErrors(errors: errors)
 		}
 	}

@@ -81,7 +81,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		operation.recordWasChangedBlock = { id, result in
 			switch result {
 			case .failure(let error):
-				Cirrus.instance.handleReceivedError(error)
+				Cirrus.instance.shouldCancelAfterError(error)
 				self.errors.append(error)
 				
 			case .success(let record):
@@ -92,7 +92,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		operation.recordZoneFetchResultBlock = { zoneID, results in
 			switch results {
 			case .failure(let error):
-				Cirrus.instance.handleReceivedError(error)
+				Cirrus.instance.shouldCancelAfterError(error)
 				self.errors.append(error)
 				
 			case .success(let done):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
@@ -105,7 +105,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		operation.fetchRecordZoneChangesResultBlock = { result in
 			switch result {
 			case .failure(let error):
-				Cirrus.instance.handleReceivedError(error)
+				Cirrus.instance.shouldCancelAfterError(error)
 				self.errors.append(error)
 				
 			case .success:

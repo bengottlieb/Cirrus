@@ -10,6 +10,7 @@ import CloudKit
 
 extension Cirrus {
 	func userSignedIn(as id: CKRecord.ID) {
+		cloudQuotaExceeded = false
 		state = .authenticated(id)
 		if localState.lastSignedInUserID != id {
 			Notifications.currentUserChanged.notify(localState.lastSignedInUserID)

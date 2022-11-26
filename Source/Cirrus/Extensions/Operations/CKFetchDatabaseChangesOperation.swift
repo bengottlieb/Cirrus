@@ -39,7 +39,7 @@ extension CKFetchDatabaseChangesOperation {
 				switch results {
 				case .failure(let error):
 					errors.append(error)
-					Task() { await Cirrus.instance.handleReceivedError(error) }
+					Task() { await Cirrus.instance.shouldCancelAfterError(error) }
 					continuation.resume(throwing: Cirrus.MultipleErrors.build(errors: errors))
 
 				case .success(let done):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)

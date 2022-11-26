@@ -14,6 +14,7 @@ public class Cirrus: ObservableObject {
 	
 	public var mutability: Mutability = .normal
 	public var state: AuthenticationState = .notLoggedIn { didSet { objectWillChange.sendOnMain() }}
+	public var cloudQuotaExceeded = false { didSet { objectWillChange.sendOnMain() }}
 	public var configuration: Configuration!
 	
 	public var container: CKContainer!

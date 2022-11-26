@@ -10,8 +10,15 @@ import CloudKit
 
 
 public extension CKDatabase {
+	static let maxRecordsPerFetchOperation = 400
+
 	func fetchRecords(withIDs ids: [CKRecord.ID]) async throws -> [CKRecord] {
 		
+		if ids.count > CKDatabase.maxRecordsPerFetchOperation {
+			print("You cannot fetch more than \(Self.maxRecordsPerFetchOperation) records at once")
+			return []
+		}
+
 		let records: [CKRecord] = try await withCheckedThrowingContinuation { continuation in
 			
 			var results: [CKRecord] = []
