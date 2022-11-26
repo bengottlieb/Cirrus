@@ -30,7 +30,6 @@ public extension CKDatabase {
 		
 		
 		let seq = AsyncRecordSequence(query: query, in: self, zoneID: zoneID)
-		seq.start()
 		return seq
 	}
 
@@ -188,7 +187,6 @@ extension CKDatabase {
 			let seq = AsyncRecordSequence(recordType: recordType, desiredKeys: [], in: self, zoneID: zone?.zoneID)
 			var recordIDs: [CKRecord.ID] = []
 
-			seq.start()
 			for try await record in seq {
 				recordIDs.append(record.recordID)
 			}

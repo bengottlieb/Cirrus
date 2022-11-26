@@ -23,6 +23,7 @@ public class AsyncRecordSequence: AsyncSequence {
 	var isComplete = false
 	var desiredKeys: [String]?
 	var isRunning = false
+	var cursor: CKQueryOperation.Cursor?
 
 	init(recordType: CKRecord.RecordType, desiredKeys: [String]? = nil, predicate: NSPredicate? = nil, in database: CKDatabase, zoneID: CKRecordZone.ID? = nil) {
 		self.query = CKQuery(recordType: recordType, predicate: predicate ?? .init(value: true))
@@ -38,12 +39,6 @@ public class AsyncRecordSequence: AsyncSequence {
 		self.desiredKeys = desiredKeys
 	}
 	
-	public func start() {
-		if !run() {
-			isComplete = true
-		}
-	}
-	
 	public var all: [CKRecord] {
 		get async throws {
 			for try await _ in self { }
@@ -51,58 +46,67 @@ public class AsyncRecordSequence: AsyncSequence {
 		}
 	}
 
-	func run(cursor: CKQueryOperation.Cursor? = nil) -> Bool {
+	func run(cursor: CKQueryOperation.Cursor? = nil) async throws -> Bool {
 		if isRunning && cursor == nil { return true }
-		if !Cirrus.instance.state.isSignedIn, database != .public { return false }
+		if await !Cirrus.instance.state.isSignedIn, database != .public { return false }
 		
 		isRunning = true
+		var errors: [Error] = []
 
-		let operation: CKQueryOperation
-		
-		if let cursor = cursor {
-			operation = CKQueryOperation(cursor: cursor)
-		} else {
-			operation = CKQueryOperation(query: query)
-		}
-		
-		operation.desiredKeys = desiredKeys
-		operation.zoneID = zoneID
-		operation.resultsLimit = resultChunkSize
-		operation.recordMatchedBlock = { recordID, result in
-			switch result {
-			case .failure(let error):
-				Cirrus.instance.shouldCancelAfterError(error)
-				self.errors.append(error)
-			case .success(let record):
-				if self.checkForDuplicates, let index = self.records.firstIndex(where: { $0.recordID == recordID }) {
-					print("Received duplicate record at \(index): \(record)")
-					return
-				}
-				self.records.append(record)
+		let _: Void = await withUnsafeContinuation { continuation in
+			let operation: CKQueryOperation
+			
+			if let cursor = cursor {
+				operation = CKQueryOperation(cursor: cursor)
+			} else {
+				operation = CKQueryOperation(query: query)
 			}
-		}
-		
-		operation.queryResultBlock = { result in
-			switch result {
-			case .failure(let error):
-				Cirrus.instance.shouldCancelAfterError(error)
-				self.errors.append(error)
-			case .success(let possibleCursor):
-				if let cursor = possibleCursor {
-					_ = self.run(cursor: cursor)
-				} else {
-					self.isComplete = true
+			
+			operation.desiredKeys = desiredKeys
+			operation.zoneID = zoneID
+			operation.resultsLimit = resultChunkSize
+			operation.recordMatchedBlock = { recordID, result in
+				switch result {
+				case .failure(let error):
+					errors.append(error)
+					
+				case .success(let record):
+					if self.checkForDuplicates, let index = self.records.firstIndex(where: { $0.recordID == recordID }) {
+						print("Received duplicate record at \(index): \(record)")
+						return
+					}
+					self.records.append(record)
 				}
 			}
+			
+			operation.queryResultBlock = { result in
+				switch result {
+				case .failure(let error):
+					errors.append(error)
+					continuation.resume(returning: Void())
+				case .success(let possibleCursor):
+					self.cursor = possibleCursor
+					self.isComplete = possibleCursor == nil
+					continuation.resume(returning: Void())
+				}
+			}
+			
+			database.add(operation)
 		}
 		
-		database.add(operation)
+		if let error = errors.first {
+			await Cirrus.instance.shouldCancelAfterError(error)
+		}
+		
 		return true
 	}
 
 	public struct RecordIterator: AsyncIteratorProtocol {
 		var position = 0
 		public mutating func next() async throws -> CKRecord? {
+			if !sequence.isRunning {
+				if try await !sequence.run() { return nil }
+			}
 			while true {
 				if let error = sequence.errors.first { throw error }
 				if position < sequence.records.count {
@@ -111,7 +115,7 @@ public class AsyncRecordSequence: AsyncSequence {
 				}
 				
 				if sequence.isComplete { return nil }
-				try? await Task.sleep(nanoseconds: 1_000_000_000)
+				_ = try await sequence.run(cursor: sequence.cursor)
 			}
 		}
 		
@@ -121,7 +125,6 @@ public class AsyncRecordSequence: AsyncSequence {
 	}
 	
 	public __consuming func makeAsyncIterator() -> RecordIterator {
-		self.start()
 		return RecordIterator(sequence: self)
 	}
 }
