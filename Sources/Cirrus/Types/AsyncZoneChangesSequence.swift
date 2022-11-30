@@ -29,19 +29,21 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 	let database: CKDatabase
 	let zoneIDs: [CKRecordZone.ID]
 	var resultChunkSize: Int = 0
+	var tokens: ZoneChangeTokens
 	
 	public var changes: [CKRecordChange] = []
 	public var errors: [Error] = []
 	var isComplete = false
 	var queryType: CKDatabase.RecordChangesQueryType
 	
-	init(zoneIDs: [CKRecordZone.ID], in database: CKDatabase, queryType: CKDatabase.RecordChangesQueryType = .recent) {
+	init(zoneIDs: [CKRecordZone.ID], in database: CKDatabase, queryType: CKDatabase.RecordChangesQueryType = .recent, tokens: ZoneChangeTokens = Cirrus.instance.localState.zoneChangeTokens) {
 		self.database = database
 		self.zoneIDs = zoneIDs
 		self.queryType = queryType
+		self.tokens = tokens
 
 		if queryType == .all {
-			Cirrus.instance.localState.zoneChangeTokens = [:]
+			tokens.clear()
 		}
 	}
 	
@@ -57,7 +59,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		var results: [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneConfiguration] = [:]
 		
 		for zone in zoneIDs {
-			if let token = Cirrus.instance.changeToken(for: zone) {
+			if let token = tokens.changeToken(for: zone) {
 				results[zone] = CKFetchRecordZoneChangesOperation.ZoneConfiguration(previousServerChangeToken: token, resultsLimit: nil, desiredKeys: nil)
 			}
 		}
@@ -96,7 +98,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 				self.errors.append(error)
 				
 			case .success(let done):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
-				Cirrus.instance.setChangeToken(done.serverChangeToken, for: zoneID)
+				self.tokens.setChangeToken(done.serverChangeToken, for: zoneID)
 				print("Zone change token: \(done.serverChangeToken)")
 				if !done.moreComing { self.isComplete = true }
 			}
@@ -129,7 +131,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 				if sequence.isComplete {
 					return nil
 				}
-                try? await Task.sleep(nanoseconds: 1_000)
+				try? await Task.sleep(nanoseconds: 1_000)
 			}
 		}
 		

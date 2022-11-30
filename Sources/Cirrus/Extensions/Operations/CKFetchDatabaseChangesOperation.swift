@@ -12,7 +12,7 @@ public enum CKZoneChange {
 	case deleted(CKRecordZone.ID)
 	case purged(CKRecordZone.ID)
 	
-	var changedZoneID: CKRecordZone.ID? {
+	public var changedZoneID: CKRecordZone.ID? {
 		switch self {
 		case .changed(let id): return id
 		default: return nil
@@ -20,13 +20,16 @@ public enum CKZoneChange {
 	}
 }
 
-extension CKFetchDatabaseChangesOperation {
-	convenience init(database: CKDatabase) {
-		self.init(previousServerChangeToken: Cirrus.instance.changeToken(for: database))
+public class CirrusFetchDatabaseChangesOperation: CKFetchDatabaseChangesOperation {
+	var tokens = Cirrus.instance.localState.zoneChangeTokens
+	
+	public convenience init(database: CKDatabase, tokens: ZoneChangeTokens) {
+		self.init(previousServerChangeToken: tokens.changeToken(for: database))
 		self.database = database
+		self.tokens = tokens
 	}
 	
-	func changedZones() async throws -> [CKZoneChange] {
+	public func changedZones() async throws -> [CKZoneChange] {
 		var errors: [Error] = []
 		var changes: [CKZoneChange] = []
 		
@@ -44,7 +47,7 @@ extension CKFetchDatabaseChangesOperation {
 
 				case .success(let done):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
 					print("Database change token: \(done.serverChangeToken)")
-					Task() { await Cirrus.instance.setChangeToken(done.serverChangeToken, for: self.database!) }
+					self.tokens.setChangeToken(done.serverChangeToken, for: self.database!)
 					continuation.resume(returning: changes)
 				}
 			}

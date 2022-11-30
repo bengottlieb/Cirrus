@@ -8,6 +8,34 @@
 import Foundation
 import CloudKit
 
+public class ZoneChangeTokens: Codable {
+	public var tokens: [String: Data] = [:]
+	
+	public init(saved: [String: Data]? = nil) {
+		tokens = saved ?? [:]
+	}
+	
+	func changeToken(for zoneID: CKRecordZone.ID) -> CKServerChangeToken? {
+		guard let data = tokens[zoneID.tokenIdentifier] else { return nil }
+		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
+	}
+
+	func changeToken(for database: CKDatabase) -> CKServerChangeToken? {
+		guard let data = tokens[database.databaseScope.tokenIdentifier] else { return nil }
+		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
+	}
+
+	func setChangeToken(_ token: CKServerChangeToken, for zoneID: CKRecordZone.ID) {
+		tokens[zoneID.tokenIdentifier] = token.data
+	}
+
+	func setChangeToken(_ token: CKServerChangeToken, for database: CKDatabase) {
+		tokens[database.databaseScope.tokenIdentifier] = token.data
+	}
+	
+	func clear() { tokens = [:] }
+}
+
 extension Cirrus {
 	struct LocalState: Codable {
 		var lastCreatedZoneNamesList: [String] = []
@@ -21,40 +49,20 @@ extension Cirrus {
 			set { lastSignedInUserIDName = newValue?.recordName }
 		}
 		
-		var zoneChangeTokens: [String: Data] = [:]
+		var zoneChangeTokens = ZoneChangeTokens()
 	}
 }
 
-extension Cirrus {
-	func changeToken(for zoneID: CKRecordZone.ID) -> CKServerChangeToken? {
-		guard let data = localState.zoneChangeTokens[zoneID.tokenIdentifier] else { return nil }
-		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
-	}
-
-	func changeToken(for database: CKDatabase) -> CKServerChangeToken? {
-		guard let data = localState.zoneChangeTokens[database.databaseScope.tokenIdentifier] else { return nil }
-		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
-	}
-
-	func setChangeToken(_ token: CKServerChangeToken, for zoneID: CKRecordZone.ID) {
-		localState.zoneChangeTokens[zoneID.tokenIdentifier] = token.data
-	}
-
-	func setChangeToken(_ token: CKServerChangeToken, for database: CKDatabase) {
-		localState.zoneChangeTokens[database.databaseScope.tokenIdentifier] = token.data
-	}
-}
-
-extension CKServerChangeToken {
+public extension CKServerChangeToken {
 	var data: Data? {
 		try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
 	}
 }
 
-extension CKRecordZone.ID {
+public extension CKRecordZone.ID {
 	var tokenIdentifier: String { "zone_" + zoneName}
 }
 
-extension CKDatabase.Scope {
+public extension CKDatabase.Scope {
 	var tokenIdentifier: String { "db_" + name }
 }

@@ -87,7 +87,7 @@ public class SyncedContainer: ObservableObject {
 		
 		var database: CKDatabase! = db
 		if database == nil { database = await Cirrus.instance.container.privateCloudDatabase }
-		let zoneIDs = try await CKFetchDatabaseChangesOperation(database: database).changedZones().compactMap { $0.changedZoneID }
+		let zoneIDs = try await CirrusFetchDatabaseChangesOperation(database: database, tokens: Cirrus.instance.localState.zoneChangeTokens).changedZones().compactMap { $0.changedZoneID }
 		
 		let queryType: CKDatabase.RecordChangesQueryType = fromBeginning ? .all : (isFirstSync ? .createdOnly : .recent)
 		
