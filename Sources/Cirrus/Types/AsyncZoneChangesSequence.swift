@@ -29,14 +29,14 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 	let database: CKDatabase
 	let zoneIDs: [CKRecordZone.ID]
 	var resultChunkSize: Int = 0
-	var tokens: ZoneChangeTokens
+	var tokens: ChangeTokens
 	
 	public var changes: [CKRecordChange] = []
 	public var errors: [Error] = []
 	var isComplete = false
 	var queryType: CKDatabase.RecordChangesQueryType
 	
-	init(zoneIDs: [CKRecordZone.ID], in database: CKDatabase, queryType: CKDatabase.RecordChangesQueryType = .recent, tokens: ZoneChangeTokens = Cirrus.instance.localState.zoneChangeTokens) {
+	init(zoneIDs: [CKRecordZone.ID], in database: CKDatabase, queryType: CKDatabase.RecordChangesQueryType = .recent, tokens: ChangeTokens = Cirrus.instance.localState.changeTokens) {
 		self.database = database
 		self.zoneIDs = zoneIDs
 		self.queryType = queryType
@@ -55,20 +55,8 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		run()
 	}
 	
-	var configuration: [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneConfiguration] {
-		var results: [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneConfiguration] = [:]
-		
-		for zone in zoneIDs {
-			if let token = tokens.changeToken(for: zone) {
-				results[zone] = CKFetchRecordZoneChangesOperation.ZoneConfiguration(previousServerChangeToken: token, resultsLimit: nil, desiredKeys: nil)
-			}
-		}
-		
-		return results
-	}
-	
 	func run(cursor: CKQueryOperation.Cursor? = nil) {
-		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: configuration)
+		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: tokens.tokens(for: zoneIDs))
 		
 		if queryType != .createdOnly {
 			operation.recordWithIDWasDeletedBlock = { id, type in

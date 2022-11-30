@@ -21,9 +21,9 @@ public enum CKZoneChange {
 }
 
 public class CirrusFetchDatabaseChangesOperation: CKFetchDatabaseChangesOperation {
-	var tokens = Cirrus.instance.localState.zoneChangeTokens
+	var tokens = Cirrus.instance.localState.changeTokens
 	
-	public convenience init(database: CKDatabase, tokens: ZoneChangeTokens) {
+	public convenience init(database: CKDatabase, tokens: ChangeTokens) {
 		self.init(previousServerChangeToken: tokens.changeToken(for: database))
 		self.database = database
 		self.tokens = tokens

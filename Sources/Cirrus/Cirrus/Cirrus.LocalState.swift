@@ -8,34 +8,6 @@
 import Foundation
 import CloudKit
 
-public class ZoneChangeTokens: Codable {
-	public var tokens: [String: Data] = [:]
-	
-	public init(saved: [String: Data]? = nil) {
-		tokens = saved ?? [:]
-	}
-	
-	func changeToken(for zoneID: CKRecordZone.ID) -> CKServerChangeToken? {
-		guard let data = tokens[zoneID.tokenIdentifier] else { return nil }
-		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
-	}
-
-	func changeToken(for database: CKDatabase) -> CKServerChangeToken? {
-		guard let data = tokens[database.databaseScope.tokenIdentifier] else { return nil }
-		return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CKServerChangeToken.self, from: data)
-	}
-
-	func setChangeToken(_ token: CKServerChangeToken, for zoneID: CKRecordZone.ID) {
-		tokens[zoneID.tokenIdentifier] = token.data
-	}
-
-	func setChangeToken(_ token: CKServerChangeToken, for database: CKDatabase) {
-		tokens[database.databaseScope.tokenIdentifier] = token.data
-	}
-	
-	func clear() { tokens = [:] }
-}
-
 extension Cirrus {
 	struct LocalState: Codable {
 		var lastCreatedZoneNamesList: [String] = []
@@ -49,7 +21,7 @@ extension Cirrus {
 			set { lastSignedInUserIDName = newValue?.recordName }
 		}
 		
-		var zoneChangeTokens = ZoneChangeTokens()
+		var changeTokens = ChangeTokens()
 	}
 }
 
