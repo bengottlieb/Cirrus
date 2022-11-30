@@ -22,7 +22,7 @@ public enum CKRecordChange {
 	}
 }
 
-public class AsyncZoneChangesSequence: AsyncSequence {
+public actor AsyncZoneChangesSequence: AsyncSequence {
 	public typealias AsyncIterator = RecordIterator
 	public typealias Element = CKRecordChange
 		
@@ -30,13 +30,14 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 	let zoneIDs: [CKRecordZone.ID]
 	var resultChunkSize: Int = 0
 	var tokens: ChangeTokens
+	var isRunning = false
 	
 	public var changes: [CKRecordChange] = []
 	public var errors: [Error] = []
 	var isComplete = false
 	var queryType: CKDatabase.RecordChangesQueryType
 	
-	init(zoneIDs: [CKRecordZone.ID], in database: CKDatabase, queryType: CKDatabase.RecordChangesQueryType = .recent, tokens: ChangeTokens = Cirrus.instance.localState.changeTokens) {
+	init(zoneIDs: [CKRecordZone.ID], in database: CKDatabase, queryType: CKDatabase.RecordChangesQueryType = .recent, tokens: ChangeTokens) {
 		self.database = database
 		self.zoneIDs = zoneIDs
 		self.queryType = queryType
@@ -47,79 +48,87 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		}
 	}
 	
-	public func start() {
-		if zoneIDs.isEmpty {
-			isComplete = true
-			return
-		}
-		run()
-	}
-	
-	func run(cursor: CKQueryOperation.Cursor? = nil) {
-		let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, configurationsByRecordZoneID: tokens.tokens(for: zoneIDs))
+	private func startFetch() async throws -> Bool {
+		if isRunning { return true }
+		if await !Cirrus.instance.state.isSignedIn || database == .public || zoneIDs.isEmpty { return false }
+
+		print("RUNNING")
+		isRunning = true
 		
-		if queryType != .createdOnly {
-			operation.recordWithIDWasDeletedBlock = { id, type in
-				if type.isEmpty {
-					self.changes.append(.badRecord)
-				} else {
-					self.changes.append(CKRecordChange.deleted(id, type))
+		let _: Void = try await withCheckedThrowingContinuation { continuation in
+			let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: self.zoneIDs, configurationsByRecordZoneID: self.tokens.tokens(for: self.zoneIDs))
+			
+			if queryType != .createdOnly {
+				operation.recordWithIDWasDeletedBlock = { id, type in
+					if type.isEmpty {
+						self.changes.append(.badRecord)
+					} else {
+						print("Deleted \(type)")
+						self.changes.append(CKRecordChange.deleted(id, "\(type)"))
+					}
 				}
 			}
-		}
-		
-		operation.recordWasChangedBlock = { id, result in
-			switch result {
-			case .failure(let error):
-				Cirrus.instance.shouldCancelAfterError(error)
-				self.errors.append(error)
-				
-			case .success(let record):
-				self.changes.append(.changed(id, record))
+			
+			operation.recordWasChangedBlock = { id, result in
+				switch result {
+				case .failure(let error):
+					Task { await Cirrus.instance.shouldCancelAfterError(error) }
+					self.errors.append(error)
+					
+				case .success(let record):
+					self.changes.append(.changed(id, record))
+				}
 			}
-		}
-		
-		operation.recordZoneFetchResultBlock = { zoneID, results in
-			switch results {
-			case .failure(let error):
-				Cirrus.instance.shouldCancelAfterError(error)
-				self.errors.append(error)
-				
-			case .success(let done):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
-				self.tokens.setChangeToken(done.serverChangeToken, for: zoneID)
-				print("Zone change token: \(done.serverChangeToken)")
-				if !done.moreComing { self.isComplete = true }
+			
+			operation.recordZoneFetchResultBlock = { zoneID, results in
+				switch results {
+				case .failure(let error):
+					Task { await Cirrus.instance.shouldCancelAfterError(error) }
+					self.errors.append(error)
+					
+				case .success(let (serverToken, clientToken, moreComing)):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
+					self.tokens.setChangeToken(serverToken, for: zoneID)
+					print("more coming: \(moreComing), Zone change token: \(serverToken), client token: \(String(describing: clientToken))")
+					if !moreComing { self.isComplete = true }
+				}
 			}
-		}
-		
-		operation.fetchRecordZoneChangesResultBlock = { result in
-			switch result {
-			case .failure(let error):
-				Cirrus.instance.shouldCancelAfterError(error)
-				self.errors.append(error)
-				
-			case .success:
-				self.isComplete = true
+			
+			operation.fetchRecordZoneChangesResultBlock = { result in
+				switch result {
+				case .failure(let error):
+					Task { await Cirrus.instance.shouldCancelAfterError(error) }
+					self.errors.append(error)
+					continuation.resume(throwing: error)
+
+				case .success:
+					self.isComplete = true
+					continuation.resume()
+				}
 			}
+			
+			database.add(operation)
 		}
-		
-		database.add(operation)
+		return true
 	}
 
 	public struct RecordIterator: AsyncIteratorProtocol {
 		var position = 0
 		public mutating func next() async throws -> CKRecordChange? {
+			if await !sequence.isRunning { if try await !sequence.startFetch() { return nil } }
+			
 			while true {
-				if let error = sequence.errors.first { throw error }
-				if position < sequence.changes.count {
+				if let error = await sequence.errors.first { throw error }
+				let changes = await sequence.changes
+				
+				if position < changes.count {
 					position += 1
-					return sequence.changes[position - 1]
+					return changes[position - 1]
 				}
 				
-				if sequence.isComplete {
+				if await sequence.isComplete {
 					return nil
 				}
-				try? await Task.sleep(nanoseconds: 1_000)
+	//			_ = try await sequence.run()
 			}
 		}
 		
@@ -128,7 +137,7 @@ public class AsyncZoneChangesSequence: AsyncSequence {
 		
 	}
 	
-	public __consuming func makeAsyncIterator() -> RecordIterator {
+	nonisolated public __consuming func makeAsyncIterator() -> RecordIterator {
 		RecordIterator(sequence: self)
 	}
 }

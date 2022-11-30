@@ -46,7 +46,7 @@ public class AsyncRecordSequence: AsyncSequence {
 		}
 	}
 
-	func run(cursor: CKQueryOperation.Cursor? = nil) async throws -> Bool {
+	func runQuery(cursor: CKQueryOperation.Cursor? = nil) async throws -> Bool {
 		if isRunning && cursor == nil { return true }
 		if await !Cirrus.instance.state.isSignedIn, database != .public { return false }
 		
@@ -105,7 +105,7 @@ public class AsyncRecordSequence: AsyncSequence {
 		var position = 0
 		public mutating func next() async throws -> CKRecord? {
 			if !sequence.isRunning {
-				if try await !sequence.run() { return nil }
+				if try await !sequence.runQuery() { return nil }
 			}
 			while true {
 				if let error = sequence.errors.first { throw error }
@@ -115,7 +115,7 @@ public class AsyncRecordSequence: AsyncSequence {
 				}
 				
 				if sequence.isComplete { return nil }
-				_ = try await sequence.run(cursor: sequence.cursor)
+				_ = try await sequence.runQuery(cursor: sequence.cursor)
 			}
 		}
 		
