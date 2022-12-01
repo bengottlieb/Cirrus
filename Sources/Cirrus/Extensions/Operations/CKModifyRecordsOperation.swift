@@ -39,6 +39,7 @@ extension CKModifyRecordsOperation {
 				case .failure(let error): continuation.resume(throwing: error)
 				}
 			}
+			qualityOfService = .userInitiated
 			database.add(self)
 		}
 	}
@@ -82,6 +83,7 @@ extension CKModifyRecordsOperation {
 					continuation.resume(throwing: Cirrus.MultipleErrors.build(errors: errors))
 				}
 			}
+			qualityOfService = .userInitiated
 			database.add(self)
 		}
 	}

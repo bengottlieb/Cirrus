@@ -91,6 +91,7 @@ public class AsyncRecordSequence: AsyncSequence {
 				}
 			}
 			
+			operation.qualityOfService = .userInitiated
 			database.add(operation)
 		}
 		

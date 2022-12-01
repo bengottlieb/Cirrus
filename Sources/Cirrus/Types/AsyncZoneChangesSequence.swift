@@ -56,6 +56,7 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 		
 		let _: Void = try await withCheckedThrowingContinuation { continuation in
 			let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: self.zoneIDs, configurationsByRecordZoneID: self.tokens.tokens(for: self.zoneIDs))
+			operation.qualityOfService = .userInitiated
 			
 			if queryType != .createdOnly {
 				operation.recordWithIDWasDeletedBlock = { id, type in

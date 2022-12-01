@@ -15,6 +15,7 @@ extension CKModifySubscriptionsOperation {
 				continuation.resume(with: result)
 			}
 			
+			qualityOfService = .userInitiated
 			database.add(self)
 		}
 	}

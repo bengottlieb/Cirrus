@@ -32,6 +32,7 @@ extension CKFetchSubscriptionsOperation {
 				}
 			}
 			
+			qualityOfService = .userInitiated
 			database.add(self)
 		}
 	}
