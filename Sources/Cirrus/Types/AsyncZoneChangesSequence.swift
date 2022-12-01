@@ -52,7 +52,6 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 		if isRunning { return true }
 		if await !Cirrus.instance.state.isSignedIn || database == .public || zoneIDs.isEmpty { return false }
 
-		print("RUNNING")
 		isRunning = true
 		
 		let _: Void = try await withCheckedThrowingContinuation { continuation in
@@ -63,7 +62,6 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 					if type.isEmpty {
 						self.changes.append(.badRecord)
 					} else {
-						print("Deleted \(type)")
 						self.changes.append(CKRecordChange.deleted(id, "\(type)"))
 					}
 				}

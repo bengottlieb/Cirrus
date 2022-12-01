@@ -34,6 +34,7 @@ public class ChangeTokens: Codable {
 	}
 	
 	func clear() { tokens = [:] }
+	public var isEmpty: Bool { tokens.isEmpty }
 	
 	func tokens(for zoneIDs: [CKRecordZone.ID]) -> [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneConfiguration] {
 		var results: [CKRecordZone.ID : CKFetchRecordZoneChangesOperation.ZoneConfiguration] = [:]
