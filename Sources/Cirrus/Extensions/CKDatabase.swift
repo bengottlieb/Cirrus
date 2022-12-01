@@ -33,8 +33,8 @@ public extension CKDatabase {
 		return seq
 	}
 
-	func changes(in zoneIDs: [CKRecordZone.ID], queryType: RecordChangesQueryType = .recent) -> AsyncZoneChangesSequence {
-		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self, queryType: queryType, tokens: Cirrus.instance.localState.changeTokens)
+	func changes(in zoneIDs: [CKRecordZone.ID], queryType: RecordChangesQueryType = .recent, tokens: ChangeTokens) -> AsyncZoneChangesSequence {
+		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self, queryType: queryType, tokens: tokens)
 
 		return seq
 	}
