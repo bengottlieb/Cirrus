@@ -40,8 +40,8 @@ extension Cirrus {
 		}
 	}
 	
-	func setupZones() async throws {
-		if self.localState.lastCreatedZoneNamesList == configuration.zoneNames {
+	func setupZones(forceCreate: Bool = false) async throws {
+		if !forceCreate, self.localState.lastCreatedZoneNamesList == configuration.zoneNames {
 			self.privateZones = [:]
 			self.sharedZones = [:]
 			for name in configuration.zoneNames {

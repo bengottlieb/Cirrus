@@ -25,8 +25,8 @@ extension Cirrus {
 		if error.isOffline {
 			state = state.convertToOffline()
 			return true
-		} else if let cloudErr = error as? CKError {
-			switch cloudErr.code {
+		} else if let cloudErr = error.cloudKitErrorCode {
+			switch cloudErr {
 			case .quotaExceeded:
 				cloudQuotaExceeded = true
 				logg(error: error, "Quota exceeded")
@@ -35,6 +35,14 @@ extension Cirrus {
 			case .permissionFailure:
 				logg(error: error, "\(label): Not signed in")
 				DispatchQueue.onMain { self.state = .notLoggedIn }
+				return true
+
+			case .changeTokenExpired:
+				Cirrus.instance.localState.changeTokens = .init()
+				return true
+				
+			case .zoneNotFound:
+				Task { try? await Cirrus.instance.setupZones(forceCreate: true) }
 				return true
 
 			case .missingEntitlement:
@@ -69,6 +77,10 @@ extension Cirrus {
 }
 
 public extension Error {
+	var cloudKitErrorCode: CKError.Code? {
+		(self as? CKError)?.code
+	}
+
 	var isOffline: Bool {
 		(self as NSError).code == -1009
 	}

@@ -37,7 +37,6 @@ extension Cirrus {
 		}
 		.store(in: &cancelBag)
 #endif
-		
 		Notification.Name.CKAccountChanged.publisher()
 			.sink() { _ in Task {
 				switch self.state {
