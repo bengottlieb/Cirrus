@@ -12,7 +12,7 @@ import CloudKit
 public extension CKDatabase {
 	static let maxRecordsPerFetchOperation = 400
 
-	func fetchRecords(withIDs ids: [CKRecord.ID]) async throws -> [CKRecord] {
+	func fetchRecords(withIDs ids: [CKRecord.ID], logFailures: Bool = true) async throws -> [CKRecord] {
 		if ids.count > Self.maxRecordsPerFetchOperation {
 			let chunks = ids.breakIntoChunks(ofSize: Self.maxRecordsPerFetchOperation)
 			var results: [CKRecord] = []
@@ -35,7 +35,7 @@ public extension CKDatabase {
 					results.append(record)
 					
 				case .failure(let error):
-					print("Record failed: \(id): \(error)")
+					if logFailures { print("Record failed: \(id): \(error)") }
 				}
 			}
 			
