@@ -31,6 +31,7 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 	var resultChunkSize: Int = 0
 	var tokens: ChangeTokens
 	var isRunning = false
+	var totalRecordsFetchedCount = 0
 	
 	public struct Notifications {
 		public static let zoneChangeReceivedForRecord = Notification.Name("zoneChangeReceivedForRecord")
@@ -80,7 +81,8 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 					
 				case .success(let record):
 					self.changes.append(.changed(id, record))
-					Notifications.zoneChangeReceivedForRecord.notify(record)
+					self.totalRecordsFetchedCount += 1
+					Notifications.zoneChangeReceivedForRecord.notify(record, info: ["count": self.totalRecordsFetchedCount])
 				}
 			}
 			
