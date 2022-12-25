@@ -32,6 +32,10 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 	var tokens: ChangeTokens
 	var isRunning = false
 	
+	public struct Notifications {
+		public static let zoneChangeReceivedForRecord = Notification.Name("zoneChangeReceivedForRecord")
+	}
+	
 	public var changes: [CKRecordChange] = []
 	public var errors: [Error] = []
 	var isComplete = false
@@ -76,6 +80,7 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 					
 				case .success(let record):
 					self.changes.append(.changed(id, record))
+					Notifications.zoneChangeReceivedForRecord.notify(record)
 				}
 			}
 			
