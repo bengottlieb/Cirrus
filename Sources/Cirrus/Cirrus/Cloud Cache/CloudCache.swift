@@ -29,7 +29,6 @@ public class CloudCache<CacheObjectType: CKRecordConvertable> {
 	}
 	
 	public func fetch(objectID id: String) async throws -> CacheObjectType? {
-		if await !Cirrus.instance.state.isSignedIn { return nil }
 		if let record = try await database.fetchRecord(withID: CKRecord.ID(recordName: id)) {
 			let object = try CacheObjectType(record)
 			return object
