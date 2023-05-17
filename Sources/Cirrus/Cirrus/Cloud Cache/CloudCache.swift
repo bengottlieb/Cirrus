@@ -11,12 +11,13 @@ import CloudKit
 public class CloudCache<CacheObjectType: CKRecordConvertable> {
 	let database: CKDatabase
 	
-	init(database: CKDatabase = .public) {
+	public init(database: CKDatabase = .public) {
 		self.database = database
 	}
 	
-	func cache(_ object: CacheObjectType) async throws {
+	public func store(_ object: CacheObjectType) async throws {
 		let id = object.ckRecordID
+		if await !Cirrus.instance.state.isSignedIn { return }
 		
 		if let record = try await database.fetchRecord(withID: id) {
 			try object.write(to: record)
@@ -27,11 +28,18 @@ public class CloudCache<CacheObjectType: CKRecordConvertable> {
 		}
 	}
 	
-	func fetch(objectID id: String) async throws -> CacheObjectType? {
+	public func fetch(objectID id: String) async throws -> CacheObjectType? {
+		if await !Cirrus.instance.state.isSignedIn { return nil }
 		if let record = try await database.fetchRecord(withID: CKRecord.ID(recordName: id)) {
 			let object = try CacheObjectType(record)
 			return object
 		}
 		return nil
+	}
+	
+	public func fetch(objectsMatching predicate: NSPredicate) async throws -> [CacheObjectType] {
+		let records = try await database.fetchRecords(ofType: CacheObjectType.recordType, matching: predicate)
+		
+		return try records.map { record in try CacheObjectType(record) }
 	}
 }

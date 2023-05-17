@@ -17,8 +17,8 @@ public protocol CKRecordConvertable: Identifiable {
 	var ckRecordID: CKRecord.ID { get }
 }
 
-public extension Decodable where Self: CKRecordConvertable {
-	init(_ record: CKRecord, using decoder: JSONDecoder = .default) throws {
+public extension CKRecordConvertable where Self: Decodable  {
+	static func load(from record: CKRecord, using decoder: JSONDecoder = .default) throws -> Self {
 		var dict: [String: Any] = [:]
 		
 		for (key, value) in record {
@@ -26,12 +26,12 @@ public extension Decodable where Self: CKRecordConvertable {
 		}
 		
 		let data = try JSONSerialization.data(withJSONObject: dict)
-		self = try decoder.decode(Self.self, from: data)
+		return try decoder.decode(Self.self, from: data)
 	}
 }
 
-public extension Encodable where Self: CKRecordConvertable {
-	func write(to record: CKRecord, using encoder: JSONEncoder = .default) throws {
+public extension CKRecordConvertable where Self: Encodable {
+	func encode(to record: CKRecord, using encoder: JSONEncoder = .default) throws {
 		let json = try self.asJSON(using: encoder)
 		
 		for (key, value) in json {

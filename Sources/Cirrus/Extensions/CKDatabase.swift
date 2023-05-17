@@ -93,6 +93,41 @@ public extension CKDatabase {
 		_ = try await op.delete(from: self)
 	}
 	
+	func fetchRecords(ofType type: CKRecord.RecordType, matching predicate: NSPredicate, inZone: CKRecordZone.ID? = nil, keys: [CKRecord.FieldKey]? = nil, limit: Int = CKQueryOperation.maximumResults) async throws -> [CKRecord] {
+		let query = CKQuery(recordType: type, predicate: predicate)
+		do {
+			var allResults: [CKRecord] = []
+			var cursor: CKQueryOperation.Cursor?
+			
+			while true {
+				let results: (matchResults: [(CKRecord.ID, Result<CKRecord, Error>)], queryCursor: CKQueryOperation.Cursor?)
+				
+				if let cursor {
+					results = try await self.records(continuingMatchFrom: cursor)
+				} else {
+					results = try await self.records(matching: query, inZoneWith: inZone, desiredKeys: keys, resultsLimit: limit)
+				}
+				
+				allResults += results.matchResults.compactMap { result in
+					switch result.1 {
+					case .success(let record): return record
+					case .failure: return nil
+					}
+				}
+				
+				guard let next = results.queryCursor, allResults.count < limit else { break }
+				cursor = next
+			}
+			return allResults
+		} catch let error as CKError {
+			switch error.code {
+			default:
+				await Cirrus.instance.shouldCancelAfterError(error)
+				throw error
+			}
+		}
+	}
+	
 	func fetchRecord(withID id: CKRecord.ID) async throws -> CKRecord? {
 		do {
 			return try await record(for: id)

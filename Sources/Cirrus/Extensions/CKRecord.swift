@@ -15,6 +15,7 @@ import UIKit
 // To do: This is a temporary fix, will need to be addressed by Apple
 extension CKRecord: @unchecked Sendable { }
 extension CKRecordZone: @unchecked Sendable { }
+extension NSPredicate: @unchecked Sendable { }
 
 extension CKRecord {
 	enum SharingError: Error { case noViewController }
