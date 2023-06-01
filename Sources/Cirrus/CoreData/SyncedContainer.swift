@@ -24,16 +24,18 @@ public class SyncedContainer: ObservableObject {
 		context.parent = viewContext
 		return context
 	}
-	public static func setup(name: String, containerIdentifier: String? = nil, managedObjectModel model: NSManagedObjectModel? = nil, bundle: Bundle = .main) {
-		instance = .init(name: name, containerIdentifier: containerIdentifier, managedObjectModel: model, bundle: bundle)
+	public static func setup(name: String, containerIdentifier: String? = nil, databaseDirectory: String? = nil, managedObjectModel model: NSManagedObjectModel? = nil, bundle: Bundle = .main) {
+		instance = .init(name: name, containerIdentifier: containerIdentifier, databaseDirectory: databaseDirectory, managedObjectModel: model, bundle: bundle)
 	}
 	
 	public func entity(named name: String) -> NSEntityDescription {
 		container.persistentStoreCoordinator.managedObjectModel.entitiesByName[name]!
 	}
     
-	public init(name: String, containerIdentifier: String?, managedObjectModel model: NSManagedObjectModel?, bundle: Bundle) {
+	public init(name: String, containerIdentifier: String?, databaseDirectory: String?, managedObjectModel model: NSManagedObjectModel?, bundle: Bundle) {
 		AppGroupPersistentContainer.applicationGroupIdentifier = containerIdentifier
+		if let databaseDirectory { AppGroupPersistentContainer.directoryName = databaseDirectory }
+
 		self.container = AppGroupPersistentContainer(name: name, managedObjectModel: model ?? NSManagedObjectModel(contentsOf: bundle.url(forResource: name, withExtension: "momd")!)!)
 		
 		self.container.loadPersistentStores { desc, error in
