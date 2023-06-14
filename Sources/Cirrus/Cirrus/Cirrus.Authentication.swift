@@ -9,32 +9,33 @@ import Suite
 import CloudKit
 
 extension Cirrus {
-	public func authenticate(evenIfOffline: Bool = false) async throws {
-		guard state.isSignedOut || state == .temporaryUnavailable || (evenIfOffline && state.isOffline) else { return }
+	@MainActor public func authenticate(evenIfOffline: Bool = false) async throws {
+		guard state.isSignedOut || state == .temporaryUnavailable || (evenIfOffline || !state.isOffline) else { return }
 		
-		if state != .temporaryUnavailable { DispatchQueue.onMain { self.state = .signingIn } }
+		if state != .temporaryUnavailable { self.state = .signingIn }
 		do {
 			let status = try await container.accountStatus()
 			switch status {
 			case .couldNotDetermine, .noAccount, .restricted, .temporarilyUnavailable:
-				DispatchQueue.onMain { self.state = .denied }
+				self.state = .denied
 				
 			case .available:
 				let id = try await container.userRecordID()
 				try await setupZones()
-				DispatchQueue.onMain { self.userSignedIn(as: id) }
+				self.userSignedIn(as: id)
+				print("Signed In")
 
 			default:
-				DispatchQueue.onMain { self.state = .notLoggedIn }
+				self.state = .notLoggedIn
 			}
 		} catch let error as NSError {
 			print("Error when signing in: \((error as NSError).code)  \(error)\n \((error as NSError).domain)")
 			switch (error.code, error.domain) {
 			case (1028, "CKInternalErrorDomain"):
-				DispatchQueue.onMain { self.state = .temporaryUnavailable }
+				self.state = .temporaryUnavailable
 				
 			default:
-				DispatchQueue.onMain { self.state = .failed(error) }
+				self.state = .failed(error)
 				throw error
 			}
 		}
@@ -56,7 +57,7 @@ extension Cirrus {
 			self.defaultPrivateZone = privateZones[defaultZone]
 			self.defaultSharedZone = sharedZones[defaultZone]
 		}
-		DispatchQueue.onMain { self.localState.lastCreatedZoneNamesList = self.configuration.zoneNames }
+		await MainActor.run { self.localState.lastCreatedZoneNamesList = self.configuration.zoneNames }
 	}
 	
 	public func signOut() {
