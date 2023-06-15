@@ -95,7 +95,7 @@ public class SyncedContainer: ObservableObject {
 		
 		do {
 			for try await change in database.changes(in: zoneIDs, queryType: queryType, tokens: await Cirrus.instance.localState.changeTokens) {
-				if Logger.instance.level == .verbose {
+				if SuiteLogger.instance.level == .verbose {
 					switch change {
 					case .deleted(_, let type): if !isFirstSync { logg("Deleted \(type)") }
 					case .changed(let id, let record): logg("Received \(record.recordType): \(id)")
