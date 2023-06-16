@@ -11,6 +11,62 @@ import CloudKit
 
 public extension CKDatabase {
 	static let maxRecordsPerFetchOperation = 400
+	
+	func fetchAllRecords(kind: CKRecord.RecordType) async throws -> [CKRecord] {
+		let query = CKQuery(recordType: kind, predicate: NSPredicate(value: true))
+		
+		return try await fetchAllRecords(query: query)
+	}
+
+	func fetchAllRecords(query: CKQuery) async throws -> [CKRecord] {
+		try await fetchAllRecords(query: CKQueryOperation(query: query))
+	}
+
+	func fetchAllRecords(query: CKQueryOperation) async throws -> [CKRecord] {
+		var totalRecords: [CKRecord] = []
+		
+		var op = query
+		
+		while true {
+			let results: ([CKRecord], CKQueryOperation.Cursor?) = try await withCheckedThrowingContinuation { continuation in
+				var records: [CKRecord] = []
+				
+				op.recordMatchedBlock = { id, result in
+					switch result {
+					case .success(let record): records.append(record)
+					case .failure(let error):
+						print("Failed to fetch record: \(error)")
+					}
+				}
+				
+				op.queryResultBlock = { result in
+					switch result {
+					case .success(let cursor):
+						continuation.resume(returning: (records, cursor))
+						
+					case .failure(let error):
+						print("Failed to finish fetching records: \(error)")
+						if records.isEmpty {
+							continuation.resume(throwing: error)
+						} else {
+							continuation.resume(returning: (records, nil))
+						}
+					}
+				}
+				
+				self.add(op)
+			}
+			
+			totalRecords += results.0
+			if let cursor = results.1 {
+				op = CKQueryOperation(cursor: cursor)
+			} else {
+				break
+			}
+		}
+		
+		return totalRecords
+	}
 
 	func fetchRecords(withIDs ids: [CKRecord.ID], logFailures: Bool = true) async throws -> [CKRecord] {
 		if ids.count > Self.maxRecordsPerFetchOperation {
