@@ -23,7 +23,6 @@ extension Cirrus {
 				let id = try await container.userRecordID()
 				try await setupZones()
 				self.userSignedIn(as: id)
-				print("Signed In")
 
 			default:
 				self.state = .notLoggedIn
