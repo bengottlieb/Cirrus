@@ -32,6 +32,11 @@ public extension CKDatabase {
 		let seq = AsyncRecordSequence(query: query, in: self, zoneID: zoneID)
 		return seq
 	}
+	
+	func resolve(reference: CKRecord.Reference?) async throws -> CKRecord? {
+		guard let reference else { return nil }
+		return try await record(for: reference.recordID)
+	}
 
 	func changes(in zoneIDs: [CKRecordZone.ID], queryType: RecordChangesQueryType = .recent, tokens: ChangeTokens) -> AsyncZoneChangesSequence {
 		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self, queryType: queryType, tokens: tokens)
