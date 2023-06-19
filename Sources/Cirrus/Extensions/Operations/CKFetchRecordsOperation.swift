@@ -12,14 +12,16 @@ import CloudKit
 public extension CKDatabase {
 	static let maxRecordsPerFetchOperation = 400
 	
-	func fetchAllRecords(kind: CKRecord.RecordType) async throws -> [CKRecord] {
+	func fetchAllRecords(kind: CKRecord.RecordType, in zoneID: CKRecordZone.ID? = nil) async throws -> [CKRecord] {
 		let query = CKQuery(recordType: kind, predicate: NSPredicate(value: true))
 		
-		return try await fetchAllRecords(query: query)
+		return try await fetchAllRecords(query: query, in: zoneID)
 	}
 
-	func fetchAllRecords(query: CKQuery) async throws -> [CKRecord] {
-		try await fetchAllRecords(query: CKQueryOperation(query: query))
+	func fetchAllRecords(query: CKQuery, in zoneID: CKRecordZone.ID? = nil) async throws -> [CKRecord] {
+		let op = CKQueryOperation(query: query)
+		op.zoneID = zoneID
+		return try await fetchAllRecords(query: op)
 	}
 
 	func fetchAllRecords(query: CKQueryOperation) async throws -> [CKRecord] {

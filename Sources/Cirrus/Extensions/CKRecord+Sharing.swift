@@ -25,8 +25,11 @@ public extension CKRecord {
 		if !createIfNeeded { return nil }
 		
 		let share = CKShare(rootRecord: self)
-		let _ = try await CKDatabase.private.modifyRecords(saving: [self, share], deleting: [])
+		share.publicPermission = .readOnly
+		let results = try await CKDatabase.private.modifyRecords(saving: [self, share], deleting: [])
 
+		if results.saveResults.values.count != 2 { return nil }
+		
 		return share
 	}
 }

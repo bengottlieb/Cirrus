@@ -35,7 +35,7 @@ extension CKRecord {
 		let controller = await UICloudSharingController { shareController, prep in
 			let share = CKShare(rootRecord: self)
 			share[CKShare.SystemFieldKey.title] = title as CKRecordValue
-			share.publicPermission = .readOnly
+			share.publicPermission = .readWrite
 			
 			Task {
 				do {
