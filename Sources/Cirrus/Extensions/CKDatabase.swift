@@ -19,6 +19,16 @@ extension CKRecord: CKRecordProviding {
 }
 
 public extension CKDatabase {
+	enum Kind: String { case `public`, `private`, shared
+		var database: CKDatabase {
+			switch self {
+			case .public: return .public
+			case .private: return .private
+			case .shared: return .shared
+			}
+		}
+	}
+	
     static var `public`: CKDatabase { Cirrus.instance.container.publicCloudDatabase }
     static var `private`: CKDatabase { Cirrus.instance.container.privateCloudDatabase }
     static var `shared`: CKDatabase { Cirrus.instance.container.sharedCloudDatabase }

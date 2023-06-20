@@ -16,7 +16,8 @@ public extension CKRecord {
 	}
 	
 	func fetchShare(createIfNeeded: Bool = false) async throws -> CKShare? {
-		if let shareRecord = try await CKDatabase.private.resolve(reference: share) {
+		let actualRecord = try await CKDatabase.private.fetchRecord(withID: recordID) ?? self
+		if let shareRecord = try await CKDatabase.private.resolve(reference: actualRecord.share) {
 			if let share = shareRecord as? CKShare { return share }
 			print("Got a share record, but it's not a CKShare.")
 			return nil
@@ -24,9 +25,9 @@ public extension CKRecord {
 		
 		if !createIfNeeded { return nil }
 		
-		let share = CKShare(rootRecord: self)
+		let share = CKShare(rootRecord: actualRecord)
 		share.publicPermission = .readOnly
-		let results = try await CKDatabase.private.modifyRecords(saving: [self, share], deleting: [])
+		let results = try await CKDatabase.private.modifyRecords(saving: [actualRecord, share], deleting: [])
 
 		if results.saveResults.values.count != 2 { return nil }
 		
