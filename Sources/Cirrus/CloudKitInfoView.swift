@@ -8,13 +8,17 @@
 import SwiftUI
 import CloudKit
 
-public struct CloudKitInfoView: View {
+@MainActor public struct CloudKitInfoView: View {
 	@State private var databaseInfo: DatabaseInfo?
 	@State private var cached: [CKDatabase.Kind: DatabaseInfo] = [:]
 	@State private var currentDatabaseKind = CKDatabase.Kind.public
 	@State private var pendingKind: CKDatabase.Kind? = .public
 	@State private var error: Error?
-	public init() { }
+	let recordTypes: [CKRecord.RecordType]
+	
+	public init(recordTypes: [CKRecord.RecordType] = []) {
+		self.recordTypes = recordTypes
+	}
 	
 	public var body: some View {
 		VStack {
@@ -29,6 +33,10 @@ public struct CloudKitInfoView: View {
 					VStack(alignment: .leading) {
 						if case .authenticated(let id) = Cirrus.instance.state {
 							Text("ID: \(id.recordName)")
+						}
+						
+						ForEach(recordTypes, id: \.self) { type in
+							Text("\(type): \(databaseInfo.recordCounts[type] ?? 0)")
 						}
 						
 						ForEach(databaseInfo.zones, id: \.zoneID) { zone in
@@ -69,13 +77,13 @@ public struct CloudKitInfoView: View {
 		pendingKind = kind
 		Task {
 			do {
-				databaseInfo = try await DatabaseInfo.info(for: kind)
+				databaseInfo = try await DatabaseInfo.info(for: kind, recordTypes: recordTypes)
 				cached[kind] = databaseInfo
 			} catch {
 				self.error = error
 			}
+			pendingKind = nil
 		}
-		pendingKind = nil
 	}
 }
 
@@ -95,12 +103,25 @@ extension CloudKitInfoView {
 struct DatabaseInfo {
 	var zones: [CKRecordZone] = []
 	var subscriptions: [CKSubscription] = []
+	var recordCounts: [CKRecord.RecordType: Int] = [:]
 	
-	static func info(for kind: CKDatabase.Kind) async throws -> DatabaseInfo {
+	static func info(for kind: CKDatabase.Kind, recordTypes: [CKRecord.RecordType]) async throws -> DatabaseInfo {
 		var info = DatabaseInfo()
 		
 		info.zones = try await kind.database.allRecordZones()
 		info.subscriptions = try await kind.database.allSubscriptions()
+		
+		for type in recordTypes {
+			var count = 0
+			if kind == .shared {
+				for zone in info.zones {
+					count += try await kind.database.allRecordIDs(from: [type], in: zone).count
+				}
+			} else {
+				count = try await kind.database.allRecordIDs(from: [type]).count
+			}
+			info.recordCounts[type] = count
+		}
 		
 		return info
 	}
