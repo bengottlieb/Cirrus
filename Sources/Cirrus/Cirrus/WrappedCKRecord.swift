@@ -58,18 +58,18 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		}
 	}
 	
-	open func willSave() async throws { }		// move any fields to save into the record
+	open func willSave(to record: CKRecord) async throws { }		// move any fields to save into the record
 	
 	open func didLoad() { }			// move any data out of the record
 	
 	public func save() async throws {
-		try await willSave()
-		try await performSave(firstTime: true)
+		let record = record ?? CKRecord(recordType: recordType, recordID: recordID)
+		try await willSave(to: record)
+		try await performSave(record: record, firstTime: true)
 	}
 	
-	func performSave(firstTime: Bool) async throws {
+	func performSave(record: CKRecord, firstTime: Bool) async throws {
 		if !isDirty { return }
-		let record = record ?? CKRecord(recordType: recordType, recordID: recordID)
 		
 		if isSaving { return }
 		isSaving = true
@@ -86,8 +86,8 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 			case .serverRecordChanged:
 				if firstTime {
 					try await performFetch()
-					try await willSave()
-					try await performSave(firstTime: false)
+					try await willSave(to: record)
+					try await performSave(record: record, firstTime: false)
 				} else {
 					throw error
 				}
