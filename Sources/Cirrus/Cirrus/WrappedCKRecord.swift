@@ -58,6 +58,16 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		}
 	}
 	
+	open func asyncSave() {
+		Task {
+			do {
+				try await save()
+			} catch {
+				print("Failed to save record: \(error)")
+			}
+		}
+	}
+	
 	open func willSave(to record: CKRecord) async throws { }		// move any fields to save into the record
 	
 	open func didLoad() { }			// move any data out of the record
