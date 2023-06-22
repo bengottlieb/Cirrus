@@ -73,9 +73,9 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 	open func didLoad() { }			// move any data out of the record
 	
 	public func save() async throws {
-		let record = record ?? CKRecord(recordType: recordType, recordID: recordID)
-		try await willSave(to: record)
-		try await performSave(record: record, firstTime: true)
+		record = record ?? CKRecord(recordType: recordType, recordID: recordID)
+		try await willSave(to: record!)
+		try await performSave(record: record!, firstTime: true)
 	}
 	
 	func performSave(record: CKRecord, firstTime: Bool) async throws {
@@ -113,7 +113,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 	}
 	
 	func performFetch() async throws {
-		record = try await CKDatabase.private.record(for: recordID)
+		record = try? await CKDatabase.private.record(for: recordID)
 	}
 	
 	func recordChanged() {
