@@ -88,7 +88,7 @@ extension CKRecord: Identifiable {
 		}
 		.onChange(of: currentDatabaseKind) { kind in load(kind) }
 		.sheet(item: $detailsRecord) { record in
-			CKRecordView(record: record)
+			CKRecordView(record: record, database: currentDatabaseKind.database)
 		}
 		.onAppear { load(.public) }
 	}
