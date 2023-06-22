@@ -28,7 +28,22 @@ public struct CKRecordView: View {
 					.padding()
 			}
 			ScrollView {
-				VStack {
+				VStack(alignment: .leading) {
+					Labeled(label: "ID", content: record.recordID.recordName)
+					Labeled(label: "Type", content: record.recordType)
+					if let share = record.share {
+						Labeled(label: "Sharing", content: "\(share)")
+					}
+					
+					let keys = record.allKeys()
+					
+					ForEach(keys, id: \.self) { key in
+						if let value = record[key] {
+							Labeled(label: key, content: "\(value)")
+						}
+					}
+					
+					Spacer(minLength: 50)
 					Text("\(record)")
 						.multilineTextAlignment(.leading)
 				}
@@ -47,5 +62,17 @@ public struct CKRecordView: View {
 		}
 		.buttonStyle(.borderedProminent)
 		.padding()
+	}
+	
+	struct Labeled: View {
+		let label: String
+		let content: String
+		
+		var body: some View {
+			HStack {
+				Text(label)
+				Text(content).bold()
+			}
+		}
 	}
 }

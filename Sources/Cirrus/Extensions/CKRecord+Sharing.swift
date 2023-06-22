@@ -15,6 +15,14 @@ public extension CKRecord {
 		return share.participants.contains { $0.userIdentity.userRecordID == userID }
 	}
 	
+	var isSharedWithAnyone: Bool {
+		get async throws {
+			guard let share = try await fetchShare(createIfNeeded: false) else { return false }
+			
+			return !share.participants.isEmpty
+		}
+	}
+	
 	func fetchShare(createIfNeeded: Bool = false) async throws -> CKShare? {
 		let actualRecord = try await CKDatabase.private.fetchRecord(withID: recordID) ?? self
 		if let shareRecord = try await CKDatabase.private.resolve(reference: actualRecord.share) {

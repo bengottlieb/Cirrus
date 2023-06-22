@@ -106,6 +106,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 				throw error
 			}
 		}
+		isSaving = false
 	}
 	
 	func load() async throws {
@@ -114,7 +115,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 	}
 	
 	func performFetch() async throws {
-		record = try? await CKDatabase.private.record(for: recordID)
+		record = try? await database.record(for: recordID)
 	}
 	
 	func recordChanged() {
