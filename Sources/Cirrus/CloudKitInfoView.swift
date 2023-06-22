@@ -8,16 +8,23 @@
 import SwiftUI
 import CloudKit
 
+extension CKRecord: Identifiable {
+	public var id: ID { recordID }
+}
+
 @MainActor public struct CloudKitInfoView: View {
 	@State private var databaseInfo: DatabaseInfo?
 	@State private var cached: [CKDatabase.Kind: DatabaseInfo] = [:]
 	@State private var currentDatabaseKind = CKDatabase.Kind.public
 	@State private var pendingKind: CKDatabase.Kind? = .public
 	@State private var error: Error?
+	@State var detailsRecord: CKRecord?
+	let showRecordIDs: Bool
 	let recordTypes: [CKRecord.RecordType]
 	
-	public init(recordTypes: [CKRecord.RecordType] = []) {
+	public init(recordTypes: [CKRecord.RecordType] = [], showRecordIDs: Bool = true) {
 		self.recordTypes = recordTypes
+		self.showRecordIDs = showRecordIDs
 	}
 	
 	public var body: some View {
@@ -36,7 +43,21 @@ import CloudKit
 						}
 						
 						ForEach(recordTypes, id: \.self) { type in
-							Text("\(type): \(databaseInfo.recordCounts[type] ?? 0)")
+							if let ids = databaseInfo.recordIDs[type] {
+								Text("\(type): \(ids.count)")
+								if showRecordIDs {
+									VStack {
+										ForEach(ids, id: \.recordName) { id in
+											Text("\(id.recordName)")
+												.onTapGesture {
+													Task {
+														detailsRecord = try? await currentDatabaseKind.database.fetchRecord(withID: id)
+													}
+												}
+										}
+									}
+								}
+							}
 						}
 						
 						ForEach(databaseInfo.zones, id: \.zoneID) { zone in
@@ -66,6 +87,9 @@ import CloudKit
 			}
 		}
 		.onChange(of: currentDatabaseKind) { kind in load(kind) }
+		.sheet(item: $detailsRecord) { record in
+			CKRecordView(record: record)
+		}
 		.onAppear { load(.public) }
 	}
 	
@@ -103,7 +127,7 @@ extension CloudKitInfoView {
 struct DatabaseInfo {
 	var zones: [CKRecordZone] = []
 	var subscriptions: [CKSubscription] = []
-	var recordCounts: [CKRecord.RecordType: Int] = [:]
+	var recordIDs: [CKRecord.RecordType: [CKRecord.ID]] = [:]
 	
 	static func info(for kind: CKDatabase.Kind, recordTypes: [CKRecord.RecordType]) async throws -> DatabaseInfo {
 		var info = DatabaseInfo()
@@ -112,15 +136,15 @@ struct DatabaseInfo {
 		info.subscriptions = try await kind.database.allSubscriptions()
 		
 		for type in recordTypes {
-			var count = 0
+			var recordIDs: [CKRecord.ID] = []
 			if kind == .shared {
 				for zone in info.zones {
-					count += try await kind.database.allRecordIDs(from: [type], in: zone).count
+					recordIDs += try await kind.database.allRecordIDs(from: [type], in: zone).ids[type] ?? []
 				}
 			} else {
-				count = try await kind.database.allRecordIDs(from: [type]).count
+				recordIDs += try await kind.database.allRecordIDs(from: [type]).ids[type] ?? []
 			}
-			info.recordCounts[type] = count
+			info.recordIDs[type] = recordIDs
 		}
 		
 		return info

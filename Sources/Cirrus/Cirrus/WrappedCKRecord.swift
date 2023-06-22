@@ -24,6 +24,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		self.database = database
 		recordID = record.recordID
 		recordType = record.recordType
+		didLoad()
 	}
 	
 	public static func ==(lhs: WrappedCKRecord, rhs: WrappedCKRecord) -> Bool {
@@ -40,7 +41,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		self.database = database
 		self.recordID = recordID
 		self.recordType = recordType
-		try await performFetch()
+		try await load()
 	}
 	
 	public subscript(key: String) -> CKRecordValue? {
