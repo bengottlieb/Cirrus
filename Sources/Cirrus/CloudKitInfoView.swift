@@ -43,6 +43,7 @@ extension CKRecord: Identifiable {
 							Text("ID: \(id.recordName)")
 						}
 						
+						Text("Records").frame(maxWidth: .infinity, alignment: .center).background(Color.black).foregroundColor(.white)
 						ForEach(recordTypes, id: \.self) { type in
 							if let ids = databaseInfo.recordIDs[type] {
 								Text("\(type): \(ids.count)")
@@ -62,6 +63,7 @@ extension CKRecord: Identifiable {
 							}
 						}
 						
+						Text("Zones").frame(maxWidth: .infinity, alignment: .center).background(Color.black).foregroundColor(.white)
 						ForEach(databaseInfo.zones, id: \.zoneID) { zone in
 							VStack(alignment: .leading) {
 								Text(zone.zoneID.zoneName)
@@ -71,6 +73,7 @@ extension CKRecord: Identifiable {
 							}
 						}
 
+						Text("Subscriptions").frame(maxWidth: .infinity, alignment: .center).background(Color.black).foregroundColor(.white)
 						ForEach(databaseInfo.subscriptions, id: \.subscriptionID) { sub in
 							VStack(alignment: .leading) {
 								Text(sub.subscriptionID.description)
@@ -89,6 +92,7 @@ extension CKRecord: Identifiable {
 							.onTapGesture { selectedSubscription = sub }
 						}
 					}
+					.padding()
 				}
 			}
 		}
