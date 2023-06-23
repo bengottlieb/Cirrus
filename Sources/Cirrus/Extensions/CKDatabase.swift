@@ -249,7 +249,7 @@ extension CKDatabase {
 
 
 extension CKDatabase.Scope: Codable {
-	var database: CKDatabase {
+	public var database: CKDatabase {
 		switch self {
 		case .private: return Cirrus.instance.container.privateCloudDatabase
 		case .public: return Cirrus.instance.container.publicCloudDatabase
@@ -257,11 +257,11 @@ extension CKDatabase.Scope: Codable {
 		default: return Cirrus.instance.container.privateCloudDatabase
 		}
 	}
-	static var allScopes: [CKDatabase.Scope] {
+	public static var allScopes: [CKDatabase.Scope] {
 		[.private, .public, .shared]
 	}
 	
-	var name: String {
+	public var name: String {
 		switch self {
 		case .private: return "private"
 		case .public: return "public"
