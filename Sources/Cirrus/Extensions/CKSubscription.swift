@@ -17,3 +17,15 @@ public extension CKSubscription.SubscriptionType {
 		}
 	}
 }
+
+public extension CKSubscription {
+	var detailedDescription: String {
+		var result = subscriptionType.title
+		if let db = self as? CKDatabaseSubscription {
+			if let recordType = db.recordType { result += ": \(recordType)" }
+		}
+		
+		return result
+	}
+
+}

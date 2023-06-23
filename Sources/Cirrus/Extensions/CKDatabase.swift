@@ -157,24 +157,6 @@ public extension CKDatabase {
 			}
 		}
 	}
-	
-	func setupSubscriptions(_ subs: [Cirrus.SubscriptionInfo]) async {
-		let ids = subs.map { $0.id(in: self.databaseScope) }
-		let op = CKFetchSubscriptionsOperation(subscriptionIDs: ids)
-		
-		do {
-			let existing = try await op.fetchAll(in: self)
-			let newSubs = subs.filter { existing[$0.id(in: databaseScope)] == nil }.map { $0.subscription(in: databaseScope) }
-			
-			let modifyOp = CKModifySubscriptionsOperation(subscriptionsToSave: newSubs, subscriptionIDsToDelete: nil)
-			try await modifyOp.save(in: self)
-		} catch {
-			logg(error: error, "Failed to fetch/setup subscriptions")
-			await Cirrus.instance.shouldCancelAfterError(error)
-		}
-		
-	}
-	
 }
 
 extension CKDatabase {

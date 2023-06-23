@@ -18,6 +18,7 @@ extension CKRecord: Identifiable {
 	@State private var currentDatabaseKind = CKDatabase.Kind.public
 	@State private var pendingKind: CKDatabase.Kind? = .public
 	@State private var error: Error?
+	@State private var selectedSubscription: CKSubscription?
 	@State var detailsRecord: CKRecord?
 	let showRecordIDs: Bool
 	let recordTypes: [CKRecord.RecordType]
@@ -37,7 +38,7 @@ extension CKRecord: Identifiable {
 					Text("Loading \(pendingKind.rawValue)")
 					ProgressView()
 				} else if let databaseInfo {
-					VStack(alignment: .leading) {
+					VStack(alignment: .leading, spacing: 5) {
 						if case .authenticated(let id) = Cirrus.instance.state {
 							Text("ID: \(id.recordName)")
 						}
@@ -46,9 +47,10 @@ extension CKRecord: Identifiable {
 							if let ids = databaseInfo.recordIDs[type] {
 								Text("\(type): \(ids.count)")
 								if showRecordIDs {
-									VStack {
+									VStack(alignment: .leading) {
 										ForEach(ids, id: \.recordName) { id in
 											Text("\(id.recordName)")
+												.font(.callout)
 												.onTapGesture {
 													Task {
 														detailsRecord = try? await currentDatabaseKind.database.fetchRecord(withID: id)
@@ -61,26 +63,30 @@ extension CKRecord: Identifiable {
 						}
 						
 						ForEach(databaseInfo.zones, id: \.zoneID) { zone in
-							Text(zone.zoneID.zoneName)
-								.font(.headline)
-							Text(zone.zoneID.description)
-								.font(.caption)
+							VStack(alignment: .leading) {
+								Text(zone.zoneID.zoneName)
+									.font(.headline)
+								Text(zone.zoneID.description)
+									.font(.caption)
+							}
 						}
 
 						ForEach(databaseInfo.subscriptions, id: \.subscriptionID) { sub in
-							Text(sub.subscriptionID.description)
-								.font(.headline)
-							Text(sub.subscriptionType.title)
-								.font(.caption)
-							if let querySub = sub as? CKQuerySubscription {
-								HStack {
-									if querySub.querySubscriptionOptions.contains(.firesOnce) { Text("once") }
-									if querySub.querySubscriptionOptions.contains(.firesOnRecordCreation) { Text("create") }
-									if querySub.querySubscriptionOptions.contains(.firesOnRecordUpdate) { Text("update") }
-									if querySub.querySubscriptionOptions.contains(.firesOnRecordDeletion) { Text("deletion") }
+							VStack(alignment: .leading) {
+								Text(sub.subscriptionID.description)
+									.font(.headline)
+								Text(sub.detailedDescription)
+								if let querySub = sub as? CKQuerySubscription {
+									HStack {
+										if querySub.querySubscriptionOptions.contains(.firesOnce) { Text("once") }
+										if querySub.querySubscriptionOptions.contains(.firesOnRecordCreation) { Text("create") }
+										if querySub.querySubscriptionOptions.contains(.firesOnRecordUpdate) { Text("update") }
+										if querySub.querySubscriptionOptions.contains(.firesOnRecordDeletion) { Text("deletion") }
+									}
+									.font(.caption)
 								}
-								.font(.caption)
 							}
+							.onTapGesture { selectedSubscription = sub }
 						}
 					}
 				}
@@ -90,10 +96,34 @@ extension CKRecord: Identifiable {
 		.sheet(item: $detailsRecord) { record in
 			CKRecordView(record: record, database: currentDatabaseKind.database)
 		}
+		.alert("Delete Subscription", isPresented: .constant(selectedSubscription != nil), presenting: $selectedSubscription, actions: { sub in
+			Button("Delete Subscription", role: .destructive) { deleteSubscription(sub.wrappedValue) }
+		}, message: { _ in
+			Text("Are you sure?")
+			Text("This cannot be undone.")
+		})
 		.onAppear { load(.public) }
 	}
 	
+	func deleteSubscription(_ sub: CKSubscription?) {
+		guard let sub else { return }
+		Task {
+			do {
+				try await currentDatabaseKind.database.deleteSubscription(withID: sub.subscriptionID)
+				reload()
+			} catch {
+				self.error = error
+			}
+		}
+	}
+	
+	func reload() {
+		cached[currentDatabaseKind] = nil
+		load(currentDatabaseKind)
+	}
+	
 	func load(_ kind: CKDatabase.Kind) {
+		self.error = nil
 		if let cached = cached[kind] {
 			databaseInfo = cached
 			return
