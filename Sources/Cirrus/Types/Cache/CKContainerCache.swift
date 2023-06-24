@@ -21,6 +21,16 @@ public class CKContainerCache {
 		instance = CKContainerCache(url: url, translator: translator)
 	}
 	
+	public func database(for scope: CKDatabase.Scope) -> CKDatabaseCache {
+		switch scope {
+		case .private: return self.private
+		case .public: return self.public
+		case .shared: return self.shared
+		@unknown default:
+			return self.private
+		}
+	}
+	
 	init(url: URL, translator: @escaping RecordTypeTranslator = { _ in nil}) {
 		self.url = url
 		self.translator = translator

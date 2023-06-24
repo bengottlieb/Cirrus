@@ -102,6 +102,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		record = record ?? CKRecord(recordType: recordType, recordID: recordID)
 		try await willSave(to: record!)
 		try await performSave(record: record!, firstTime: true)
+		CKContainerCache.instance?.database(for: database.databaseScope).save(record: self)
 	}
 	
 	func performSave(record: CKRecord, firstTime: Bool) async throws {

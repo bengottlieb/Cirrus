@@ -22,13 +22,17 @@ public class CKDatabaseCache: ObservableObject {
 		load()
 	}
 	
+	public func allRecords<Record: WrappedCKRecord>() -> [Record] {
+		Array(records.values.filter { $0.recordType == Record.recordType }) as! [Record]
+	}
+	
 	public func resolve<Record: WrappedCKRecord>(reference: CKRecord.Reference?) -> Record? {
 		guard let reference else { return nil }
 		
 		return records[reference.recordID] as? Record
 	}
 	
-	subscript(id: CKRecord.ID) -> WrappedCKRecord? {
+	public subscript(id: CKRecord.ID) -> WrappedCKRecord? {
 		get { records[id] }
 		set {
 			guard let newValue else {
@@ -39,6 +43,11 @@ public class CKDatabaseCache: ObservableObject {
 			records[id] = newValue
 			save(record: newValue)
 		}
+	}
+	
+	public func cache(record: WrappedCKRecord) {
+		self.records[record.recordID] = record
+		save(record: record)
 	}
 	
 	public func load(records: [CKRecord]) {
@@ -58,6 +67,7 @@ public class CKDatabaseCache: ObservableObject {
 	
 	func save(record: WrappedCKRecord) {
 		do {
+			records[record.recordID] = record
 			let typeURL = url.appendingPathComponent(record.recordType, conformingTo: .directory)
 			try? FileManager.default.createDirectory(at: typeURL, withIntermediateDirectories: true)
 			let recordURL = typeURL.appendingPathComponent(record.recordID.recordName, conformingTo: .json)
