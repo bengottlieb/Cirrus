@@ -10,6 +10,7 @@ import SwiftUI
 
 
 open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
+	open class var recordType: CKRecord.RecordType { "" }
 	public var record: CKRecord? { didSet { recordChanged() }}
 	public var database: CKDatabase
 	public var recordID: CKRecord.ID
@@ -19,12 +20,13 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 	public var cache: [String: CKRecordValue?] = [:]
 	public var id: String { recordID.recordName }
 	
-	public init(record: CKRecord, in database: CKDatabase = .private) {
+	
+	required public init(record: CKRecord, in database: CKDatabase = .private) {
 		self.record = record
 		self.database = database
 		recordID = record.recordID
 		recordType = record.recordType
-		didLoad()
+		didLoad(record: record)
 	}
 	
 	public required init(from decoder: Decoder) throws {
@@ -44,6 +46,10 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		if let parent = try container.decodeIfPresent(EncodedCKRecordReference.self, forKey: .recordParent) {
 			record?.parent = parent.reference
 		}
+	}
+	
+	open func merge(fromLatest latest: CKRecord) {
+		record = latest
 	}
 	
 	public static func ==(lhs: WrappedCKRecord, rhs: WrappedCKRecord) -> Bool {
@@ -90,7 +96,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 	
 	open func willSave(to record: CKRecord) async throws { }		// move any fields to save into the record
 	
-	open func didLoad() { }			// move any data out of the record
+	open func didLoad(record: CKRecord) { }			// move any data out of the record
 	
 	public func save() async throws {
 		record = record ?? CKRecord(recordType: recordType, recordID: recordID)
@@ -130,11 +136,13 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 	
 	func load() async throws {
 		try await performFetch()
-		didLoad()
+		if let record { didLoad(record: record) }
 	}
 	
 	func performFetch() async throws {
-		record = try? await database.record(for: recordID)
+		if let newRecord = try? await database.record(for: recordID) {
+			merge(fromLatest: newRecord)
+		}
 	}
 	
 	func recordChanged() {

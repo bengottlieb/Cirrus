@@ -15,4 +15,9 @@ extension CKAsset {
 		
 		self.init(fileURL: url)
 	}
+	
+	public var data: Data? {
+		guard let fileURL else { return nil }
+		return try? Data(contentsOf: fileURL)
+	}
 }

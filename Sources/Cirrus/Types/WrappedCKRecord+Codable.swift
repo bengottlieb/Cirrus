@@ -8,7 +8,7 @@
 import Foundation
 import CloudKit
 
-extension WrappedCKRecord: Encodable {
+extension WrappedCKRecord: Codable {
 	enum CodingKeys: String, CodingKey { case database, recordID, recordIDZoneName, recordType, isDirty, cache, recordFields, recordParent }
 	
 	public func encode(to encoder: Encoder) throws {
