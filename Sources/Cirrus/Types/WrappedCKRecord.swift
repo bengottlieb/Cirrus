@@ -27,6 +27,25 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		didLoad()
 	}
 	
+	public required init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		
+		recordID = try container.decode(EncodedCKRecordID.self, forKey: .recordID).id
+		database = try container.decode(CKDatabase.Scope.self, forKey: .database).database
+		recordType = try container.decode(CKRecord.RecordType.self, forKey: .recordType)
+		
+		let dict = try container.decode([String: Any].self, forKey: .recordFields)
+		if !dict.isEmpty {
+			record = CKRecord(recordType: recordType, recordID: recordID)
+			record?.jsonDictionary = dict
+		}
+		cache = try container.decode([String: Any?].self, forKey: .cache).cloudKitValues
+		
+		if let parent = try container.decodeIfPresent(EncodedCKRecordReference.self, forKey: .recordParent) {
+			record?.parent = parent.reference
+		}
+	}
+	
 	public static func ==(lhs: WrappedCKRecord, rhs: WrappedCKRecord) -> Bool {
 		if let record = lhs.record ?? rhs.record {
 			for key in record.allKeys() {
