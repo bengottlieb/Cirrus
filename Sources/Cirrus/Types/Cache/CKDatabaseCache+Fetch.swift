@@ -49,10 +49,12 @@ extension CKDatabaseCache {
 		}
 		
 		var returnedChanges = RecordChanges()
-		container.changeTokens.setChangeToken(changes.changeToken, for: .shared)
+		returnedChanges.deletedZones = changes.deletions.map { $0.zoneID }
+		container.changeTokens.setChangeToken(changes.changeToken, for: scope.database)
 		for change in changes.modifications {
 			returnedChanges = returnedChanges + (try await fetchChanges(in: scope, zoneID: change.zoneID))
 		}
+		
 		return returnedChanges
 	}
 	
@@ -73,6 +75,10 @@ extension CKDatabaseCache {
 						}
 					}
 					
+					for deletion in modifications.deletions {
+						changes.deleted.append(deletion.recordID)
+					}
+					
 					continuation.resume(returning: changes)
 
 				case .failure(let error):
@@ -88,9 +94,10 @@ extension CKDatabaseCache {
 		public var modified: [CKRecord] = []
 		public var deleted: [CKRecord.ID] = []
 		public var errors: [Error] = []
+		public var deletedZones: [CKRecordZone.ID] = []
 		
 		public static func +(lhs: Self, rhs: Self) -> RecordChanges {
-			.init(modified: lhs.modified + rhs.modified, deleted: lhs.deleted + rhs.deleted, errors: lhs.errors + rhs.errors)
+			.init(modified: lhs.modified + rhs.modified, deleted: lhs.deleted + rhs.deleted, errors: lhs.errors + rhs.errors, deletedZones: lhs.deletedZones + rhs.deletedZones)
 		}
 	}
 
