@@ -1,0 +1,97 @@
+//
+//  CKDatabaseCache+Fetch.swift
+//
+//
+//  Created by Ben Gottlieb on 6/25/23.
+//
+
+import CloudKit
+
+extension CKDatabaseCache {
+	public func pullChanges(in zoneID: CKRecordZone.ID? = nil) async {
+		do {
+			let recordChanges: RecordChanges
+			
+			if let zoneID {
+				recordChanges = try await fetchChanges(in: scope, zoneID: zoneID)
+			} else {
+				recordChanges = try await fetchAllZoneChanges()
+			}
+			
+			process(changes: recordChanges)
+		} catch {
+			print("Failed to pull changes: \(error)")
+		}
+	}
+	
+	func process(changes: RecordChanges) {
+		print("\(changes.deleted.count) records deleted from \(scope.name), \(changes.modified.count) changed")
+		for deleted in changes.deleted {
+			uncache(deleted)
+		}
+		
+		load(records: changes.modified)
+	}
+	
+	func fetchAllZoneChanges() async throws -> RecordChanges {
+		let changes: (modifications: [CKDatabase.DatabaseChange.Modification], deletions: [CKDatabase.DatabaseChange.Deletion], changeToken: CKServerChangeToken, moreComing: Bool) = try await withCheckedThrowingContinuation { continuation in
+			scope.database.fetchDatabaseChanges(since: container.changeTokens.changeToken(for: scope.database)) { results in
+				//			Result<(modifications: [CKDatabase.DatabaseChange.Modification], deletions: [CKDatabase.DatabaseChange.Deletion], changeToken: CKServerChangeToken, moreComing: Bool), Error> in
+				
+				switch results {
+				case .success(let modifications):
+					continuation.resume(returning: modifications)
+					
+				case .failure(let error):
+					continuation.resume(throwing: error)
+				}
+			}
+		}
+		
+		var returnedChanges = RecordChanges()
+		container.changeTokens.setChangeToken(changes.changeToken, for: .shared)
+		for change in changes.modifications {
+			returnedChanges = returnedChanges + (try await fetchChanges(in: scope, zoneID: change.zoneID))
+		}
+		return returnedChanges
+	}
+	
+	func fetchChanges(in scope: CKDatabase.Scope, zoneID: CKRecordZone.ID) async throws -> RecordChanges {
+		return try await withCheckedThrowingContinuation { continuation in
+			scope.database.fetchRecordZoneChanges(inZoneWith: zoneID, since: container.changeTokens.changeToken(for: zoneID)) { results in
+				
+//				Result<(modificationResultsByID: [CKRecord.ID : Result<CKDatabase.RecordZoneChange.Modification, Error>], deletions: [CKDatabase.RecordZoneChange.Deletion], changeToken: CKServerChangeToken, moreComing: Bool), Error> in
+
+				switch results {
+				case .success(let modifications):
+					var changes = RecordChanges()
+					
+					for result in modifications.modificationResultsByID.values {
+						switch result {
+						case .success(let record): changes.modified.append(record.record)
+						case .failure(let error): changes.errors.append(error)
+						}
+					}
+					
+					continuation.resume(returning: changes)
+
+				case .failure(let error):
+					continuation.resume(throwing: error)
+				}
+			}
+		}
+
+	}
+
+
+	struct RecordChanges {
+		public var modified: [CKRecord] = []
+		public var deleted: [CKRecord.ID] = []
+		public var errors: [Error] = []
+		
+		public static func +(lhs: Self, rhs: Self) -> RecordChanges {
+			.init(modified: lhs.modified + rhs.modified, deleted: lhs.deleted + rhs.deleted, errors: lhs.errors + rhs.errors)
+		}
+	}
+
+}

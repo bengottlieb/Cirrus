@@ -16,12 +16,13 @@ public class CKContainerCache {
 	
 	let url: URL
 	let translator: RecordTypeTranslator
-	
+	var changeTokens: ChangeTokens
+
 	public static func setup(url: URL, translator: @escaping RecordTypeTranslator) {
 		instance = CKContainerCache(url: url, translator: translator)
 	}
 	
-	public func database(for scope: CKDatabase.Scope) -> CKDatabaseCache {
+	public subscript(scope: CKDatabase.Scope) -> CKDatabaseCache {
 		switch scope {
 		case .private: return self.private
 		case .public: return self.public
@@ -34,6 +35,8 @@ public class CKContainerCache {
 	init(url: URL, translator: @escaping RecordTypeTranslator = { _ in nil}) {
 		self.url = url
 		self.translator = translator
+		try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+		changeTokens = ChangeTokens.tokens(at: url.appendingPathComponent("change_tokens", conformingTo: .data))
 		print("Loading cache at \(url.path)")
 	}
 	
