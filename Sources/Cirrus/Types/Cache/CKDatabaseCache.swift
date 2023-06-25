@@ -26,10 +26,32 @@ public class CKDatabaseCache: ObservableObject {
 		Array(records.values.filter { $0.recordType == Record.recordType }) as! [Record]
 	}
 	
+	public func uncache(_ id: CKRecord.ID?) {
+		guard let id, let wrapped = self[id] else { return }
+		
+		let url = url(for: wrapped)
+		try? FileManager.default.removeItem(at: url)
+		records.removeValue(forKey: id)
+	}
+	
 	public func resolve<Record: WrappedCKRecord>(reference: CKRecord.Reference?) -> Record? {
 		guard let reference else { return nil }
 		
 		return records[reference.recordID] as? Record
+	}
+	
+	public func create<Record: WrappedCKRecord>(recordWithID id: CKRecord.ID) async throws -> Record? {
+		if let record = records[id] as? Record { return record }
+		do {
+			guard let ckRecord = try await scope.database.fetchRecord(withID: id) else { return nil }
+
+			let recordClass = container.translator(ckRecord.recordType) ?? WrappedCKRecord.self
+			let newRecord = recordClass.init(record: ckRecord, in: scope.database)
+			records[id] = newRecord
+			return newRecord as? Record
+		} catch {
+			return nil
+		}
 	}
 	
 	public subscript(id: CKRecord.ID) -> WrappedCKRecord? {
@@ -65,12 +87,16 @@ public class CKDatabaseCache: ObservableObject {
 		}
 	}
 	
+	func url(for record: WrappedCKRecord) -> URL {
+		let typeURL = url.appendingPathComponent(record.recordType, conformingTo: .directory)
+		try? FileManager.default.createDirectory(at: typeURL, withIntermediateDirectories: true)
+		return typeURL.appendingPathComponent(record.recordID.recordName, conformingTo: .json)
+	}
+	
 	func save(record: WrappedCKRecord) {
 		do {
 			records[record.recordID] = record
-			let typeURL = url.appendingPathComponent(record.recordType, conformingTo: .directory)
-			try? FileManager.default.createDirectory(at: typeURL, withIntermediateDirectories: true)
-			let recordURL = typeURL.appendingPathComponent(record.recordID.recordName, conformingTo: .json)
+			let recordURL = url(for: record)
 			let data = try JSONEncoder().encode(record)
 			try data.write(to: recordURL)
 		} catch {
