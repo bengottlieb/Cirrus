@@ -30,6 +30,15 @@ extension CKDatabaseCache {
 			uncache(deleted)
 		}
 		
+		for zone in changes.deletedZones {
+			for recordID in records.keys {
+				if recordID.zoneID == zone {
+					uncache(recordID)
+					print("Deleting \(recordID)")
+				}
+			}
+		}
+		
 		load(records: changes.modified)
 	}
 	

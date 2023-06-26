@@ -20,6 +20,7 @@ extension NSPredicate: @unchecked Sendable { }
 extension CKRecord {
 	enum SharingError: Error { case noViewController }
 	
+	public static var cloudShareRecordType: CKRecord.RecordType { "cloudkit.share" }
 	public func insertChanges(from dictionary: [String: CKRecordValue?]) {
 		for (key, value) in dictionary {
 			if !areEqual(self[key], value) {

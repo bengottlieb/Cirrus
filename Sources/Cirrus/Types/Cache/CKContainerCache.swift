@@ -9,6 +9,9 @@ import CloudKit
 
 public typealias RecordTypeTranslator = (CKRecord.RecordType) -> WrappedCKRecord.Type?
 
+public protocol CKContainerCacheDelegate: AnyObject {
+	func didAddRemoteRecord(record: WrappedCKRecord, in scope: CKDatabase.Scope)
+}
 
 public class CKContainerCache {
 	
@@ -17,6 +20,7 @@ public class CKContainerCache {
 	let url: URL
 	let translator: RecordTypeTranslator
 	var changeTokens: ChangeTokens
+	public weak var delegate: CKContainerCacheDelegate?
 
 	public static func setup(url: URL, translator: @escaping RecordTypeTranslator) {
 		instance = CKContainerCache(url: url, translator: translator)
@@ -32,8 +36,9 @@ public class CKContainerCache {
 		}
 	}
 	
-	init(url: URL, translator: @escaping RecordTypeTranslator = { _ in nil}) {
+	init(url: URL, delegate: CKContainerCacheDelegate? = nil, translator: @escaping RecordTypeTranslator = { _ in nil}) {
 		self.url = url
+		self.delegate = delegate
 		self.translator = translator
 		try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
 		changeTokens = ChangeTokens.tokens(at: url.appendingPathComponent("change_tokens", conformingTo: .data))

@@ -108,7 +108,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 	func performSave(record: CKRecord, firstTime: Bool) async throws {
 		if !isDirty { return }
 		
-		if isSaving { return }
+		if isSaving, firstTime { return }
 		isSaving = true
 		for (key, value) in cache {
 			record[key] = value
@@ -119,6 +119,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 			cache = [:]
 			isDirty = false
 		} catch let error as CKError {
+			print("Error saving record: \(recordID): \(error.localizedDescription)")
 			switch error.code {
 			case .serverRecordChanged:
 				if firstTime {
@@ -126,6 +127,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 					try await willSave(to: record)
 					try await performSave(record: record, firstTime: false)
 				} else {
+					print("Error re-fetching record: \(error.localizedDescription)")
 					throw error
 				}
 			default:

@@ -78,11 +78,13 @@ public class CKDatabaseCache: ObservableObject {
 				current.merge(fromLatest: record)
 				save(record: current)
 			} else {
+				if record.recordType == CKRecord.cloudShareRecordType { continue }					 // don't worry about cloudkit shares
 				let type = container.translator(record.recordType) ?? WrappedCKRecord.self
 				
 				let newRecord = type.init(record: record, in: scope.database)
 				self.records[record.recordID] = newRecord
 				save(record: newRecord)
+				container.delegate?.didAddRemoteRecord(record: newRecord, in: scope)
 			}
 		}
 	}
