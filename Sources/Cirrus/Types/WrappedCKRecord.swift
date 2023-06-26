@@ -123,6 +123,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 			switch error.code {
 			case .serverRecordChanged:
 				if firstTime {
+					try? await Task.sleep(nanoseconds: 1_000_000_000)
 					try await performFetch()
 					try await willSave(to: record)
 					try await performSave(record: record, firstTime: false)

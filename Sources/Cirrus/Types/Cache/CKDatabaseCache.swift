@@ -77,6 +77,7 @@ public class CKDatabaseCache: ObservableObject {
 			if let current = self.records[record.recordID] {
 				current.merge(fromLatest: record)
 				save(record: current)
+				container.delegate?.didUpdateRemoteRecord(record: current, in: scope)
 			} else {
 				if record.recordType == CKRecord.cloudShareRecordType { continue }					 // don't worry about cloudkit shares
 				let type = container.translator(record.recordType) ?? WrappedCKRecord.self

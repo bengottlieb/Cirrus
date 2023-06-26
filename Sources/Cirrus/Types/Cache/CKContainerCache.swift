@@ -11,6 +11,7 @@ public typealias RecordTypeTranslator = (CKRecord.RecordType) -> WrappedCKRecord
 
 public protocol CKContainerCacheDelegate: AnyObject {
 	func didAddRemoteRecord(record: WrappedCKRecord, in scope: CKDatabase.Scope)
+	func didUpdateRemoteRecord(record: WrappedCKRecord, in scope: CKDatabase.Scope)
 }
 
 public class CKContainerCache {
