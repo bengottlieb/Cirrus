@@ -28,13 +28,14 @@ extension CKDatabaseCache {
 		print("\(changes.deleted.count) records deleted from \(scope.name), \(changes.modified.count) changed")
 		for deleted in changes.deleted {
 			uncache(deleted)
+			container.delegate?.didRemoveRemoteRecord(recordID: deleted, in: scope)
 		}
 		
 		for zone in changes.deletedZones {
 			for recordID in records.keys {
 				if recordID.zoneID == zone {
 					uncache(recordID)
-					print("Deleting \(recordID)")
+					container.delegate?.didRemoveRemoteRecord(recordID: recordID, in: scope)
 				}
 			}
 		}

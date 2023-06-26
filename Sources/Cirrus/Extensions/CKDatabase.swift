@@ -187,6 +187,11 @@ extension CKDatabase {
 		return found
 	}
 	
+	public func fetchZone(withID target: CKRecordZone.ID) async throws -> CKRecordZone? {
+		let all = try await allZones()
+		return all.first { $0.zoneID.ownerName == target.ownerName && $0.zoneID.zoneName == target.zoneName }
+	}
+	
 	@discardableResult func setup(zones names: [String]) async throws -> [String: CKRecordZone] {
 		let zones = Dictionary(uniqueKeysWithValues: names.map { ($0, CKRecordZone(zoneName: $0)) })
 		let op = CKModifyRecordZonesOperation(recordZonesToSave: Array(zones.values), recordZoneIDsToDelete: nil)

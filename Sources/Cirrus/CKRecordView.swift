@@ -29,7 +29,7 @@ public struct CKRecordView: View {
 			}
 			ScrollView {
 				VStack(alignment: .leading) {
-					Labeled(label: "ID", content: record.recordID.recordName)
+					Labeled(label: "ID", content: record.recordID.description)
 					Labeled(label: "Type", content: record.recordType)
 					if let share = record.share {
 						Labeled(label: "Sharing", content: "\(share)")

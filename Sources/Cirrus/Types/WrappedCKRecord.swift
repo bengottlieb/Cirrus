@@ -84,9 +84,12 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		}
 	}
 	
-	open func asyncSave() {
+	open func asyncSave(fetchingFirst: Bool = false) {
 		Task {
 			do {
+				if fetchingFirst {
+					try? await performFetch()
+				}
 				try await save()
 			} catch {
 				print("Failed to save record: \(error)")
@@ -143,7 +146,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		if let record { didLoad(record: record) }
 	}
 	
-	func performFetch() async throws {
+	open func performFetch() async throws {
 		if let newRecord = try? await database.record(for: recordID) {
 			merge(fromLatest: newRecord)
 		}
