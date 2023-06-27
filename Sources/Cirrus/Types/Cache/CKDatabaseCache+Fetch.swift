@@ -10,6 +10,10 @@ import CloudKit
 extension CKDatabaseCache {
 	public func pullChanges(in zoneID: CKRecordZone.ID? = nil) async {
 		do {
+			if isPullingChanges { return }
+			isPullingChanges = true
+			
+			print("Starting pull changes in \(scope.name): \(zoneID?.zoneName ?? "--")")
 			let recordChanges: RecordChanges
 			
 			if let zoneID {
@@ -19,13 +23,16 @@ extension CKDatabaseCache {
 			}
 			
 			process(changes: recordChanges)
+			print("Finished pull changes in \(scope.name): \(zoneID?.zoneName ?? "--")")
 		} catch {
-			print("Failed to pull changes: \(error)")
+			print("Failing pull changes in \(scope.name): \(zoneID?.zoneName ?? "--"): \(error)")
 		}
+		isPullingChanges = false
 	}
 	
 	func process(changes: RecordChanges) {
-		print("\(changes.deleted.count) records deleted from \(scope.name), \(changes.modified.count) changed")
+		if !changes.deleted.isEmpty || !changes.modified.isEmpty { print("\(changes.deleted.count) records deleted from \(scope.name), \(changes.modified.count) changed") }
+	
 		for deleted in changes.deleted {
 			uncache(deleted)
 			container.delegate?.didRemoveRemoteRecord(recordID: deleted, in: scope)

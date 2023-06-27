@@ -11,6 +11,7 @@ public class CKDatabaseCache: ObservableObject {
 	let scope: CKDatabase.Scope
 	let container: CKContainerCache
 	let url: URL
+	var isPullingChanges = false
 	
 	public var records: [CKRecord.ID: WrappedCKRecord] = [:]
 	
