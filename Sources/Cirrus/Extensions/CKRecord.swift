@@ -29,7 +29,7 @@ extension CKRecord {
 		}
 	}
 	
-	#if os(iOS)
+#if os(iOS)
 	public func share(withTitle title: String, permissions: CKShare.ParticipantPermission = .readOnly, in window: UIWindow?) async throws {
 		guard let host = await window?.rootViewController else { throw SharingError.noViewController }
 		
@@ -50,14 +50,14 @@ extension CKRecord {
 		
 		await host.show(controller, sender: nil)
 	}
-	#endif
-
+#endif
+	
 	public convenience init?(_ seed: CKRecordSeed) {
 		guard let id = seed.recordID else {
 			self.init(recordType: seed.recordType)
 			return nil
 		}
-
+		
 		self.init(recordType: seed.recordType, recordID: id)
 		for name in seed.savedFieldNames {
 			self[name] = seed[name]
@@ -76,6 +76,31 @@ extension CKRecord {
 				self[key] = reference
 			}
 		}
+	}
+	
+	public subscript(data key: String) -> Data? {
+		get { self[key] as? Data }
+		set { self[key] = newValue as? CKRecordValue }
+	}
+	
+	public subscript(string key: String) -> String? {
+		get { self[key] as? String }
+		set { self[key] = newValue as? CKRecordValue }
+	}
+	
+	public subscript(bool key: String) -> Bool? {
+		get { self[key] as? Bool }
+		set { self[key] = newValue as? CKRecordValue }
+	}
+	
+	public subscript(int key: String) -> Int? {
+		get { self[key] as? Int }
+		set { self[key] = newValue as? CKRecordValue }
+	}
+
+	public subscript(double key: String) -> Double? {
+		get { self[key] as? Double }
+		set { self[key] = newValue as? CKRecordValue }
 	}
 }
 
