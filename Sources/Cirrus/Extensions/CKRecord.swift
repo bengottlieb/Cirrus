@@ -80,27 +80,50 @@ extension CKRecord {
 	
 	public subscript(data key: String) -> Data? {
 		get { self[key] as? Data }
-		set { self[key] = newValue as? CKRecordValue }
+		set {
+			if newValue == self[key] { return }
+			self[key] = newValue as? CKRecordValue
+		}
 	}
 	
 	public subscript(string key: String) -> String? {
 		get { self[key] as? String }
-		set { self[key] = newValue as? CKRecordValue }
+		set {
+			if newValue == self[key] { return }
+			self[key] = newValue as? CKRecordValue
+		}
 	}
 	
+	public subscript(strings key: String) -> [String]? {
+		get { self[key] as? [String] }
+		set {
+			if newValue == self[key] { return }
+			self[key] = newValue as? CKRecordValue
+		}
+	}
+
 	public subscript(bool key: String) -> Bool? {
 		get { self[key] as? Bool }
-		set { self[key] = newValue as? CKRecordValue }
+		set {
+			if newValue == self[key] { return }
+			self[key] = newValue as? CKRecordValue
+		}
 	}
 	
 	public subscript(int key: String) -> Int? {
 		get { self[key] as? Int }
-		set { self[key] = newValue as? CKRecordValue }
+		set {
+			if newValue == self[key] { return }
+			self[key] = newValue as? CKRecordValue
+		}
 	}
 
 	public subscript(double key: String) -> Double? {
 		get { self[key] as? Double }
-		set { self[key] = newValue as? CKRecordValue }
+		set {
+			if newValue == self[key] { return }
+			self[key] = newValue as? CKRecordValue
+		}
 	}
 }
 
