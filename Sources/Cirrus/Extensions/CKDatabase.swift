@@ -78,8 +78,6 @@ public extension CKDatabase {
 		
 		for chunk in recordChunks {
 			let saved = chunk.map { $0.record }
-			print(saved)
-			print(saved.map { $0.recordID.zoneID })
 			let op = CKModifyRecordsOperation(recordsToSave: saved)
 			var resolver = conflictResolver
 			if resolver == nil { resolver = await Cirrus.instance.configuration.conflictResolver }
