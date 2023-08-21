@@ -106,7 +106,7 @@ public extension CKDatabase {
 		_ = try await op.delete(from: self)
 	}
 	
-	func fetchRecords(ofType type: CKRecord.RecordType, matching predicate: NSPredicate, inZone: CKRecordZone.ID? = nil, keys: [CKRecord.FieldKey]? = nil, limit: Int = CKQueryOperation.maximumResults) async throws -> [CKRecord] {
+	func fetchRecords(ofType type: CKRecord.RecordType, matching predicate: NSPredicate = .init(value: true), inZone: CKRecordZone.ID? = nil, keys: [CKRecord.FieldKey]? = nil, limit: Int = CKQueryOperation.maximumResults) async throws -> [CKRecord] {
 		let query = CKQuery(recordType: type, predicate: predicate)
 		do {
 			var allResults: [CKRecord] = []
