@@ -94,6 +94,14 @@ extension CKRecord {
 		}
 	}
 	
+	public subscript(date key: String) -> Date? {
+		get { self[key] as? Date }
+		set {
+			if newValue == self[key] { return }
+			self[key] = newValue as? CKRecordValue
+		}
+	}
+	
 	public subscript(strings key: String) -> [String]? {
 		get { self[key] as? [String] }
 		set {
