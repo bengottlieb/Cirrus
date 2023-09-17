@@ -93,7 +93,7 @@ public extension CKDatabase {
 					results.append(record)
 					
 				case .failure(let error):
-					if logFailures { print("Record failed: \(id): \(error)") }
+					if logFailures, error.cloudKitErrorCode != .unknownItem { print("Record failed: \(id): \(error)") }
 				}
 			}
 			
