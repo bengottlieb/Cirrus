@@ -46,7 +46,7 @@ public class CirrusFetchDatabaseChangesOperation: CKFetchDatabaseChangesOperatio
 					continuation.resume(throwing: Cirrus.MultipleErrors.build(errors: errors))
 
 				case .success(let done):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
-					print("Database change token: \(done.serverChangeToken), more: \(done.moreComing)")
+					cirrus_log("Database change token: \(done.serverChangeToken), more: \(done.moreComing)")
 					self.tokens.setChangeToken(done.serverChangeToken, for: self.database!)
 					continuation.resume(returning: changes)
 				}

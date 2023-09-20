@@ -128,7 +128,7 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 			case .badRecord: break
 			}
 		} catch {
-			print("Failed to change: \(error)")
+			cirrus_log("Failed to change: \(error)")
 		}
 	}
 }

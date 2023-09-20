@@ -76,7 +76,7 @@ public class SyncedContainer: ObservableObject {
 			do {
 				try await sync(fromBeginning: fromBeginning, in: db)
 			} catch {
-				print("Synchronization failed: \(error)")
+				cirrus_log("Synchronization failed: \(error)")
 			}
 		}
 	}

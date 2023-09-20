@@ -94,7 +94,7 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 					
 				case .success(let (serverToken, clientToken, moreComing)):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
 					self.tokens.setChangeToken(serverToken, for: zoneID)
-					print("more coming: \(moreComing), Zone change token: \(serverToken), client token: \(String(describing: clientToken))")
+					cirrus_log("more coming: \(moreComing), Zone change token: \(serverToken), client token: \(String(describing: clientToken))")
 					if !moreComing { self.isComplete = true }
 				}
 			}

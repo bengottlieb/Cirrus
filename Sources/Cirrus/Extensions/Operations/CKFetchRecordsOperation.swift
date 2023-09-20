@@ -37,7 +37,7 @@ public extension CKDatabase {
 					switch result {
 					case .success(let record): records.append(record)
 					case .failure(let error):
-						print("Failed to fetch record: \(error)")
+						cirrus_log("Failed to fetch record: \(error)")
 					}
 				}
 				
@@ -47,7 +47,7 @@ public extension CKDatabase {
 						continuation.resume(returning: (records, cursor))
 						
 					case .failure(let error):
-						print("Failed to finish fetching records: \(error)")
+						cirrus_log("Failed to finish fetching records: \(error)")
 						if records.isEmpty {
 							continuation.resume(throwing: error)
 						} else {
@@ -93,7 +93,7 @@ public extension CKDatabase {
 					results.append(record)
 					
 				case .failure(let error):
-					if logFailures, error.cloudKitErrorCode != .unknownItem { print("Record failed: \(id): \(error)") }
+					if logFailures, error.cloudKitErrorCode != .unknownItem { cirrus_log("Record failed: \(id): \(error)") }
 				}
 			}
 			

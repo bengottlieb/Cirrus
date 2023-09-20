@@ -12,7 +12,7 @@ public func tryCloud<Result>(_ block: @escaping () async throws -> Result) async
 	do {
 		return try await block()
 	} catch {
-		print("CloudKit function failed: \(error)")
+		cirrus_log("CloudKit function failed: \(error)")
 		return nil
 	}
 }

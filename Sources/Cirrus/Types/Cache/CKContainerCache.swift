@@ -44,7 +44,7 @@ public class CKContainerCache {
 		self.translator = translator
 		try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
 		changeTokens = ChangeTokens.tokens(at: url.appendingPathComponent("change_tokens", conformingTo: .data))
-		print("Loading cache at \(url.path)")
+		cirrus_log("Loading cache at \(url.path)")
 	}
 	
 	public lazy var `private` = CKDatabaseCache(scope: .private, in: self)

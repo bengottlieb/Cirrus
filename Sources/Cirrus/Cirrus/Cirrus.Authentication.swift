@@ -28,7 +28,7 @@ extension Cirrus {
 				self.state = .notLoggedIn
 			}
 		} catch let error as NSError {
-			print("Error when signing in: \((error as NSError).code)  \(error)\n \((error as NSError).domain)")
+			cirrus_log("Error when signing in: \((error as NSError).code)  \(error)\n \((error as NSError).domain)")
 			switch (error.code, error.domain) {
 			case (1028, "CKInternalErrorDomain"):
 				self.state = .temporaryUnavailable

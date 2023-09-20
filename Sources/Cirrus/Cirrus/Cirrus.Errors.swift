@@ -50,25 +50,25 @@ extension Cirrus {
 				return true
 
 			case .notAuthenticated:
-				print("\(label): Not signed in")
+				cirrus_log("\(label): Not signed in")
 				DispatchQueue.onMain { self.state = .notLoggedIn }
 				return true
 
 			case .invalidArguments:
-				print("\(label): Possibly missing index. \(error.localizedDescription)")
+				cirrus_log("\(label): Possibly missing index. \(error.localizedDescription)")
 				return true
 
 			case .limitExceeded:
-				print("\(label): Too many records in the request, \(error.localizedDescription)")
+				cirrus_log("\(label): Too many records in the request, \(error.localizedDescription)")
 				return true
 
 			case .accountTemporarilyUnavailable:
-				print("\(label): Account temporarily unavailable")
+				cirrus_log("\(label): Account temporarily unavailable")
 				DispatchQueue.onMain { Cirrus.instance.state = .temporaryUnavailable }
 				return true
 
 			default:
-				print("\(label): Unexpected Error: \(error)")
+				cirrus_log("\(label): Unexpected Error: \(error)")
 				return false
 			}
 		}

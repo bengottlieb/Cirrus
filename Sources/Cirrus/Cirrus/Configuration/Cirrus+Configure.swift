@@ -31,7 +31,7 @@ extension Cirrus {
 				do {
 					try await self.authenticate()
 				} catch {
-					print("Faield to authenticate when entering foreground: \(error)")
+					cirrus_log("Failed to authenticate when entering foreground: \(error)")
 				}
 			}
 		}
@@ -44,7 +44,7 @@ extension Cirrus {
 					do {
 						try await self.authenticate()
 					} catch {
-						print("Failed to authenticate when the name changed: \(error)")
+						cirrus_log("Failed to authenticate when the name changed: \(error)")
 					}
 					
 				default: break
@@ -71,7 +71,7 @@ extension Cirrus {
 						do {
 							try await self.authenticate(evenIfOffline: true)
 						} catch {
-							print("Failed to authenticate when reachability changed")
+							cirrus_log("Failed to authenticate when reachability changed")
 						}
 					}
 				}
@@ -82,7 +82,7 @@ extension Cirrus {
 			do {
 				try await self.authenticate()
 			} catch {
-				print("Error signing in: \(error)")
+				cirrus_log("Error signing in: \(error)")
 			}
 		}
 	}

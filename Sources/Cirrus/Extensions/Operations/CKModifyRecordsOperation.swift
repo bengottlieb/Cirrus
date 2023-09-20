@@ -13,7 +13,7 @@ extension CKModifyRecordsOperation {
 		
 		guard let records = recordsToSave, records.isNotEmpty else { return }
 		if await Cirrus.instance.mutability.isReadOnlyForCloudOps {
-			print("Not saving \(records.count) records, no cloud mutability")
+			cirrus_log("Not saving \(records.count) records, no cloud mutability")
 			return
 		}
 		var errors: [Error] = []
@@ -51,12 +51,12 @@ extension CKModifyRecordsOperation {
 		guard let recordIDs = recordIDsToDelete, recordIDs.isNotEmpty else { return [] }
 		
 		if await Cirrus.instance.mutability.isReadOnlyForCloudOps {
-			print("Not deleting record, no cloud mutability")
+			cirrus_log("Not deleting record, no cloud mutability")
 			return []
 		}
 		
 		if let count = recordsToSave?.count, count >= Self.maxRecordsPerOperation {
-			print("You cannot save more than \(Self.maxRecordsPerOperation) records at once")
+			cirrus_log("You cannot save more than \(Self.maxRecordsPerOperation) records at once")
 			return []
 		}
 		

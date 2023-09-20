@@ -104,7 +104,7 @@ public class CKDatabaseCache: ObservableObject {
 			let data = try JSONEncoder().encode(record)
 			try data.write(to: recordURL)
 		} catch {
-			print("Failed to save \(record): \(error)")
+			cirrus_log("Failed to save \(record): \(error)")
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class CKDatabaseCache: ObservableObject {
 				}
 			}
 		} catch {
-			print("Failed to load cached database \(scope.name): \(error)")
+			cirrus_log("Failed to load cached database \(scope.name): \(error)")
 		}
 	}
 }

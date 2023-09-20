@@ -72,7 +72,7 @@ public class AsyncRecordSequence: AsyncSequence {
 					
 				case .success(let record):
 					if self.checkForDuplicates, let index = self.records.firstIndex(where: { $0.recordID == recordID }) {
-						print("Received duplicate record at \(index): \(record)")
+						cirrus_log("Received duplicate record at \(index): \(record)")
 						return
 					}
 					self.records.append(record)

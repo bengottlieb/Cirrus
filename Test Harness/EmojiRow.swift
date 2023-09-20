@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Suite
 
 struct EmojiRow: View {
 	@ObservedObject var emoji: EmojiMO
@@ -73,7 +74,7 @@ struct EmojiRow: View {
 		do {
 			try emoji.managedObjectContext?.save()
 		} catch {
-			print("Error when saving: \(error)")
+			logg("Error when saving: \(error)")
 		}
 	}
 }

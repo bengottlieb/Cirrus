@@ -27,7 +27,7 @@ public extension CKRecord {
 		let actualRecord = try await CKDatabase.private.fetchRecord(withID: recordID) ?? self
 		if let shareRecord = try await CKDatabase.private.resolve(reference: actualRecord.share) {
 			if let share = shareRecord as? CKShare { return share }
-			print("Got a share record, but it's not a CKShare.")
+			cirrus_log("Got a share record, but it's not a CKShare.")
 			return nil
 		}
 		

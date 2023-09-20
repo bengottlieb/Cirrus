@@ -92,7 +92,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 				}
 				try await save()
 			} catch {
-				print("Failed to save record: \(error)")
+				cirrus_log("Failed to save record: \(error)")
 			}
 		}
 	}
@@ -122,7 +122,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 			cache = [:]
 			isDirty = false
 		} catch let error as CKError {
-			print("Error saving record: \(recordID): \(error.localizedDescription)")
+			cirrus_log("Error saving record: \(recordID): \(error.localizedDescription)")
 			switch error.code {
 			case .serverRecordChanged:
 				if firstTime {
@@ -131,7 +131,7 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 					try await willSave(to: record)
 					try await performSave(record: record, firstTime: false)
 				} else {
-					print("Error re-fetching record: \(error.localizedDescription)")
+					cirrus_log("Error re-fetching record: \(error.localizedDescription)")
 					throw error
 				}
 			default:

@@ -13,7 +13,7 @@ extension CKDatabaseCache {
 			if isPullingChanges { return }
 			isPullingChanges = true
 			
-			print("Starting pull changes in \(scope.name): \(zoneID?.zoneName ?? "--")")
+			cirrus_log("Starting pull changes in \(scope.name): \(zoneID?.zoneName ?? "--")")
 			let recordChanges: RecordChanges
 			
 			if let zoneID {
@@ -23,15 +23,15 @@ extension CKDatabaseCache {
 			}
 			
 			process(changes: recordChanges)
-			print("Finished pull changes in \(scope.name): \(zoneID?.zoneName ?? "--")")
+			cirrus_log("Finished pull changes in \(scope.name): \(zoneID?.zoneName ?? "--")")
 		} catch {
-			print("Failing pull changes in \(scope.name): \(zoneID?.zoneName ?? "--"): \(error)")
+			cirrus_log("Failing pull changes in \(scope.name): \(zoneID?.zoneName ?? "--"): \(error)")
 		}
 		isPullingChanges = false
 	}
 	
 	func process(changes: RecordChanges) {
-		if !changes.deleted.isEmpty || !changes.modified.isEmpty { print("\(changes.deleted.count) records deleted from \(scope.name), \(changes.modified.count) changed") }
+		if !changes.deleted.isEmpty || !changes.modified.isEmpty { cirrus_log("\(changes.deleted.count) records deleted from \(scope.name), \(changes.modified.count) changed") }
 	
 		for deleted in changes.deleted {
 			uncache(deleted)
