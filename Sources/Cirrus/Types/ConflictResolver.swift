@@ -35,7 +35,7 @@ extension ConflictResolver {
 				}
 
 			case CKError.requestRateLimited:
-				print(err)
+				cirrus_log(err)
 				
 			case CKError.batchRequestFailed: break
 			default: return nil
