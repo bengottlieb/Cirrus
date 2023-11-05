@@ -25,7 +25,7 @@ public class AsyncRecordSequence: AsyncSequence {
 	var isRunning = false
 	var cursor: CKQueryOperation.Cursor?
 
-	init(recordType: CKRecord.RecordType, desiredKeys: [String]? = nil, predicate: NSPredicate? = nil, in database: CKDatabase, zoneID: CKRecordZone.ID? = nil) {
+	public init(recordType: CKRecord.RecordType, desiredKeys: [String]? = nil, predicate: NSPredicate? = nil, in database: CKDatabase, zoneID: CKRecordZone.ID? = nil) {
 		self.query = CKQuery(recordType: recordType, predicate: predicate ?? .init(value: true))
 		self.database = database
 		self.zoneID = zoneID
