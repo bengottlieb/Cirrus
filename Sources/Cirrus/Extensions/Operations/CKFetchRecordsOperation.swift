@@ -12,8 +12,13 @@ import CloudKit
 public extension CKDatabase {
 	static let maxRecordsPerFetchOperation = 400
 	
-	func fetchAllRecords(kind: CKRecord.RecordType, in zoneID: CKRecordZone.ID? = nil) async throws -> [CKRecord] {
-		let query = CKQuery(recordType: kind, predicate: NSPredicate(value: true))
+	func modifiedSincePredicate(for date: Date?) -> NSPredicate {
+		guard let date else { return NSPredicate(value: true) }
+		return NSPredicate(format: "modificationDate < %@", date as NSDate)
+	}
+
+	func fetchAllRecords(kind: CKRecord.RecordType, modifiedSince: Date? = nil, in zoneID: CKRecordZone.ID? = nil) async throws -> [CKRecord] {
+		let query = CKQuery(recordType: kind, predicate: modifiedSincePredicate(for: modifiedSince))
 		
 		return try await fetchAllRecords(query: query, in: zoneID)
 	}
