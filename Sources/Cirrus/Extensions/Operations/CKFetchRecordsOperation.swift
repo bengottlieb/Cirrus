@@ -14,7 +14,7 @@ public extension CKDatabase {
 	
 	func modifiedSincePredicate(for date: Date?) -> NSPredicate {
 		guard let date else { return NSPredicate(value: true) }
-		return NSPredicate(format: "modificationDate < %@", date as NSDate)
+		return NSPredicate(format: "modificationDate > %@", date as NSDate)
 	}
 
 	func fetchAllRecords(kind: CKRecord.RecordType, modifiedSince: Date? = nil, in zoneID: CKRecordZone.ID? = nil) async throws -> [CKRecord] {
