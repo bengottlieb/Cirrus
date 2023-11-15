@@ -97,7 +97,23 @@ public extension CKDatabase {
 	
 	func save(record: CKRecordProviding?, conflictResolver: ConflictResolver? = nil) async throws {
 		guard let record = record else { return }
-		try await save(records: [record], conflictResolver: conflictResolver)
+        
+        do {
+            try await save(records: [record], conflictResolver: conflictResolver)
+        } catch let error as CKError {
+            switch error.cloudKitErrorCode {
+            case .zoneNotFound:
+                if await Cirrus.instance.autoCreateNewZones {
+                    _ = try await createZone(named: record.record.recordID.zoneID.zoneName)
+                    try await save(records: [record], conflictResolver: conflictResolver)
+               } else {
+                    throw error
+                }
+                
+            default: 
+                throw error
+            }
+        }
 	}
 
 	func delete(record: CKRecord?) async throws {
@@ -146,6 +162,9 @@ public extension CKDatabase {
 			return try await record(for: id)
 		} catch let error as CKError {
 			switch error.code {
+            case .zoneNotFound:
+                return nil
+                
 			case .unknownItem:
 				return nil
 				
