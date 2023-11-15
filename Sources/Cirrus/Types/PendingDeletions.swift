@@ -30,7 +30,7 @@ class QueuedDeletions {
 		
 		var recordID: CKRecord.ID {
 			
-			if let zoneName = zoneName, let zone = Cirrus.instance.zone(named: zoneName, in: scope) {
+			if let zoneName = zoneName, let zone = Cirrus.instance.privateZone(named: zoneName, in: scope) {
 				return CKRecord.ID(recordName: recordName, zoneID: zone.zoneID)
 			} else {
 				return CKRecord.ID(recordName: recordName)

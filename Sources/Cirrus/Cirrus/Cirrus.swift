@@ -18,15 +18,13 @@ public class Cirrus: ObservableObject {
 	public var configuration: Configuration!
 	
 	public var container: CKContainer!
-	public var sharedZones: [String: CKRecordZone] = [:]
+	public var sharedZones: [CKRecordZone] = []
 	public var privateZones: [String: CKRecordZone] = [:]
 	public var defaultPrivateZone: CKRecordZone?
-	public var defaultSharedZone: CKRecordZone?
 
-	public func zone(named name: String, in scope: CKDatabase.Scope) -> CKRecordZone? {
+	public func privateZone(named name: String, in scope: CKDatabase.Scope) -> CKRecordZone? {
 		switch scope {
 		case .private: return privateZones[name]
-		case .shared: return sharedZones[name]
 		default: return nil
 		}
 	}
@@ -34,7 +32,7 @@ public class Cirrus: ObservableObject {
 	public func zone(withID id: CKRecordZone.ID, in scope: CKDatabase.Scope) -> CKRecordZone? {
 		switch scope {
 		case .private: return privateZones.values.first { $0.zoneID == id }
-		case .shared: return sharedZones.values.first { $0.zoneID == id }
+		case .shared: return sharedZones.first { $0.zoneID == id }
 		default: return nil
 		}
 	}
@@ -42,7 +40,7 @@ public class Cirrus: ObservableObject {
 	public func allZoneIDs(in scope: CKDatabase.Scope) -> [CKRecordZone.ID] {
 		switch scope {
 		case .private: return privateZones.values.map { $0.zoneID }
-		case .shared: return sharedZones.values.map { $0.zoneID }
+		case .shared: return sharedZones.map { $0.zoneID }
 		default: return []
 		}
 	}

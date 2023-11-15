@@ -73,7 +73,6 @@ open class SyncedManagedObject: NSManagedObject, CKRecordSeed, Identifiable {
 		if let parent = parent { return parent.recordZone }
 		switch database {
 		case .private: return Cirrus.instance.defaultPrivateZone
-		case .shared: return Cirrus.instance.defaultSharedZone
 		default: return nil
 		}
 		
