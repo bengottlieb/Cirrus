@@ -30,7 +30,7 @@ extension Cirrus {
 }
 
 public extension Cirrus.Configuration {
-	init(identifier: String, zones: [String], defaultZone: String? = nil) {
+	init(identifier: String, zones: [String] = [], defaultZone: String? = nil) {
 		containerIdentifer = identifier
 		zoneNames = zones
 		defaultZoneName = defaultZone ?? zoneNames.first

@@ -40,21 +40,17 @@ extension Cirrus {
 		}
 	}
 	
-	func setupZones(forceCreate: Bool = false) async throws {
-		if !forceCreate, self.localState.lastCreatedZoneNamesList == configuration.zoneNames {
-			self.privateZones = [:]
-			self.sharedZones = []
-			for name in configuration.zoneNames {
-				privateZones[name] = CKRecordZone(zoneName: name)
-			}
-		} else {
-			self.privateZones = try await container.privateCloudDatabase.setup(zones: configuration.zoneNames)
-			self.sharedZones = try await container.sharedCloudDatabase.allZones()
-        }
-		if let defaultZone = configuration.defaultZoneName {
-			self.defaultPrivateZone = privateZones[defaultZone]
+	func setupZones() async throws {
+		let existingZones = try await container.privateCloudDatabase.allZones()
+		for zone in existingZones {
+			privateZones[zone.zoneID.zoneName] = zone
 		}
-		await MainActor.run { self.localState.lastCreatedZoneNamesList = self.configuration.zoneNames }
+		
+		sharedZones = try await container.sharedCloudDatabase.allZones()
+		let missing = configuration.zoneNames.filter({ privateZones[$0] == nil })
+		if !missing.isEmpty {
+			self.privateZones = try await container.privateCloudDatabase.setup(zones: missing)
+		}
 	}
 	
 	public func signOut() {

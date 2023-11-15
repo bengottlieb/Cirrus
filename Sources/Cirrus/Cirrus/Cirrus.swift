@@ -22,11 +22,8 @@ public class Cirrus: ObservableObject {
 	public var privateZones: [String: CKRecordZone] = [:]
 	public var defaultPrivateZone: CKRecordZone?
 
-	public func privateZone(named name: String, in scope: CKDatabase.Scope) -> CKRecordZone? {
-		switch scope {
-		case .private: return privateZones[name]
-		default: return nil
-		}
+	public func privateZone(named name: String) -> CKRecordZone? {
+		privateZones[name]
 	}
 
 	public func zone(withID id: CKRecordZone.ID, in scope: CKDatabase.Scope) -> CKRecordZone? {

@@ -189,7 +189,15 @@ extension CKDatabase {
 		let all = try await allZones()
 		return all.first { $0.zoneID.ownerName == target.ownerName && $0.zoneID.zoneName == target.zoneName }
 	}
-    
+	
+	public func createZone(named name: String) async throws -> CKRecordZone {
+		if self == .private, let zone = await Cirrus.instance.privateZone(named: name) { return zone }
+		
+		let newZones = try await setup(zones: [name])
+		if let newZone = newZones[name] { return newZone }
+		throw Cirrus.CirrusError.unableToCreateZone
+	}
+	
 	@discardableResult func setup(zones names: [String]) async throws -> [String: CKRecordZone] {
 		let zones = Dictionary(uniqueKeysWithValues: names.map { ($0, CKRecordZone(zoneName: $0)) })
 		let op = CKModifyRecordZonesOperation(recordZonesToSave: Array(zones.values), recordZoneIDsToDelete: nil)

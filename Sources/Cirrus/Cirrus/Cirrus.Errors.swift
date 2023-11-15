@@ -9,6 +9,7 @@ import Suite
 import CloudKit
 
 extension Cirrus {
+	enum CirrusError: Error { case unableToCreateZone }
 	@discardableResult public func shouldCancelAfterError(_ error: Error) -> Bool { shouldCancelAfterError("", error) }
 	@discardableResult public func shouldCancelAfterError(_ label: String, _ error: Error) -> Bool {
 		if let multiple = error as? MultipleErrors {
@@ -42,7 +43,6 @@ extension Cirrus {
 				return true
 				
 			case .zoneNotFound:
-				Task { try? await Cirrus.instance.setupZones(forceCreate: true) }
 				return true
 
 			case .missingEntitlement:
