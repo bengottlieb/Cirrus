@@ -20,8 +20,9 @@ public struct CloudKitShareView: UIViewControllerRepresentable {
 
 	public func makeUIViewController(context: Context) -> UICloudSharingController {
 		let sharingController = UICloudSharingController(share: share, container: container)
+		sharingController.availablePermissions = [.allowReadOnly, .allowPrivate]
+		if share.publicPermission == .readWrite { sharingController.availablePermissions = [.allowReadWrite, .allowPrivate] }
 		
-		sharingController.availablePermissions = [.allowReadOnly, .allowPrivate, .allowReadWrite]
 		sharingController.modalPresentationStyle = .formSheet
 		return sharingController
 	}
