@@ -21,7 +21,9 @@ public class Cirrus: ObservableObject {
 	public var sharedZones: [CKRecordZone] = []
 	public var privateZones: [String: CKRecordZone] = [:]
 	public var defaultPrivateZone: CKRecordZone?
-    public var autoCreateNewZones = true
+	public var autoCreateNewZones = true
+	public var privateZonesIDs: [CKRecordZone.ID] { Array(privateZones.values.map { $0.zoneID })}
+	public var sharedZonesIDs: [CKRecordZone.ID] { Array(sharedZones.map { $0.zoneID })}
 
 	public func privateZone(named name: String) -> CKRecordZone? {
 		privateZones[name]

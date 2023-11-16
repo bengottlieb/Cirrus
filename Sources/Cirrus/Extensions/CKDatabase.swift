@@ -49,7 +49,9 @@ public extension CKDatabase {
 	}
 
 	func changes(in zoneIDs: [CKRecordZone.ID], queryType: RecordChangesQueryType = .recent, tokens: ChangeTokens) -> AsyncZoneChangesSequence {
-		let seq = AsyncZoneChangesSequence(zoneIDs: zoneIDs, in: self, queryType: queryType, tokens: tokens)
+		
+		let noDefaultZone = zoneIDs.filter { $0.zoneName != "_defaultZone" }
+		let seq = AsyncZoneChangesSequence(zoneIDs: noDefaultZone, in: self, queryType: queryType, tokens: tokens)
 
 		return seq
 	}
