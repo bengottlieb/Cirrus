@@ -21,8 +21,13 @@ extension Cirrus {
 				
 			case .available:
 				let id = try await container.userRecordID()
-				try await setupZones()
-				self.userSignedIn(as: id)
+				
+				if await Reachability.instance.setupAndCheckForOnline() {
+					try await setupZones()
+					self.userSignedIn(as: id, offline: false)
+				} else {
+					self.userSignedIn(as: id, offline: true)
+				}
 
 			default:
 				self.state = .notLoggedIn

@@ -92,9 +92,9 @@ public actor AsyncZoneChangesSequence: AsyncSequence {
 					Task { await Cirrus.instance.shouldCancelAfterError(error) }
 					self.errors.append(error)
 					
-				case .success(let (serverToken, clientToken, moreComing)):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
+				case .success(let (serverToken, _, moreComing)):		// (serverChangeToken: CKServerChangeToken, clientChangeTokenData: Data?, moreComing: Bool)
 					self.tokens.setChangeToken(serverToken, for: zoneID)
-					cirrus_log("more coming: \(moreComing), Zone change token: \(serverToken), client token: \(String(describing: clientToken))")
+					//cirrus_log("more coming: \(moreComing), Zone change token: \(serverToken), client token: \(String(describing: clientToken))")
 					if !moreComing { self.isComplete = true }
 				}
 			}

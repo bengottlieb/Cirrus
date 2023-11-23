@@ -49,6 +49,19 @@ public class Cirrus: ObservableObject {
 	
 	internal var cancelBag = Set<AnyCancellable>()
 	@FileBackedCodable(url: .library(named: "cirrus.local.dat"), initialValue: LocalState()) var localState
+	
+	func reachabilityChanged() {
+		print("Reachability changed: \(Reachability.instance.isOffline)")
+	}
+	
+	init() {
+		Reachability.instance.setup()
+		Reachability.Notifications.reachabilityChanged.publisher()
+			.sink { _ in
+				self.reachabilityChanged()
+			}
+			.store(in: &cancelBag)
+	}
 }
 
 public extension Cirrus {
