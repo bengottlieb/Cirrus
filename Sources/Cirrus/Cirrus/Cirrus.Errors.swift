@@ -9,7 +9,7 @@ import Suite
 import CloudKit
 
 extension Cirrus {
-	enum CirrusError: Error { case unableToCreateZone }
+	enum CirrusError: Error { case offline, unableToCreateZone }
 	@discardableResult public func shouldCancelAfterError(_ error: Error) -> Bool { shouldCancelAfterError("", error) }
 	@discardableResult public func shouldCancelAfterError(_ label: String, _ error: Error) -> Bool {
 		if let multiple = error as? MultipleErrors {

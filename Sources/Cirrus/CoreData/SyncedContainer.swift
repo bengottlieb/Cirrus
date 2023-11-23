@@ -94,7 +94,7 @@ public class SyncedContainer: ObservableObject {
 		let queryType: CKDatabase.RecordChangesQueryType = fromBeginning ? .all : (isFirstSync ? .createdOnly : .recent)
 		
 		do {
-			for try await change in database.changes(in: zoneIDs, queryType: queryType, tokens: await Cirrus.instance.localState.changeTokens) {
+			for try await change in try database.changes(in: zoneIDs, queryType: queryType, tokens: await Cirrus.instance.localState.changeTokens) {
 				if SuiteLogger.instance.level == .verbose {
 					switch change {
 					case .deleted(_, let type): if !isFirstSync { logg("Deleted \(type)") }

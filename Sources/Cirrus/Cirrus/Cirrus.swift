@@ -26,6 +26,7 @@ public class Cirrus: ObservableObject {
 	public var sharedZoneIDs: [CKRecordZone.ID] { Array(sharedZones.map { $0.zoneID })}
 	
 	public var isConfigured: Bool { configuration != nil }
+	public var isOffline: Bool { if case .offline = state { return true } else { return false }}
 
 	public func privateZone(named name: String) -> CKRecordZone? {
 		privateZones[name]
@@ -51,7 +52,15 @@ public class Cirrus: ObservableObject {
 	@FileBackedCodable(url: .library(named: "cirrus.local.dat"), initialValue: LocalState()) var localState
 	
 	func reachabilityChanged() {
-		print("Reachability changed: \(Reachability.instance.isOffline)")
+		if Reachability.instance.isOffline {
+			if case let .authenticated(id) = state {
+				state = .offline(id)
+			}
+		} else {
+			if case let .offline(id) = state {
+				state = .authenticated(id)
+			}
+		}
 	}
 	
 	init() {
