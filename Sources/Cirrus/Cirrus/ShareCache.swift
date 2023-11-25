@@ -10,7 +10,8 @@ import CloudKit
 
 
 extension CKShare {
-	var sharedRecordName: String { record.record.id.recordName }
+    var sharedRecordName: String? { nil }
+    var sharedZoneName: String? { recordID.zoneID.zoneName }
 }
 
 public class ShareCache {
@@ -20,20 +21,28 @@ public class ShareCache {
 	
 	public var cacheURL: URL? { didSet { load() }}
 	
-	public func permission(for recordID: CKRecord.ID) -> CKShare.ParticipantPermission? {
-		guard let share = cachedShares.first(where: { $0.recordName == recordID.recordName }) else { return nil }
-		
-		return share.permission
-	}
-	
 	var cachedShares: [ShareInfo] = []
-	
+
+    public func permission(forRecordID recordID: CKRecord.ID) -> CKShare.ParticipantPermission? {
+        guard let share = cachedShares.first(where: { $0.recordName == recordID.recordName }) else { return nil }
+        
+        return share.permission
+    }
+
+    public func permission(forZoneName recordZone: String) -> CKShare.ParticipantPermission? {
+        guard let share = cachedShares.first(where: { $0.zoneName == recordZone }) else { return nil }
+        
+        return share.permission
+    }
+
 	public func record(_ share: CKShare?) {
 		guard let share else { return }
 		
-		if let index = cachedShares.firstIndex(where: { $0.recordName == share.sharedRecordName }) {
-			cachedShares[index].update(from: share)
-		} else {
+        if let sharedName = share.sharedRecordName, let index = cachedShares.firstIndex(where: { $0.recordName == sharedName }) {
+            cachedShares[index].update(from: share)
+        } else if let zoneName = share.sharedZoneName, let index = cachedShares.firstIndex(where: { $0.zoneName == zoneName }) {
+            cachedShares[index].update(from: share)
+        } else {
 			cachedShares.append(.init(record: share))
 		}
 		
@@ -56,12 +65,13 @@ public class ShareCache {
 
 extension ShareCache {
 	struct ShareInfo: Codable {
-		enum CodingKeys: String, CodingKey { case url, permission, recordName }
+		enum CodingKeys: String, CodingKey { case url, permission, recordName, zoneName }
 		
-		let recordName: String
+		let recordName: String?
 		var url: URL?
 		var permission: CKShare.ParticipantPermission?
 		var record: CKShare?
+        var zoneName: String?
 		
 		mutating func update(from share: CKShare) {
 			url = share.url
@@ -70,6 +80,7 @@ extension ShareCache {
 		
 		init(record: CKShare) {
 			recordName = record.sharedRecordName
+            zoneName = record.id.zoneID.zoneName
 			url = record.url
 			permission = record.currentUserParticipant?.permission
 			self.record = record
@@ -78,7 +89,8 @@ extension ShareCache {
 		func encode(to encoder: Encoder) throws {
 			var container = encoder.container(keyedBy: CodingKeys.self)
 			
-			try container.encode(recordName, forKey: .recordName)
+            if let recordName { try container.encode(recordName, forKey: .recordName) }
+            if let zoneName { try container.encode(zoneName, forKey: .zoneName) }
 			if let url { try container.encode(url, forKey: .url) }
 			if let permission { try container.encode(permission.rawValue, forKey: .permission) }
 		}
@@ -86,7 +98,8 @@ extension ShareCache {
 		init(from decoder: Decoder) throws {
 			let container = try decoder.container(keyedBy: CodingKeys.self)
 			
-			recordName = try container.decode(String.self, forKey: .recordName)
+            recordName = try container.decodeIfPresent(String.self, forKey: .recordName)
+            zoneName = try container.decodeIfPresent(String.self, forKey: .zoneName)
 			url = try container.decodeIfPresent(URL.self, forKey: .url)
 			permission = CKShare.ParticipantPermission(rawValue: try container.decode(Int.self, forKey: .permission))
 		}
