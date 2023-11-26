@@ -7,13 +7,16 @@
 
 import Suite
 import CloudKit
-
+import Combine
 
 public class Cirrus: ObservableObject {
 	public static let instance = Cirrus()
 	
 	public var mutability: Mutability = .normal
-	public var state: AuthenticationState = .notLoggedIn { didSet { objectWillChange.sendOnMain() }}
+	public var state: AuthenticationState = .notLoggedIn { didSet {
+		objectWillChange.sendOnMain()
+		if state != oldValue { currentState.send(state) }
+	}}
 	public var cloudQuotaExceeded = false { didSet { objectWillChange.sendOnMain() }}
 	public var configuration: Configuration!
 	
@@ -27,6 +30,7 @@ public class Cirrus: ObservableObject {
 	
 	public var isConfigured: Bool { configuration != nil }
 	public var isOffline: Bool { if case .offline = state { return true } else { return false }}
+	public var currentState: CurrentValueSubject<AuthenticationState, Never> = .init(.notLoggedIn)
 
 	public func privateZone(named name: String) -> CKRecordZone? {
 		privateZones[name]

@@ -45,8 +45,13 @@ extension Cirrus {
 		}
 	}
 	
+	public func reloadZones() async throws {
+		try await setupZones()
+	}
+	
 	func setupZones() async throws {
 		let existingZones = try await container.privateCloudDatabase.allZones()
+		privateZones = [:]
 		for zone in existingZones {
 			privateZones[zone.zoneID.zoneName] = zone
 		}
