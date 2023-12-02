@@ -8,6 +8,7 @@
 import CloudKit
 import SwiftUI
 
+#if os(iOS)
 extension CKDatabase {
 	public func share(zoneID: CKRecordZone.ID, title: String, image: UIImage? = nil, readWrite: Bool = true) async throws -> CKShare {
 		let recordID = CKRecord.ID(recordName: "cloudkit.zoneshare", zoneID: zoneID)
@@ -29,3 +30,4 @@ extension CKDatabase {
 		return result as? CKShare ?? share
 	}
 }
+#endif

@@ -9,6 +9,7 @@ import Foundation
 import CloudKit
 import SwiftUI
 
+#if os(iOS)
 public struct CloudKitShareView: UIViewControllerRepresentable {
 	let share: CKShare
 	var container: CKContainer
@@ -31,3 +32,4 @@ public struct CloudKitShareView: UIViewControllerRepresentable {
 		
 	}
 }
+#endif
