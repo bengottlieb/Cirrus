@@ -9,7 +9,7 @@ import Foundation
 import CloudKit
 
 extension Cirrus {
-	struct LocalState: Codable {
+	struct LocalState: Codable, Equatable {
 		var lastCreatedZoneNamesList: [String] = []
 		var lastSignedInUserIDName: String?
 		var lastSignedInUserID: CKRecord.ID? {

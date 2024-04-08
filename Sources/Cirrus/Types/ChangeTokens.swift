@@ -8,7 +8,7 @@
 import Foundation
 import CloudKit
 
-public class ChangeTokens: Codable {
+public class ChangeTokens: Codable, Equatable {
 	public var tokens: [String: Data] = [:]
 	var url: URL?
 	
@@ -26,6 +26,10 @@ public class ChangeTokens: Codable {
 		if let url {
 			try? self.saveJSON(to: url)
 		}
+	}
+	
+	public static func ==(lhs: ChangeTokens, rhs: ChangeTokens) -> Bool {
+		lhs.tokens == rhs.tokens
 	}
 	
 	public func changeToken(for zoneID: CKRecordZone.ID) -> CKServerChangeToken? {

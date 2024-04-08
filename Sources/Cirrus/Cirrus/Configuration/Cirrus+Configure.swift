@@ -14,12 +14,12 @@ import UIKit
 #endif
 
 extension Cirrus {
-	public static func configure(with configuration: Configuration) {
+	@MainActor public static func configure(with configuration: Configuration) {
 		Configuration.instance = configuration
 		instance.load(configuration: configuration)
 	}
 	
-	func load(configuration config: Configuration) {
+	@MainActor func load(configuration config: Configuration) {
 		assert(configuration == nil, "You can only configure Cirrus once.")
 		configuration = config
 		container = CKContainer(identifier: config.containerIdentifer)

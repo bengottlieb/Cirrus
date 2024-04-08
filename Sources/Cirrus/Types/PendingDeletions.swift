@@ -12,7 +12,7 @@ import Suite
 class QueuedDeletions {
 	static let instance = QueuedDeletions()
 	
-	@FileBackedCodable(url: .cache(named: "cirrus-pending-deletions"), initialValue: []) var pending: [Deletion]
+	@CodableFileStorage(.cache(named: "cirrus-pending-deletions")) var pending: [Deletion] = []
 	
 	func queue(recordID id: CKRecord.ID?, in database: CKDatabase) {
 		guard let id = id, !pending.contains(where: { $0.recordID == id && $0.scope == database.databaseScope }) else { return }
@@ -23,7 +23,7 @@ class QueuedDeletions {
 		pending = pending.filter { pending in  !deleted.contains { $0.recordName == pending.recordName && $0.scope == pending.scope } }
 	}
 
-	struct Deletion: Codable {
+	struct Deletion: Codable, Equatable {
 		let recordName: String
 		var zoneName: String?
 		let scope: CKDatabase.Scope
