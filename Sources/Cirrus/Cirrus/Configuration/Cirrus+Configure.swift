@@ -62,22 +62,23 @@ extension Cirrus {
 			.store(in: &cancelBag)
 		
 		
-		Reachability.instance.objectWillChange
-			.sink { _ in
-				if Reachability.instance.isOffline {
-					if case .authenticated(let userID) = self.state { self.state = .offline(userID) }
-				} else if self.state.isOffline {
-					Task {
-						do {
-							try await self.authenticate(evenIfOffline: true)
-						} catch {
-							cirrus_log("Failed to authenticate when reachability changed")
+		Task { @MainActor in
+			Reachability.instance.objectWillChange
+				.sink { _ in
+					Task { @MainActor in
+						if Reachability.instance.isOffline {
+							if case .authenticated(let userID) = self.state { self.state = .offline(userID) }
+						} else if self.state.isOffline {
+							do {
+								try await self.authenticate(evenIfOffline: true)
+							} catch {
+								cirrus_log("Failed to authenticate when reachability changed")
+							}
 						}
 					}
 				}
-			}
-			.store(in: &cancelBag)
-		
+				.store(in: &cancelBag)
+		}
 		Task {
 			do {
 				try await self.authenticate()

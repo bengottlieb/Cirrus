@@ -39,7 +39,7 @@ extension Cirrus {
 				return true
 
 			case .changeTokenExpired:
-				Cirrus.instance.localState.changeTokens = .init()
+				Cirrus.instance.localState.changeTokens = ChangeTokens()
 				return true
 				
 			case .zoneNotFound:
