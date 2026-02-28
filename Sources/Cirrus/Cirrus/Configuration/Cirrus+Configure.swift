@@ -15,7 +15,6 @@ import UIKit
 
 extension Cirrus {
 	@MainActor public static func configure(with configuration: Configuration) {
-		Configuration.instance = configuration
 		instance.load(configuration: configuration)
 	}
 	

@@ -26,9 +26,9 @@ import Combine
 	public nonisolated(unsafe) var defaultPrivateZone: CKRecordZone?
 	public nonisolated(unsafe) var autoCreateNewZones = true
 	public nonisolated(unsafe) var privateZoneIDs: [CKRecordZone.ID] { Array(privateZones.values.map { $0.zoneID })}
-	public nonisolated(unsafe) var sharedZoneIDs: [CKRecordZone.ID] { Array(sharedZones.map { $0.zoneID })}
+	public var sharedZoneIDs: [CKRecordZone.ID] { Array(sharedZones.map { $0.zoneID })}
 	
-	public nonisolated(unsafe) var isConfigured: Bool { configuration != nil }
+	public var isConfigured: Bool { configuration != nil }
 	public nonisolated(unsafe) var isOffline: Bool { if case .offline = state { return true } else { return false }}
 	public nonisolated(unsafe) var currentState: CurrentValueSubject<AuthenticationState, Never> = .init(.notLoggedIn)
 

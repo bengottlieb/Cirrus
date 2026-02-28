@@ -18,46 +18,6 @@ public extension NSManagedObjectContext {
 		}
 		return true
 	}
-
-	func encapsulate<T: NSManagedObject>(_ object: T, perform: @escaping (T) -> Void) {
-		self.perform {
-			if let obj = self.instantiate(object) {
-				perform(obj)
-			}
-		}
-	}
-
-	func encapsulate<T: NSManagedObject, Result>(_ object: T, perform: @escaping (T) throws -> Result) async throws -> Result? {
-		try await withCheckedThrowingContinuation { continuation in
-			self.perform {
-				do {
-					if let obj = self.instantiate(object) {
-						continuation.resume(returning: try perform(obj))
-					} else {
-						continuation.resume(returning: nil)
-					}
-				} catch {
-					continuation.resume(throwing: error)
-				}
-			}
-		}
-	}
-	
-	func perform(block: @escaping (NSManagedObjectContext) -> Void) {
-		self.perform { block(self) }
-	}
-
-	func perform<T>(_ block: @escaping (NSManagedObjectContext) throws -> T) async throws -> T {
-		try await withCheckedThrowingContinuation { continuation in
-			self.perform {
-				do {
-					continuation.resume(returning: try block(self))
-				} catch {
-					continuation.resume(throwing: error)
-				}
-			}
-		}
-	}
 	
 	func insertEntity(named name: String) -> NSManagedObject {
 		let result = NSEntityDescription.insertNewObject(forEntityName: name, into: self) as NSManagedObject
@@ -149,15 +109,7 @@ public extension NSManagedObjectContext {
 		let entityName = T.entityName(in: self)
 		return self.insertObject(named: entityName) as? T
 	}
-	
-	@available(iOS 11.0, *)
-	func insertObject<T>(loading dictionary: JSONDictionary? = nil, dateStrategy: JSONDecoder.DateDecodingStrategy = .default) -> T! where T: NSManagedObject {
-		let entityName = T.entityName(in: self)
-		let entity = self.insertObject(named: entityName) as? T
-		if let dict = dictionary { entity?.load(dictionary: dict, combining: false, dateStrategy: dateStrategy) }
-		return entity
-	}
-	
+		
 	func fetchAll<T>(matching predicate: NSPredicate? = nil, sortedBy: [NSSortDescriptor] = []) -> [T] where T: NSManagedObject {
 		return self.fetchAll(named: T.entityName(in: self), matching: predicate, sortedBy: sortedBy) as? [T] ?? []
 	}
@@ -224,22 +176,4 @@ public extension NSManagedObjectContext {
 		return false
 	}
 	
-	func fetch(fields: [String], from entityName: String, matching predicate: NSPredicate? = nil) -> [[String: Any]] {
-		let request = self.generateFetchRequest(for: entityName)
-		if predicate != nil { request.predicate = predicate! }
-		
-		request.resultType = .dictionaryResultType
-		request.propertiesToFetch = fields
-		do {
-			if let results = try self.fetch(request) as? [[String: Any]] {
-				return results
-			}
-		} catch {}
-		return []
-	}
-	
-	func fetch(field: String, from entityName: String, matching predicate: NSPredicate? = nil) -> [Any] {
-		return self.fetch(fields: [field], from: entityName, matching: predicate).compactMap { $0[field] }
-	}
-
 }

@@ -10,9 +10,7 @@ import CloudKit
 import CoreData
 
 extension Cirrus {
-	public struct Configuration {
-		public static var instance: Configuration!
-		
+	public struct Configuration {		
 		public var containerIdentifer: String
 		public var zoneNames: [String] = []
 		public var defaultZoneName: String?
