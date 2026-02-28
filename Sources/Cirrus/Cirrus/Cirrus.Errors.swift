@@ -35,7 +35,9 @@ extension Cirrus {
 				
 			case .permissionFailure:
 				logg(error: error, "\(label): Not signed in")
-				DispatchQueue.onMain { self.state = .notLoggedIn }
+				Task { @MainActor in
+						self.state = .notLoggedIn
+					}
 				return true
 
 			case .changeTokenExpired:
@@ -51,7 +53,9 @@ extension Cirrus {
 
 			case .notAuthenticated:
 				cirrus_log("\(label): Not signed in")
-				DispatchQueue.onMain { self.state = .notLoggedIn }
+				Task { @MainActor in
+						self.state = .notLoggedIn
+					}
 				return true
 
 			case .invalidArguments:
@@ -64,7 +68,9 @@ extension Cirrus {
 
 			case .accountTemporarilyUnavailable:
 				cirrus_log("\(label): Account temporarily unavailable")
-				DispatchQueue.onMain { Cirrus.instance.state = .temporaryUnavailable }
+				Task { @MainActor in
+						Cirrus.instance.state = .temporaryUnavailable
+					}
 				return true
 
 			default:

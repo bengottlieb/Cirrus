@@ -19,7 +19,7 @@ public protocol ManagedObjectSynchronizer {
 public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 	let context: NSManagedObjectContext
 	let connector: ReferenceConnector
-	weak var syncStartTimer: Timer?
+	private var syncStartTask: Task<Void, Never>?
 	
 	public init(context: NSManagedObjectContext) {
 		self.context = context
@@ -34,13 +34,14 @@ public class SimpleObjectSynchronizer: ManagedObjectSynchronizer {
 	}
 	
 	public func startSync() {
-		syncStartTimer?.invalidate()
-		DispatchQueue.onMain(async: true) {
-			self.syncStartTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
-				Task() {
-					await self.uploadLocalChanges()
-				}
+		syncStartTask?.cancel()
+		syncStartTask = Task {
+			do {
+				try await Task.sleep(nanoseconds: 200_000_000)
+			} catch {
+				return
 			}
+			await self.uploadLocalChanges()
 		}
 	}
 	

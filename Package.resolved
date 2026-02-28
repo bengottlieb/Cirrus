@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Suite",
+        "repositoryURL": "https://github.com/ios-tooling/Suite.git",
+        "state": {
+          "branch": null,
+          "revision": "44c415fa52aa3dd8319c75eceacd036e8cab9256",
+          "version": "1.3.5"
+        }
+      },
+      {
+        "package": "swift-syntax",
+        "repositoryURL": "https://github.com/apple/swift-syntax",
+        "state": {
+          "branch": null,
+          "revision": "4799286537280063c85a32f09884cfbca301b1a1",
+          "version": "602.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -20,7 +20,7 @@ extension URL {
 		
 			return FileManager.default.contentsEqual(atPath: path, andPath: other.path)
 		} catch {
-			Studio.logg(error: error, "Error while checking files")
+			Suite.logg(error: error, "Error while checking files")
 		}
 		return false
 	}

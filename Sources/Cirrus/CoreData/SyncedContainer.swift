@@ -39,7 +39,7 @@ public class SyncedContainer: ObservableObject {
 		self.container = AppGroupPersistentContainer(name: name, managedObjectModel: model ?? NSManagedObjectModel(contentsOf: bundle.url(forResource: name, withExtension: "momd")!)!)
 		
 		self.container.loadPersistentStores { desc, error in
-			Studio.logg(error: error, "Problem loading persistent stores in a SyncedContainer")
+			Suite.logg(error: error, "Problem loading persistent stores in a SyncedContainer")
 		}
 		
 		viewContext = container.viewContext
