@@ -26,7 +26,8 @@ let package = Package(
             name: "Cirrus",
             dependencies: ["Suite"],
             swiftSettings: [
-                .enableUpcomingFeature("StrictConcurrency")
+                .enableUpcomingFeature("StrictConcurrency"),
+                .enableUpcomingFeature("CompleteConcurrency")
             ]
         ),
 	 ]

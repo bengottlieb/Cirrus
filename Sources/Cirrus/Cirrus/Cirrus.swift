@@ -9,34 +9,34 @@ import Suite
 import CloudKit
 import Combine
 
-public class Cirrus: ObservableObject {
+@MainActor public class Cirrus: ObservableObject {
 	public static let instance = Cirrus()
 	
 	public var mutability: Mutability = .normal
-	public var state: AuthenticationState = .notLoggedIn { didSet {
+	public nonisolated(unsafe) var state: AuthenticationState = .notLoggedIn { didSet {
 		objectWillChange.sendOnMain()
 		if state != oldValue { currentState.send(state) }
 	}}
-	public var cloudQuotaExceeded = false { didSet { objectWillChange.sendOnMain() }}
-	public var configuration: Configuration!
+	public nonisolated(unsafe) var cloudQuotaExceeded = false { didSet { objectWillChange.sendOnMain() }}
+	public nonisolated(unsafe) var configuration: Configuration!
 	
-	public var container: CKContainer!
-	public var sharedZones: [CKRecordZone] = []
-	public var privateZones: [String: CKRecordZone] = [:]
-	public var defaultPrivateZone: CKRecordZone?
-	public var autoCreateNewZones = true
-	public var privateZoneIDs: [CKRecordZone.ID] { Array(privateZones.values.map { $0.zoneID })}
-	public var sharedZoneIDs: [CKRecordZone.ID] { Array(sharedZones.map { $0.zoneID })}
+	public nonisolated(unsafe) var container: CKContainer!
+	public nonisolated(unsafe) var sharedZones: [CKRecordZone] = []
+	public nonisolated(unsafe) var privateZones: [String: CKRecordZone] = [:]
+	public nonisolated(unsafe) var defaultPrivateZone: CKRecordZone?
+	public nonisolated(unsafe) var autoCreateNewZones = true
+	public nonisolated(unsafe) var privateZoneIDs: [CKRecordZone.ID] { Array(privateZones.values.map { $0.zoneID })}
+	public nonisolated(unsafe) var sharedZoneIDs: [CKRecordZone.ID] { Array(sharedZones.map { $0.zoneID })}
 	
-	public var isConfigured: Bool { configuration != nil }
-	public var isOffline: Bool { if case .offline = state { return true } else { return false }}
-	public var currentState: CurrentValueSubject<AuthenticationState, Never> = .init(.notLoggedIn)
+	public nonisolated(unsafe) var isConfigured: Bool { configuration != nil }
+	public nonisolated(unsafe) var isOffline: Bool { if case .offline = state { return true } else { return false }}
+	public nonisolated(unsafe) var currentState: CurrentValueSubject<AuthenticationState, Never> = .init(.notLoggedIn)
 
-	public func privateZone(named name: String) -> CKRecordZone? {
+	public nonisolated(unsafe) func privateZone(named name: String) -> CKRecordZone? {
 		privateZones[name]
 	}
 
-	public func zone(withID id: CKRecordZone.ID, in scope: CKDatabase.Scope) -> CKRecordZone? {
+	public nonisolated(unsafe) func zone(withID id: CKRecordZone.ID, in scope: CKDatabase.Scope) -> CKRecordZone? {
 		switch scope {
 		case .private: return privateZones.values.first { $0.zoneID == id }
 		case .shared: return sharedZones.first { $0.zoneID == id }
@@ -44,7 +44,7 @@ public class Cirrus: ObservableObject {
 		}
 	}
 
-	public func allZoneIDs(in scope: CKDatabase.Scope) -> [CKRecordZone.ID] {
+	public nonisolated(unsafe) func allZoneIDs(in scope: CKDatabase.Scope) -> [CKRecordZone.ID] {
 		switch scope {
 		case .private: return privateZones.values.map { $0.zoneID }
 		case .shared: return sharedZones.map { $0.zoneID }

@@ -9,23 +9,23 @@ import CloudKit
 import SwiftUI
 
 
-open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
+@MainActor open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 	open class var recordType: CKRecord.RecordType { "" }
-	public var record: CKRecord? { didSet { recordChanged() }}
+	public nonisolated let recordID: CKRecord.ID
+	public nonisolated let recordType: CKRecord.RecordType
+	public var record: CKRecord?
 	public var database: CKDatabase
-	public var recordID: CKRecord.ID
-	public var recordType: CKRecord.RecordType
 	public var isDirty = false
 	public var isSaving = false
 	public var cache: [String: CKRecordValue?] = [:]
-	public var id: String { recordID.recordName }
+	public nonisolated var id: String { recordID.recordName }
 	
 	
 	required public init(record: CKRecord, in database: CKDatabase = .private) {
-		self.record = record
-		self.database = database
 		recordID = record.recordID
 		recordType = record.recordType
+		self.database = database
+		self.record = record
 		didLoad(record: record)
 	}
 	
@@ -52,14 +52,8 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		record = latest
 	}
 	
-	public static func ==(lhs: WrappedCKRecord, rhs: WrappedCKRecord) -> Bool {
-		if let record = lhs.record ?? rhs.record {
-			for key in record.allKeys() {
-				if !areEqual(lhs[key], rhs[key]) { return false }
-			}
-		}
-		
-		return lhs.recordID == rhs.recordID
+	public nonisolated static func ==(lhs: WrappedCKRecord, rhs: WrappedCKRecord) -> Bool {
+		lhs.recordID == rhs.recordID
 	}
 		
 	public init(recordID: CKRecord.ID, recordType: CKRecord.RecordType, database: CKDatabase = .private) async throws {
@@ -152,9 +146,4 @@ open class WrappedCKRecord: ObservableObject, Identifiable, Equatable {
 		}
 	}
 	
-	func recordChanged() {
-		guard let record else { return }
-		recordID = record.recordID
-		recordType = record.recordType
-	}
 }

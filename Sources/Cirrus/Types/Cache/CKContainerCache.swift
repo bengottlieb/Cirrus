@@ -15,7 +15,7 @@ public protocol CKContainerCacheDelegate: AnyObject {
 	func didRemoveRemoteRecord(recordID: CKRecord.ID, in scope: CKDatabase.Scope)
 }
 
-public class CKContainerCache {
+@MainActor public class CKContainerCache {
 	
 	public static var instance: CKContainerCache!
 	

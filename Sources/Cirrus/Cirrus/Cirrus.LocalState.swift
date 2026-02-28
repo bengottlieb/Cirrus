@@ -25,6 +25,9 @@ extension Cirrus {
 	}
 }
 
+
+extension Cirrus.LocalState: @unchecked Sendable {}
+
 public extension CKServerChangeToken {
 	var data: Data? {
 		try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)

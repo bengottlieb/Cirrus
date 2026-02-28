@@ -71,3 +71,5 @@ public class ChangeTokens: Codable, Equatable {
 	}
 }
 
+extension ChangeTokens: @unchecked Sendable {}
+

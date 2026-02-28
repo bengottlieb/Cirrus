@@ -7,7 +7,7 @@
 
 import CloudKit
 
-public class CKDatabaseCache: ObservableObject {
+@MainActor public class CKDatabaseCache: ObservableObject {
 	let scope: CKDatabase.Scope
 	let container: CKContainerCache
 	let url: URL
